@@ -2148,7 +2148,7 @@ a {
 
 /* Estilos para los enlaces de contacto */
 .contact-link {
-    color: #D54A3A;
+    color: #D54A3A !important;
     text-decoration: none;
     font-family: 'EB Garamond', serif;
     font-style: normal;
@@ -2158,8 +2158,9 @@ a {
 }
 
 .contact-link:hover {
-    font-style: italic;
-    transition: none;
+    color: #D54A3A !important;
+    opacity: 0.8;
+    font-style: normal !important;
 }
 
 .contact-link::after {
