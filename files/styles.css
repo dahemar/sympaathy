@@ -2877,3 +2877,54 @@ a {
     object-fit: contain;
     aspect-ratio: 16/9;
 }
+
+.project-text, .project-text p {
+    font-size: 1em !important;
+    line-height: 1.7;
+    color: #8A9197;
+}
+
+/* Mobile menu styles */
+@media (max-width: 768px) {
+    .menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: black;
+        padding: 1em 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        gap: 1.5em;
+        margin: 0;
+        border: none;
+    }
+
+    .menu a {
+        color: white;
+        text-decoration: none;
+        font-size: 1em;
+        transition: color 0.3s ease;
+    }
+
+    .menu a:hover {
+        color: white;
+    }
+
+    .menu a::after {
+        display: none;
+    }
+
+    .menu a::before {
+        display: none;
+    }
+
+    .menu a span {
+        display: none;
+    }
+
+    .menu a:hover span {
+        display: none;
+    }
+}
