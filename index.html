@@ -67,13 +67,13 @@
             font-style: normal;
             font-size: clamp(0.8em, 1.5vw, 1.2em);
             opacity: 0;
-            transition: opacity 0.3s ease, color 0.3s, font-style 0.3s;
+            transition: opacity 0.3s ease, color 0.3s;
             z-index: 3;
             pointer-events: none;
             width: 90%;
             text-align: left;
             line-height: 1.2;
-            animation: scramble-text 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: none;
         }
 
         @keyframes scramble-text {
@@ -126,8 +126,9 @@
         .project-pastoral:hover::after,
         .project-pastoral-ep:hover::after {
             opacity: 1;
-            font-style: normal;
-            color: #8A9197;
+            font-style: italic;
+            color: #fff;
+            animation: scramble-text 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </body>
