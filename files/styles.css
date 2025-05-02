@@ -1504,6 +1504,12 @@ h1, h2, h3, h4, h5, h6 {
 @media (orientation: portrait) {
     .main-nav {
         padding: 6vw 4vw;
+        justify-content: center !important;
+        width: 100vw !important;
+    }
+    .main-nav-right {
+        justify-content: center !important;
+        width: 100vw !important;
     }
 
     .project-header {
@@ -2699,4 +2705,19 @@ a {
     .element.data p {
         font-size: 0.9em;
     }
+}
+
+@media (max-width: 768px), (orientation: portrait) {
+  .main-nav {
+    width: 100vw !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    box-sizing: border-box;
+  }
+  .main-nav-right {
+    width: 100vw !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    box-sizing: border-box;
+  }
 }
