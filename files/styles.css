@@ -152,7 +152,7 @@ a:hover::before {
 }
 
 .menu a:hover {
-    color: #D54A3A;
+    color: #fff;
     opacity: 1;
     font-family: 'EB Garamond', serif;
     font-style: italic;
@@ -331,7 +331,7 @@ body {
 .writing-category h2 {
 	margin-bottom: 2vw;
 	font-family: 'EB Garamond', 'Garamond', serif;
-	color: #D54A3A;
+	color: #fff;
 	position: relative;
 	overflow: hidden;
 	filter: blur(0);
@@ -371,7 +371,7 @@ body {
 }
 
 .container a:hover {
-    color: #D54A3A;
+    color: #fff;
     font-family: 'EB Garamond', serif;
     font-style: italic;
     transform: translateZ(0);
@@ -773,6 +773,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .element p {
     margin-bottom: 1.5em;
+    font-size: 0.8em;
+    line-height: 1.6;
     filter: blur(0);
     animation: text-focus 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     animation-delay: calc(var(--text-index, 5) * 0.2s);
@@ -780,7 +782,10 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (orientation: portrait) {
     .element {
-        font-size: 4vw;
+        font-size: 0.9em;
+    }
+    .element p {
+        font-size: 0.9em;
     }
 }
 
@@ -845,6 +850,8 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: -1;
     animation: font-switch 2s infinite;
+    filter: blur(16px) !important;
+    opacity: 0.25 !important;
 }
 
 @keyframes font-switch {
@@ -869,7 +876,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .main-nav a:hover {
-    color: #D54A3A;
+    color: #fff;
     font-style: italic;
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -879,6 +886,8 @@ h1, h2, h3, h4, h5, h6 {
 .main-nav a:hover::after {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.1);
+    filter: blur(24px) !important;
+    opacity: 0.18 !important;
 }
 
 /* Ajuste para el enlace "current works" */
@@ -935,7 +944,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .main-nav a:hover {
-    color: #D54A3A;
+    color: #fff;
     font-style: italic;
     transform: translateZ(0);
     backface-visibility: hidden;
@@ -1036,25 +1045,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 90%;
 }
 
-.project-live::before {
-    content: 'diamantista live';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(251, 252, 255, 0.15);
-    font-size: 4.5em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    filter: blur(4px);
-    pointer-events: none;
-    text-align: center;
-    width: 90%;
-}
-
-.project-live:hover::after,
-.project-live:hover::before {
+.project-live:hover::after {
     opacity: 1;
 }
 
@@ -1079,23 +1070,7 @@ h1, h2, h3, h4, h5, h6 {
     pointer-events: none;
 }
 
-.project-ep::before {
-    content: 'diamantista - LOVE IS VITAL';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(251, 252, 255, 0.15);
-    font-size: 4.5em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    filter: blur(4px);
-    pointer-events: none;
-}
-
-.project-ep:hover::after,
-.project-ep:hover::before {
+.project-ep:hover::after {
     opacity: 1;
 }
 
@@ -1420,6 +1395,15 @@ h1, h2, h3, h4, h5, h6 {
     filter: blur(0);
     animation: text-focus 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     animation-delay: calc(var(--text-index, 5) * 0.2s);
+}
+
+@media (orientation: portrait) {
+    .element {
+        font-size: 0.9em;
+    }
+    .element p {
+        font-size: 0.9em;
+    }
 }
 
 /* Refinamiento de la página Writings */
@@ -1748,7 +1732,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     font-family: 'Biryani', sans-serif;
     font-size: 1.1vw;
-    color: #D54A3A;
+    color: #fff;
     margin-bottom: 1em;
     text-decoration: none;
     transition: all 0.4s ease;
@@ -2148,7 +2132,7 @@ a {
 
 /* Estilos para los enlaces de contacto */
 .contact-link {
-    color: #D54A3A !important;
+    color: #fff !important;
     text-decoration: none;
     font-family: 'EB Garamond', serif;
     font-style: normal;
@@ -2158,7 +2142,7 @@ a {
 }
 
 .contact-link:hover {
-    color: #D54A3A !important;
+    color: #fff !important;
     opacity: 0.8;
     font-style: normal !important;
 }
@@ -2224,23 +2208,7 @@ a {
     pointer-events: none;
 }
 
-.project-licitir::before {
-    content: 'licitir live';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(251, 252, 255, 0.15);
-    font-size: 4.5em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    filter: blur(4px);
-    pointer-events: none;
-}
-
-.project-licitir:hover::after,
-.project-licitir:hover::before {
+.project-licitir:hover::after {
     opacity: 1;
 }
 
@@ -2267,25 +2235,7 @@ a {
     max-width: 90%;
 }
 
-.project-licitir-ep::before {
-    content: 'licitir - Tomorrow we dream of sleeping in a garden of camellias';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(251, 252, 255, 0.15);
-    font-size: 3.3em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    filter: blur(4px);
-    pointer-events: none;
-    text-align: center;
-    max-width: 90%;
-}
-
-.project-licitir-ep:hover::after,
-.project-licitir-ep:hover::before {
+.project-licitir-ep:hover::after {
     opacity: 1;
 }
 
@@ -2310,23 +2260,7 @@ a {
     pointer-events: none;
 }
 
-.project-pastoral::before {
-    content: 'pastoral live';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(251, 252, 255, 0.15);
-    font-size: 4.5em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    filter: blur(4px);
-    pointer-events: none;
-}
-
-.project-pastoral:hover::after,
-.project-pastoral:hover::before {
+.project-pastoral:hover::after {
     opacity: 1;
 }
 
@@ -2351,23 +2285,7 @@ a {
     pointer-events: none;
 }
 
-.project-pastoral-ep::before {
-    content: 'pastoral ep';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(251, 252, 255, 0.15);
-    font-size: 4.5em;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 2;
-    filter: blur(4px);
-    pointer-events: none;
-}
-
-.project-pastoral-ep:hover::after,
-.project-pastoral-ep:hover::before {
+.project-pastoral-ep:hover::after {
     opacity: 1;
 }
 
@@ -2427,15 +2345,15 @@ a {
 .element.data h2 {
     font-family: 'EB Garamond', serif;
     font-style: italic;
-    color: #D54A3A;
+    color: #fff;
     font-size: 2.5em;
     margin-bottom: 1rem;
 }
 
 .element.data p {
     margin-bottom: 1.5rem;
-    font-size: 1.1em;
-    line-height: 1.6;
+    font-size: 0.8em;
+    line-height: 1.4;
 }
 
 .element.data .divider {
@@ -2758,5 +2676,27 @@ a {
 @media (orientation: portrait) {
     .video-section {
         padding: 10px;
+    }
+}
+
+.main-nav a::after {
+    filter: blur(8px) !important;
+    opacity: 0.35 !important;
+}
+
+.main-nav a:hover::after {
+    filter: blur(12px) !important;
+    opacity: 0.22 !important;
+}
+
+.element.data p {
+    margin-bottom: 1.5rem;
+    font-size: 0.8em;
+    line-height: 1.4;
+}
+
+@media (orientation: portrait) {
+    .element.data p {
+        font-size: 0.9em;
     }
 }

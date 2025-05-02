@@ -28,7 +28,6 @@
     <div class="projects-grid">
         <a href="project-1.html" class="project-link project-live">
             <img src="images/diamantista.jpeg" alt="Project 1">
-            <video class="hover-video" src="images/diamantista.mp4" muted playsinline></video>
         </a>
         <a href="project-2.html" class="project-link project-ep">
             <img src="images/diamantista ep.jpg" alt="Project 2">
@@ -53,49 +52,51 @@
 
     <!-- Estilos específicos para el proyecto ep -->
     <style>
+        .project-live::after,
         .project-ep::after,
         .project-licitir::after,
         .project-licitir-ep::after,
         .project-pastoral::after,
         .project-pastoral-ep::after {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #D54A3A;
+            top: 10px;
+            left: 10px;
+            transform: none;
+            color: #8A9197;
             font-family: 'EB Garamond', serif;
-            font-style: italic;
-            font-size: clamp(1.5em, 4vw, 3em);
+            font-style: normal;
+            font-size: clamp(0.8em, 1.5vw, 1.2em);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, color 0.3s, font-style 0.3s;
             z-index: 3;
             pointer-events: none;
             width: 90%;
-            text-align: center;
+            text-align: left;
             line-height: 1.2;
+            animation: scramble-text 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .project-ep::before,
-        .project-licitir::before,
-        .project-licitir-ep::before,
-        .project-pastoral::before,
-        .project-pastoral-ep::before {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: rgba(251, 252, 255, 0.15);
-            font-size: clamp(2em, 5vw, 4.5em);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 2;
-            filter: blur(4px);
-            pointer-events: none;
-            font-family: 'EB Garamond', serif;
-            font-style: italic;
-            width: 90%;
-            text-align: center;
-            line-height: 1.2;
+        @keyframes scramble-text {
+            0% {
+                opacity: 0.2;
+                filter: blur(2px);
+                letter-spacing: 0.2em;
+            }
+            40% {
+                opacity: 0.7;
+                filter: blur(1px);
+                letter-spacing: 0.1em;
+            }
+            80% {
+                opacity: 1;
+                filter: blur(0.2px);
+                letter-spacing: 0.02em;
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                letter-spacing: 0;
+            }
         }
 
         .project-ep::after {
@@ -118,55 +119,15 @@
             content: 'pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos';
         }
 
-        .project-ep::before {
-            content: 'pastoral live';
-        }
-
-        .project-licitir::before {
-            content: 'pastoral live';
-        }
-
-        .project-licitir-ep::before {
-            content: 'pastoral live';
-        }
-
-        .project-pastoral::before {
-            content: 'pastoral live';
-        }
-
-        .project-pastoral-ep::before {
-            content: 'pastoral live';
-        }
-
+        .project-live:hover::after,
         .project-ep:hover::after,
         .project-licitir:hover::after,
         .project-licitir-ep:hover::after,
         .project-pastoral:hover::after,
         .project-pastoral-ep:hover::after {
             opacity: 1;
-        }
-
-        .project-ep:hover::before,
-        .project-licitir:hover::before,
-        .project-licitir-ep:hover::before,
-        .project-pastoral:hover::before,
-        .project-pastoral-ep:hover::before {
-            opacity: 1;
-        }
-
-        /* Reset any specific font sizes or text alignments */
-        .project-licitir-ep::after,
-        .project-pastoral-ep::after,
-        .project-licitir-ep::before,
-        .project-pastoral-ep::before {
-            font-size: clamp(1em, 3vw, 2em);
-            text-align: center;
-            width: 90%;
-        }
-
-        .project-licitir-ep::before,
-        .project-pastoral-ep::before {
-            font-size: clamp(1.5em, 4vw, 3em);
+            font-style: normal;
+            color: #8A9197;
         }
     </style>
 </body>
