@@ -2710,69 +2710,111 @@ a {
 /* --- MENÚ MÓVIL CENTRALIZADO PARA TODAS LAS PÁGINAS --- */
 @media (max-width: 768px) {
     .main-nav {
-        left: 0 !important;
-        right: 0 !important;
         width: 100vw !important;
-        justify-content: center !important;
-        align-items: center !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        background: #000 !important;
         position: fixed !important;
         top: 0 !important;
+        left: 0 !important;
         z-index: 100 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
         height: 60px !important;
         min-height: 60px !important;
         max-height: 60px !important;
-        display: flex !important;
+        background: #000 !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     .main-nav-right {
         display: flex !important;
-        gap: 16px !important;
-        justify-content: center !important;
+        justify-content: space-between !important;
         align-items: center !important;
         width: 100vw !important;
         height: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: none !important;
+        padding: 0 12px !important;
+        box-sizing: border-box !important;
         border: none !important;
+        background: none !important;
+        margin: 0 !important;
     }
     .main-nav a {
         color: #8A9197 !important;
         font-family: 'EB Garamond', serif !important;
-        font-size: 1.2em !important;
+        font-size: clamp(0.85em, 3.5vw, 1.1em) !important;
         font-style: normal !important;
         font-weight: 500 !important;
         text-decoration: none !important;
-        background: none !important;
-        border: none !important;
-        padding: 0.2em 0.6em !important;
-        margin: 0 !important;
         transition: none !important;
         box-shadow: none !important;
         filter: none !important;
         outline: none !important;
         text-align: center !important;
         line-height: 60px !important;
-        height: 60px !important;
-        min-height: 60px !important;
-        max-height: 60px !important;
-        display: flex !important;
-        align-items: center !important;
-        transform: translateX(20px) !important;
+        white-space: nowrap !important;
+        padding: 0.2em 0.3em !important;
+        margin: 0 !important;
+        background: none !important;
+        border: none !important;
     }
     .main-nav a:hover,
     .main-nav a:active {
         color: #fff !important;
         font-style: italic !important;
-        background: none !important;
         transition: none !important;
         box-shadow: none !important;
         filter: none !important;
     }
-    .main-nav-left { display: none !important; }
+    .main-nav-left { 
+        display: none !important; 
+    }
+}
+
+@media (max-width: 512px) {
+    .main-nav-right {
+        padding: 0 calc(12px + (100vw - 512px) * 0.02) !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100vw !important;
+        height: 100% !important;
+        box-sizing: border-box !important;
+    }
+    .main-nav a {
+        font-size: clamp(1.02em, 3.8vw, 1.28em) !important;
+        padding: 0.2em 0.3em !important;
+        white-space: nowrap !important;
+        min-width: auto !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
+    .main-nav a[href="index.html"] {
+        text-align: left !important;
+        margin-left: calc(6px + (100vw - 512px) * 0.01) !important;
+    }
+    .main-nav a[href="bio.html"] {
+        text-align: center !important;
+    }
+    .main-nav a[href="contact.html"] {
+        text-align: right !important;
+        margin-right: calc(6px + (100vw - 512px) * 0.01) !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .main-nav-right {
+        padding: 0 calc(8px + (100vw - 360px) * 0.02) !important;
+    }
+    .main-nav a {
+        font-size: clamp(0.95em, 3.4vw, 1.15em) !important;
+        padding: 0.2em 0.25em !important;
+    }
+    .main-nav a[href="index.html"] {
+        margin-left: calc(4px + (100vw - 360px) * 0.01) !important;
+    }
+    .main-nav a[href="contact.html"] {
+        margin-right: calc(4px + (100vw - 360px) * 0.01) !important;
+    }
 }
 
 @media (max-width: 768px) {
