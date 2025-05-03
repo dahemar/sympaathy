@@ -2709,7 +2709,7 @@ a {
 /* --- MENÚ MÓVIL CENTRALIZADO PARA TODAS LAS PÁGINAS --- */
 @media (max-width: 768px) {
     .main-nav {
-        left: 20px !important;
+        left: 0 !important;
         right: 0 !important;
         width: 100vw !important;
         justify-content: center !important;
@@ -2760,6 +2760,7 @@ a {
         max-height: 60px !important;
         display: flex !important;
         align-items: center !important;
+        transform: translateX(20px) !important;
     }
     .main-nav a:hover,
     .main-nav a:active {
