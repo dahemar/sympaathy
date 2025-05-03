@@ -26,22 +26,22 @@
     </nav>
 
     <div class="projects-grid">
-        <a href="project-1.html" class="project-link project-live">
+        <a href="project-1.html" class="project-link project-live" data-title="diamantista live">
             <img src="images/diamantista.jpeg" alt="Project 1">
         </a>
-        <a href="project-2.html" class="project-link project-ep">
+        <a href="project-2.html" class="project-link project-ep" data-title="diamantista - LOVE IS VITAL">
             <img src="images/diamantista ep.jpg" alt="Project 2">
         </a>
-        <a href="project-3.html" class="project-link project-licitir">
+        <a href="project-3.html" class="project-link project-licitir" data-title="licitir live">
             <img src="images/licitir.jpg" alt="Project 3">
         </a>
-        <a href="project-4.html" class="project-link project-licitir-ep">
+        <a href="project-4.html" class="project-link project-licitir-ep" data-title="licitir - Tomorrow we dream of sleeping in a garden of camellias">
             <img src="images/licitir ep.jpg" alt="Project 4">
         </a>
-        <a href="project-5.html" class="project-link project-pastoral">
+        <a href="project-5.html" class="project-link project-pastoral" data-title="pastoral live">
             <img src="images/pastoral.jpeg" alt="Project 5">
         </a>
-        <a href="project-6.html" class="project-link project-pastoral-ep">
+        <a href="project-6.html" class="project-link project-pastoral-ep" data-title="pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos">
             <img src="images/pastoral ep.jpg" alt="Project 6">
         </a>
     </div>
@@ -314,6 +314,28 @@
         document.getElementById('backToTop').onclick = function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
+    }
+    </script>
+
+    <script>
+    // Mostrar títulos de proyectos con animación al hacer scroll en móvil
+    if (window.innerWidth <= 768) {
+        document.addEventListener('DOMContentLoaded', function() {
+            const projects = document.querySelectorAll('.project-link');
+            const options = {
+                threshold: 0.3
+            };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, options);
+            projects.forEach(project => observer.observe(project));
+        });
     }
     </script>
 </body>

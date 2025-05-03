@@ -2929,3 +2929,114 @@ a {
         display: none;
     }
 }
+
+@media (max-width: 768px) {
+  html, body {
+    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+  }
+  .project-1 .project-container,
+  .project-3 .project-container,
+  .project-5 .project-container {
+    min-height: 100vh;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    padding-top: 60px; /* altura del menú fijo */
+  }
+  .project-1 .media-container,
+  .project-3 .media-container,
+  .project-5 .media-container {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    height: 100%;
+    gap: 0;
+  }
+  .project-1 .video-section,
+  .project-3 .video-section,
+  .project-5 .video-section {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    min-height: 220px;
+    max-height: 70vh;
+    width: 100%;
+    background: #000;
+    margin: 0;
+    padding: 0;
+  }
+  .project-1 .project-video,
+  .project-3 .project-video,
+  .project-5 .project-video {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100vw;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .project-link::after {
+    display: block !important;
+    content: attr(data-title);
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #8A9197;
+    font-family: 'EB Garamond', serif;
+    font-style: normal;
+    font-size: clamp(0.8em, 1.5vw, 1.2em);
+    opacity: 0;
+    transition: opacity 0.3s ease, color 0.3s;
+    z-index: 3;
+    pointer-events: none;
+    width: 90%;
+    text-align: left;
+    line-height: 1.2;
+    animation: none;
+  }
+  .project-link.visible::after {
+    opacity: 1;
+    font-style: italic;
+    color: #fff;
+    animation: scramble-text 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@keyframes scramble-text {
+  0% {
+    opacity: 0.2;
+    filter: blur(2px);
+    letter-spacing: 0.2em;
+  }
+  40% {
+    opacity: 0.7;
+    filter: blur(1px);
+    letter-spacing: 0.1em;
+  }
+  80% {
+    opacity: 1;
+    filter: blur(0.2px);
+    letter-spacing: 0.02em;
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    letter-spacing: 0;
+  }
+}
