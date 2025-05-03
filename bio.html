@@ -80,10 +80,10 @@
             btn.style.display = 'none';
         }
     });
-    // Scroll suave al top
+    // Scroll instantáneo al top
     if (document.getElementById('backToTop')) {
         document.getElementById('backToTop').onclick = function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo(0, 0);
         };
     }
     </script>

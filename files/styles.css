@@ -3045,13 +3045,13 @@ a {
 
 @media (max-width: 768px) {
   .project-caption {
-    display: block;
+    display: block !important;
     font-family: 'EB Garamond', serif;
     font-style: italic !important;
     color: #fff !important;
     font-size: 1.05em;
     text-align: left;
-    margin: 0 0 0 0;
+    margin: 2px 0 0 0;
     padding-left: 2px;
     letter-spacing: 0.01em;
     line-height: 1.3;
@@ -3059,13 +3059,6 @@ a {
     width: 100%;
     max-width: 100%;
     word-break: break-word;
-  }
-  .project-link::after,
-  .project-link.visible::after {
-    display: none !important;
-    content: none !important;
-    animation: none !important;
-    opacity: 0 !important;
   }
 }
 
