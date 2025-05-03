@@ -344,5 +344,27 @@
         });
     }
     </script>
+
+    <script>
+    // Fogonazo blanco en menú al hacer click (solo escritorio)
+    if (window.innerWidth > 768) {
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.main-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Solo si es un enlace interno
+                    const href = this.getAttribute('href');
+                    if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('#')) {
+                        e.preventDefault();
+                        this.classList.add('flash');
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 220);
+                    }
+                });
+            });
+        });
+    }
+    </script>
 </body>
 </html>
