@@ -39,7 +39,7 @@ body {
 }
 
 body, .v6_3 {
-    background-color: #000000;
+    background-color: transparent;
     color: #8A9197;
     margin: 0;
     padding: 0;
@@ -55,6 +55,7 @@ body, .v6_3 {
 html, body {
     max-width: 100%;
     overflow-x: hidden;
+    background-color: #000 !important;
 }
 
 html {
@@ -2426,7 +2427,7 @@ a {
     padding: 0;
     box-sizing: border-box;
     position: relative;
-    background: #000000;
+    background: transparent;
 }
 
 .project-image {
@@ -2478,7 +2479,7 @@ a {
     padding: 0;
     box-sizing: border-box;
     position: relative;
-    background: #000000;
+    background: transparent;
 }
 
 .project-4 .project-image {
@@ -2562,7 +2563,7 @@ a {
     padding: 0;
     box-sizing: border-box;
     position: relative;
-    background: #000000;
+    background: transparent;
 }
 
 @media (orientation: portrait) {
@@ -2613,7 +2614,7 @@ a {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000000;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2660,7 +2661,7 @@ a {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #000000;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3121,4 +3122,8 @@ body::before {
 .project-1 .image-section::after {
   display: none !important;
   background: none !important;
+}
+
+.project-1 .image-section {
+  background: transparent !important;
 }
