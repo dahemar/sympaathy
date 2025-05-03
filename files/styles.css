@@ -3144,32 +3144,3 @@ body::after {
         color: #fff;
     }
 }
-
-@media (max-width: 768px) {
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 0;
-    pointer-events: none;
-    background: radial-gradient(ellipse at 60% 40%, rgba(255,255,255,0.18) 0%, rgba(180,180,180,0.10) 40%, rgba(80,80,80,0.04) 100%);
-    opacity: 0.5;
-    filter: blur(18px) grayscale(1);
-    animation: fog-move-mobile 24s ease-in-out infinite alternate;
-    will-change: opacity, filter, transform;
-    transition: opacity 0.4s, filter 0.4s;
-  }
-  body::after {
-    display: none !important;
-  }
-  .project-link, .project-caption, .main-nav, .main-nav a {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
-  }
-}
-
-@keyframes fog-move-mobile {
-  0%   { transform: translateY(0) scale(1.02); opacity: 0.5; }
-  50%  { transform: translateY(-8px) scale(1.04); opacity: 0.6; }
-  100% { transform: translateY(6px) scale(1.01); opacity: 0.5; }
-}
