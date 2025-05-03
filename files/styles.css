@@ -3127,3 +3127,9 @@ body::before {
 .project-1 .image-section {
   background: transparent !important;
 }
+
+.project-1 .v5_59,
+.project-3 .v5_59,
+.project-5 .v5_59 {
+  justify-content: flex-end;
+}
