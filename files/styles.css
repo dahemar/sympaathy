@@ -3099,11 +3099,26 @@ body::before {
   z-index: -1;
 }
 
-.project-1 .v5_59 {
-  background: none;
+.project-1 .project-title,
+.project-1 .project-container,
+.project-1 .media-container,
+.project-1 .video-section,
+.project-1 .project-video,
+.project-1 .v5_59,
+.project-1 .image-section {
+  background: none !important;
 }
 
 .project-1 .v5_59::before,
-.project-1 .v5_59::after {
-  display: none;
+.project-1 .v5_59::after,
+.project-1 .project-container::before,
+.project-1 .project-container::after,
+.project-1 .media-container::before,
+.project-1 .media-container::after,
+.project-1 .video-section::before,
+.project-1 .video-section::after,
+.project-1 .image-section::before,
+.project-1 .image-section::after {
+  display: none !important;
+  background: none !important;
 }
