@@ -3124,3 +3124,23 @@ body::after {
   60%  { transform: translateX(-18px) scale(1.03); opacity: 0.6; }
   100% { transform: translateX(20px) scale(1.07); opacity: 0.7; }
 }
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+    .project-caption {
+        display: block !important;
+        color: #8A9197;
+        font-family: 'EB Garamond', serif;
+        font-size: 1.1em;
+        margin-top: 8px;
+        text-align: left;
+        opacity: 0.85;
+        transition: opacity 0.3s ease;
+        padding-left: 2px;
+    }
+    
+    .project-link:hover .project-caption {
+        opacity: 1;
+        color: #fff;
+    }
+}
