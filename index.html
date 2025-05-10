@@ -29,59 +29,83 @@
 
     <div class="projects-grid">
         <a href="project-1.html" class="project-link project-live" data-title="diamantista live">
-            <img src="images/diamantista.webp" 
-                 alt="Project 1" 
-                 loading="lazy"
-                 decoding="async"
-                 fetchpriority="high"
-                 width="420"
-                 height="420">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/diamantista-mobile.webp">
+                <source srcset="images/diamantista.webp">
+                <img src="images/diamantista.webp"
+                     alt="Project 1"
+                     loading="eager"  <!-- Si esta es tu imagen LCP y visible al cargar -->
+                     decoding="async"
+                     fetchpriority="high" <!-- Solo para la imagen LCP -->
+                     width="420"
+                     height="420">
+            </picture>
             <div class="project-caption">diamantista live</div>
         </a>
         <a href="project-2.html" class="project-link project-ep" data-title="diamantista - LOVE IS VITAL">
-            <img src="images/diamantista ep.webp"
-                 alt="Project 2" 
-                 loading="lazy"
-                 decoding="async"
-                 width="420"
-                 height="420">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/diamantista ep-mobile.webp"> <!-- Nota el espacio si tu archivo original lo tenía -->
+                <source srcset="images/diamantista ep.webp">
+                <img src="images/diamantista ep.webp"
+                     alt="Project 2"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
             <div class="project-caption">diamantista - LOVE IS VITAL</div>
         </a>
         <a href="project-3.html" class="project-link project-licitir" data-title="licitir live">
-            <img src="images/licitir.webp"
-                 alt="Project 3" 
-                 loading="lazy"
-                 decoding="async"
-                 width="420"
-                 height="420">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/licitir-mobile.webp">
+                <source srcset="images/licitir.webp">
+                <img src="images/licitir.webp"
+                     alt="Project 3"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
             <div class="project-caption">LICITIR live</div>
         </a>
         <a href="project-4.html" class="project-link project-licitir-ep" data-title="licitir - Tomorrow we dream of sleeping in a garden of camellias">
-            <img src="images/licitir ep.webp"
-                 alt="Project 4" 
-                 loading="lazy"
-                 decoding="async"
-                 width="420"
-                 height="420">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/licitir ep-mobile.webp"> <!-- Nota el espacio si tu archivo original lo tenía -->
+                <source srcset="images/licitir ep.webp">
+                <img src="images/licitir ep.webp"
+                     alt="Project 4"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
             <div class="project-caption">LICITIR - Tomorrow we dream of sleeping in a garden of camellias</div>
         </a>
         <a href="project-5.html" class="project-link project-pastoral" data-title="pastoral live">
-            <img src="images/pastoral.webp"
-                 alt="Project 5" 
-                 loading="lazy"
-                 decoding="async"
-                 width="420"
-                 height="420">
-            <div class="project-caption">pastoral live</div>
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/pastoral-mobile.webp">
+                <source srcset="images/pastoral.webp">
+                <img src="images/pastoral.webp"
+                     alt="Project 5"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">.pastoral live</div>
         </a>
         <a href="project-6.html" class="project-link project-pastoral-ep" data-title="pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos">
-            <img src="images/pastoral ep.webp"
-                 alt="Project 6" 
-                 loading="lazy"
-                 decoding="async"
-                 width="420"
-                 height="420">
-            <div class="project-caption">pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos</div>
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/pastoral ep-mobile.webp"> <!-- Nota el espacio si tu archivo original lo tenía -->
+                <source srcset="images/pastoral ep.webp">
+                <img src="images/pastoral ep.webp"
+                     alt="Project 6"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">.pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos</div>
         </a>
     </div>
 
@@ -147,11 +171,11 @@
         }
 
         .project-pastoral::after {
-            content: 'pastoral live';
+            content: '.pastoral live';
         }
 
         .project-pastoral-ep::after {
-            content: 'pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos';
+            content: '.pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos';
         }
 
         .project-live:hover::after,
