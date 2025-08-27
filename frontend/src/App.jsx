@@ -5,6 +5,18 @@ import { MediaSlider } from './components/MediaSlider.jsx'
 import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
 import { useImageLoader } from './hooks/useImageLoader.js'
 
+// Hook to ensure pages load at the top without scrolling
+const useLoadAtTop = () => {
+  const location = useLocation()
+  
+  useEffect(() => {
+    // Set scroll position to top without scrolling animation
+    window.scrollY = 0
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  }, [location.pathname])
+}
+
 const Layout = memo(({ children }) => {
   const [showBackToTop, setShowBackToTop] = useState(false)
 
