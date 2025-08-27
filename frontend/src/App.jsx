@@ -67,7 +67,7 @@ const Home = memo(() => {
     // Updated order and thumbnails (no separate performance card)
     {
       id: 3,
-      to: "/project/3",
+      to: "/licitir-live",
       className: "project-link project-licitir",
       dataTitle: "licitir live",
       mobileSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
@@ -78,7 +78,7 @@ const Home = memo(() => {
     },
     {
       id: 6,
-      to: "/project/6",
+      to: "/pastoral-ep",
       className: "project-link project-pastoral-ep",
       dataTitle: "pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos",
       mobileSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.JPG",
@@ -89,7 +89,7 @@ const Home = memo(() => {
     },
     {
       id: 1,
-      to: "/project/1",
+      to: "/diamantista-live",
       className: "project-link project-live",
       dataTitle: "diamantista live",
       mobileSrc: "/images/diamantista-mobile.webp",
@@ -100,7 +100,7 @@ const Home = memo(() => {
     },
     {
       id: 2,
-      to: "/project/2",
+      to: "/diamantista-ep",
       className: "project-link project-ep",
       dataTitle: "diamantista - LOVE IS VITAL",
       mobileSrc: "/images/diamantista%20ep-mobile.webp",
@@ -111,7 +111,7 @@ const Home = memo(() => {
     },
     {
       id: 5,
-      to: "/project/5",
+      to: "/pastoral-live",
       className: "project-link project-pastoral",
       dataTitle: "pastoral live",
       mobileSrc: "/images/pastoral-mobile.webp",
@@ -122,7 +122,7 @@ const Home = memo(() => {
     },
     {
       id: 4,
-      to: "/project/4",
+      to: "/licitir-ep",
       className: "project-link project-licitir-ep",
       dataTitle: "licitir - Tomorrow we dream of sleeping in a garden of camellias",
       mobileSrc: "/images/licitir%20ep-mobile.webp",
@@ -198,6 +198,10 @@ const Bio = memo(() => {
             <p key={textIndex}>
               {text.includes('full discography') ? (
                 <a href="https://diamantistavii.bandcamp.com/" className="contact-link">{text}</a>
+              ) : text.includes('link') && text.includes('Other works') ? (
+                <>
+                  Other works: Generative audivisual spatial installation as [auloplegma] with Weixin Quek Chong for Continuo at Zapadores (Madrid) Soundtrack as LICITIR for the documentary 'ALMOST A KILLA' by Maurycy Polewski Audio and voice for M. Svitlo and Salt Salomé's video performance (LINK PENDING) Soundtrack and performance for fake_trailer's 'Shapeshifting Hallucination' as .pastoral, with M. Svitlo and Salt Salomé: <a href="https://www.youtube.com/watch?v=iX0uRjRQ9JA&ab_channel=ruegoWW" className="contact-link" target="_blank" rel="noopener noreferrer">link</a>
+                </>
               ) : text.includes('link') ? (
                 <a href="https://www.youtube.com/watch?v=iX0uRjRQ9JA&ab_channel=ruegoWW" className="contact-link" target="_blank" rel="noopener noreferrer">{text}</a>
               ) : (
@@ -236,22 +240,64 @@ const Contact = memo(() => {
 Contact.displayName = 'Contact'
 
 const Project = memo(() => {
-  const { id } = useParams()
+  const { projectSlug } = useParams()
+  
+  const projectId = useMemo(() => {
+    const slugToId = {
+      'diamantista-live': '1',
+      'diamantista-ep': '2',
+      'licitir-live': '3',
+      'licitir-ep': '4',
+      'pastoral-live': '5',
+      'pastoral-ep': '6'
+    }
+    return slugToId[projectSlug]
+  }, [projectSlug])
+
+  // Redirect to home if invalid slug
+  useEffect(() => {
+    if (projectSlug && !projectId) {
+      window.location.href = '/'
+    }
+  }, [projectSlug, projectId])
 
   const projectData = useMemo(() => {
-    switch(id) {
+    switch(projectId) {
       case '1':
         return {
           title: "diamantista live",
           content: (
-            <div className="media-container">
-              <div className="image-section">
-                <img src="/images/diamantista.webp" alt="diamantista live" className="project-image" loading="lazy" />
+            <>
+              <div className="media-container">
+                <div className="image-section">
+                  <img src="/images/diamantista.webp" alt="diamantista live" className="project-image" loading="lazy" />
+                </div>
+                <div className="video-section">
+                  <video 
+                    className="project-video" 
+                    src="/images/diamantista.mp4" 
+                    controls 
+                    preload="none"
+                  />
+                </div>
               </div>
-              <div className="video-section">
-                <video className="project-video" src="/images/diamantista.mov" controls preload="none" />
+              <div className="instagram-widget">
+                <iframe 
+                  src="https://www.instagram.com/prenatal_amygdala/embed/"
+                  title="Instagram @prenatal_amygdala"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  loading="lazy"
+                  className="instagram-embed"
+                />
+                <p className="instagram-fallback">
+                  <a href="https://www.instagram.com/prenatal_amygdala/" target="_blank" rel="noopener noreferrer" className="contact-link">
+                    see instagram profile
+                  </a>
+                </p>
               </div>
-            </div>
+            </>
           )
         }
       case '2':
@@ -268,7 +314,7 @@ const Project = memo(() => {
                 <p>Artwork by Salt Salomé and M. Svitlo<br/>Lettering by Alklossien (Katarzyna Brzozowska)</p>
                 <p><strong>Mastered by Ludwig Wandinger</strong></p>
                 <p><a href="https://ruego.bandcamp.com/album/rg25" className="contact-link" target="_blank" rel="noopener noreferrer">bandcamp</a></p>
-                <p><Link to="/project/1" className="contact-link">diamantista live</Link></p>
+                <p><Link to="/diamantista-live" className="contact-link">diamantista live</Link></p>
                 <p><Link to="/bio" className="contact-link">diamantista bio</Link></p>
               </div>
               <div className="element data">
@@ -309,7 +355,7 @@ const Project = memo(() => {
                 <p>A journey through turmoil, newfound joy, confusion, dissociation, love, and the end of the world.</p>
                 <p><strong>Tomorrow we dream of sleeping in a garden of camellias</strong> is a collaborative release between LICITIR and ruego.</p>
                 <p><a href="https://ruego.bandcamp.com/album/tomorrow-we-dream-of-sleeping-in-a-garden-of-camellias-rg26" className="contact-link" target="_blank" rel="noopener noreferrer">bandcamp</a></p>
-                <p><Link to="/project/3" className="contact-link">LICITIR live</Link></p>
+                <p><Link to="/licitir-live" className="contact-link">LICITIR live</Link></p>
                 <p><Link to="/bio#licitir" className="contact-link">LICITIR bio</Link></p>
               </div>
               <div className="element data">
@@ -342,8 +388,9 @@ const Project = memo(() => {
                   <MediaSlider 
                     dataUrl="/images%202/performance-frames/index.json"
                     basePath="/images%202/performance-frames/"
-                    intervalMs={3000}
+                    intervalMs={6000}
                     alt="Performance frames from .pastoral show"
+                    showNavigation={true}
                   />
                 </div>
               </div>
@@ -352,7 +399,7 @@ const Project = memo(() => {
                   <CrossfadeGallery 
                     dataUrl="/images%202/pastoral%20gallery/index.json"
                     basePath="/images%202/pastoral%20gallery/"
-                    intervalMs={4000}
+                    intervalMs={6000}
                     alt="Pastoral live performance photos"
                     fallbackSrc="/images/pastoral.webp"
                     showNavigation={true}
@@ -387,7 +434,7 @@ const Project = memo(() => {
                 <p><strong>Un coraz​ó​n mustio y marchito por culpa de las tribulaciones y los padecimientos</strong> is a collaborative release between Most Dismal Swamp and ruego.</p>
                 <p><a href="http://www.mostdismalswamp.com" className="contact-link" target="_blank" rel="noopener noreferrer">www.mostdismalswamp.com</a></p>
                 <p><a href="https://ruego.bandcamp.com/album/un-coraz-n-mustio-y-marchito-por-culpa-de-las-tribulaciones-y-los-padecimientos-rg19" className="contact-link" target="_blank" rel="noopener noreferrer">bandcamp</a></p>
-                <p><Link to="/project/5" className="contact-link">.pastoral live</Link></p>
+                <p><Link to="/pastoral-live" className="contact-link">.pastoral live</Link></p>
                 <p><Link to="/bio#pastoral" className="contact-link">.pastoral bio</Link></p>
               </div>
               <div className="element data">
@@ -403,13 +450,13 @@ const Project = memo(() => {
       default:
         return null
     }
-  }, [id])
+  }, [projectId])
 
   if (!projectData) return null
 
-  if (id === '1' || id === '3' || id === '5') {
+  if (projectId === '1' || projectId === '3' || projectId === '5') {
     return (
-      <div className="project-container">
+      <div className={`project-container project-${projectId}`}>
         <h2 className="project-title">
           <ScrambleText delay={0}>{projectData.title}</ScrambleText>
         </h2>
@@ -434,7 +481,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/bio" element={<Bio />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/project/:id" element={<Project />} />
+        <Route path="/:projectSlug" element={<Project />} />
       </Routes>
     </Layout>
   )

@@ -4,7 +4,7 @@ import { memo, useEffect, useMemo, useState, useCallback } from 'react'
 // and a basePath where those images live. Example:
 // dataUrl: "/images%202/performance-frames/index.json"
 // basePath: "/images%202/performance-frames/"
-export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 0, alt = '' }) => {
+export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '', showNavigation = true }) => {
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
 
@@ -49,12 +49,22 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 0, alt = '' }
 
   return (
     <div className="media-slider">
-      <button className="slider-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
-      <div className="slide">
-        {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-        <img src={currentSrc} alt={alt || 'slider image'} loading="lazy" />
-      </div>
-      <button className="slider-btn next" onClick={goNext} aria-label="Next">›</button>
+      {showNavigation && (
+        <>
+          <button className="slider-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
+          <div className="slide">
+            {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+            <img src={currentSrc} alt={alt || 'slider image'} loading="lazy" />
+          </div>
+          <button className="slider-btn next" onClick={goNext} aria-label="Next">›</button>
+        </>
+      )}
+      {!showNavigation && (
+        <div className="slide">
+          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+          <img src={currentSrc} alt={alt || 'slider image'} loading="lazy" />
+        </div>
+      )}
     </div>
   )
 })

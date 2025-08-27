@@ -22,13 +22,13 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   }, [dataUrl])
 
   useEffect(() => {
-    if (files.length <= 1 || showNavigation) return
+    if (files.length <= 1) return
     const id = setInterval(() => {
       setLoaded(false)
       setIndex((i) => (i + 1) % files.length)
     }, intervalMs)
     return () => clearInterval(id)
-  }, [files, intervalMs, showNavigation])
+  }, [files, intervalMs])
 
   const currentSrc = useMemo(() => (files.length ? basePath + files[index] : fallbackSrc), [files, basePath, index, fallbackSrc])
   const onLoad = useCallback(() => setLoaded(true), [])

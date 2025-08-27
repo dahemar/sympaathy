@@ -3,7 +3,7 @@ import { useEffect, useRef, useCallback, useMemo } from 'react'
 class TextScramble {
   constructor(el) {
     this.el = el
-    this.chars = '!<>-_\\/[]{}—=+*^?#________'
+    this.chars = '░▒▓│┌┐└┘╭╮╯╰'
     this.update = this.update.bind(this)
     this.isAnimating = false
   }
@@ -20,8 +20,8 @@ class TextScramble {
     for (let i = 0; i < length; i++) {
       const from = oldText[i] || ''
       const to = newText[i] || ''
-      const start = Math.floor(Math.random() * 40)
-      const end = start + Math.floor(Math.random() * 40)
+      const start = Math.floor(Math.random() * 30)
+      const end = start + Math.floor(Math.random() * 20)
       this.queue.push({ from, to, start, end })
     }
     
@@ -42,11 +42,11 @@ class TextScramble {
         complete++
         output += to
       } else if (this.frame >= start) {
-        if (!char || Math.random() < 0.28) {
+        if (!char || Math.random() < 0.15) {
           char = this.randomChar()
           this.queue[i].char = char
         }
-        output += `<span class="dud">${char}</span>`
+        output += `<span class="glitching">${char}</span>`
       } else {
         output += from
       }
