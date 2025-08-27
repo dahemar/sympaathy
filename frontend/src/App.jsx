@@ -134,7 +134,7 @@ const Home = memo(() => {
       className: "project-link project-live",
       dataTitle: "diamantista live",
       mobileSrc: "/images/diamantista-mobile.webp",
-      desktopSrc: "/images/diamantista.jpg", // Dramatic image for desktop
+      desktopSrc: "/images/diamantista-dramatic.webp", // Dramatic image converted to WebP
       alt: "diamantista live",
       ref: image1Ref,
       caption: "diamantista live"
