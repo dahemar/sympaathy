@@ -8,18 +8,26 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
 
   useEffect(() => {
     let isMounted = true
+    console.log('CrossfadeGallery: Fetching data from:', dataUrl)
     fetch(dataUrl)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load gallery data'))))
+      .then((r) => {
+        console.log('CrossfadeGallery: Response status:', r.status)
+        return r.ok ? r.json() : Promise.reject(new Error('Failed to load gallery data'))
+      })
       .then((arr) => {
+        console.log('CrossfadeGallery: Received data:', arr)
         if (isMounted && Array.isArray(arr) && arr.length > 0) {
           const filtered = arr.filter(Boolean)
+          console.log('CrossfadeGallery: Filtered files:', filtered)
           setFiles(filtered)
           setIndex(0)
           setPreviousSrc('')
           setIsFading(false)
         }
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error('CrossfadeGallery: Error loading data:', error)
+      })
     return () => { isMounted = false }
   }, [dataUrl])
 
@@ -60,9 +68,13 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     preloadAndSwap(nextIndex)
   }, [files, index, preloadAndSwap])
 
-  if (!files.length && !fallbackSrc) return null
+  if (!files.length && !fallbackSrc) {
+    console.log('CrossfadeGallery: No files and no fallback, returning null')
+    return null
+  }
 
   if (!files.length && fallbackSrc) {
+    console.log('CrossfadeGallery: Using fallback image:', fallbackSrc)
     return (
       <div className="crossfade-container CrossfadeGallery">
         <img
@@ -76,6 +88,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     )
   }
 
+  console.log('CrossfadeGallery: Rendering with', files.length, 'files, current index:', index)
   return (
     <div className="crossfade-container CrossfadeGallery">
       {previousSrc ? (
