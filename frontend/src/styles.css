@@ -346,6 +346,18 @@ body {
 	color: #5A5F6B;
 }
 
+/* Mobile adjustments for Current Works captions */
+@media (max-width: 768px) {
+  .gallery-caption, .project-item h3, .writing-item h3 {
+    margin-top: 2px !important; /* Reduce from default to bring closer to images */
+    margin-bottom: 0 !important;
+  }
+  
+  .gallery-caption p, .project-item p, .writing-item p {
+    margin: 2px 0 0 0 !important; /* Reduce top margin to bring captions closer */
+  }
+}
+
 #bouncingImagesLyr0 {
 	display: none;
 	z-index:12 !important;
