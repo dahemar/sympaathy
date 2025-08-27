@@ -4157,3 +4157,34 @@ body::before {
     transition: opacity 0.3s ease !important;
   }
 }
+
+@media (max-width: 768px) {
+  /* Ensure image-section shows and stacks above video */
+  .project-5 .image-section {
+    display: block !important;
+    position: relative !important;
+    z-index: 2 !important;
+    height: 40vh !important;
+    min-height: 220px !important;
+    max-height: 320px !important;
+    overflow: hidden !important;
+  }
+  .project-5 .video-section {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  
+  /* Make the gallery container match its parent block height */
+  .project-5 .image-section .CrossfadeGallery.crossfade-container,
+  .project-5 .CrossfadeGallery.crossfade-container {
+    height: 40vh !important;
+    min-height: 220px !important;
+    max-height: 320px !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important; /* container visible (not images) */
+  }
+}
