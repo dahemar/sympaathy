@@ -6,15 +6,24 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [previousSrc, setPreviousSrc] = useState('')
   const [isFading, setIsFading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     let isMounted = true
     setIsLoading(true)
-    console.log('CrossfadeGallery: Fetching data from:', dataUrl)
-    fetch(dataUrl)
+    setError(null)
+    
+    // Decode URL to handle spaces and special characters properly
+    const decodedDataUrl = decodeURIComponent(dataUrl)
+    console.log('CrossfadeGallery: Fetching data from:', decodedDataUrl)
+    
+    fetch(decodedDataUrl)
       .then((r) => {
         console.log('CrossfadeGallery: Response status:', r.status)
-        return r.ok ? r.json() : Promise.reject(new Error('Failed to load gallery data'))
+        if (!r.ok) {
+          throw new Error(`HTTP ${r.status}: ${r.statusText}`)
+        }
+        return r.json()
       })
       .then((arr) => {
         console.log('CrossfadeGallery: Received data:', arr)
@@ -27,28 +36,40 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
           setIsFading(false)
           setIsLoading(false)
         } else {
+          console.warn('CrossfadeGallery: No valid files found in response')
           setIsLoading(false)
         }
       })
       .catch((error) => {
         console.error('CrossfadeGallery: Error loading data:', error)
+        setError(error.message)
         setIsLoading(false)
       })
     return () => { isMounted = false }
   }, [dataUrl])
 
-  const currentSrc = useMemo(() => (files.length ? basePath + files[index] : (fallbackSrc || '')), [files, basePath, index, fallbackSrc])
+  const currentSrc = useMemo(() => {
+    if (files.length && basePath) {
+      const decodedBasePath = decodeURIComponent(basePath)
+      return decodedBasePath + files[index]
+    }
+    return fallbackSrc || ''
+  }, [files, basePath, index, fallbackSrc])
 
   const preloadAndSwap = useCallback((targetIndex) => {
-    if (!files.length) return
-    const nextSrc = basePath + files[targetIndex]
+    if (!files.length || !basePath) return
+    const decodedBasePath = decodeURIComponent(basePath)
+    const nextSrc = decodedBasePath + files[targetIndex]
     const img = new Image()
     img.onload = () => {
       setPreviousSrc(currentSrc)
       setIndex(targetIndex)
       setIsFading(true)
       // Match CSS transition duration
-      setTimeout(() => setIsFading(false), 600)
+      setTimeout(() => setIsFading(false), 300)
+    }
+    img.onerror = () => {
+      console.error('CrossfadeGallery: Failed to load image:', nextSrc)
     }
     img.src = nextSrc
   }, [files, basePath, currentSrc])
@@ -76,6 +97,24 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
 
   if (isLoading) {
     console.log('CrossfadeGallery: Loading data, showing nothing')
+    return null
+  }
+
+  if (error) {
+    console.error('CrossfadeGallery: Error state, showing fallback:', error)
+    if (fallbackSrc) {
+      return (
+        <div className="crossfade-container CrossfadeGallery">
+          <img
+            src={fallbackSrc}
+            alt={alt || 'gallery fallback image'}
+            className="crossfade-image visible"
+            loading="lazy"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
+      )
+    }
     return null
   }
 

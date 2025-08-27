@@ -440,10 +440,10 @@ const Project = memo(() => {
                   <CrossfadeGallery 
                     dataUrl="/images%202/pastoral%20gallery/index.json"
                     basePath="/images%202/pastoral%20gallery/"
-                    intervalMs={6000}
-                    alt="Pastoral live performance photos"
-                    fallbackSrc="/images/pastoral.webp"
+                    intervalMs={5000}
+                    alt="Pastoral gallery images"
                     showNavigation={true}
+                    fallbackSrc="/images/pastoral.webp"
                   />
                 </div>
                 <div className="video-section">
