@@ -135,7 +135,7 @@ const Home = memo(() => {
       dataTitle: "diamantista live",
       mobileSrc: "/images/diamantista-mobile.webp",
       desktopSrc: "/images/diamantista.jpg", // Dramatic image for desktop
-      alt: "Project 1",
+      alt: "diamantista live",
       ref: image1Ref,
       caption: "diamantista live"
     },
