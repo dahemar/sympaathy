@@ -3734,18 +3734,19 @@ body::before {
 }
 
 .crossfade-image {
-  position: relative; /* Change from absolute to relative like MediaSlider */
-  top: auto; /* Remove absolute positioning */
-  left: auto;
+  position: absolute; /* Use absolute positioning for proper layering */
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 1; /* Always visible, no opacity transitions */
-  /* Remove transition property */
-  display: block; /* Ensure it's always displayed */
+  opacity: 0; /* Start with opacity 0 for crossfade effect */
+  transition: opacity 0.3s ease;
+  display: block;
 }
 
-.crossfade-image.loaded {
+.crossfade-image.loaded,
+.crossfade-image.visible {
   opacity: 1;
 }
 
@@ -4007,6 +4008,23 @@ body::before {
     overflow: hidden !important;
     transition: none !important;
     animation: none !important;
+  }
+  
+  /* Ensure CrossfadeGallery is visible on mobile */
+  .CrossfadeGallery {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  .CrossfadeGallery .crossfade-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    position: relative !important;
   }
 }
 
