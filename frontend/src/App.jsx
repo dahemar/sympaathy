@@ -118,7 +118,7 @@ const Home = memo(() => {
       desktopSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
       alt: "LICITIR live",
       ref: image3Ref,
-      caption: "licitir live"
+      caption: "LICITIR live"
     },
     {
       id: 6,
