@@ -218,7 +218,7 @@ a:hover::before {
 
     .project-item, .gallery-item {
         margin-bottom: 8vw;
-        width: 100%;
+        /* Width will be controlled by the more specific mobile rules below */
     }
 
     /* Mejorar la legibilidad del menú activo */
@@ -346,16 +346,80 @@ body {
 	color: #5A5F6B;
 }
 
-/* Mobile adjustments for Current Works captions */
+/* Mobile adjustments for Current Works captions and consistent margins */
 @media (max-width: 768px) {
+  /* Caption spacing */
   .gallery-caption, .project-item h3, .writing-item h3 {
-    margin-top: 2px !important; /* Reduce from default to bring closer to images */
+    margin-top: 2px !important;
     margin-bottom: 0 !important;
   }
   
   .gallery-caption p, .project-item p, .writing-item p {
-    margin: 2px 0 0 0 !important; /* Reduce top margin to bring captions closer */
+    margin: 2px 0 0 0 !important;
   }
+  
+  /* Current Works grid layout - force consistent widths */
+  .projects-grid {
+    padding: 0 20px !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* All project links get the same width and margins */
+  .project-link {
+    width: 100% !important;
+    margin: 0 0 16px 0 !important;
+    display: block !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* All project link images get the same dimensions */
+  .project-link img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 !important;
+    object-fit: cover !important;
+  }
+  
+  /* Project captions align with images */
+  .project-caption {
+    width: 100% !important;
+    margin: 2px 0 0 0 !important;
+    text-align: left !important;
+  }
+  
+  /* Add bottom margin to pastoral live page */
+  .project-5.project-container {
+    padding-bottom: 40px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  /* Add bottom margin to pastoral live page on desktop too */
+  @media (min-width: 769px) {
+    .project-5.project-container {
+      padding-bottom: 60px !important;
+      margin-bottom: 30px !important;
+    }
+    
+    /* Also target the space-separated version */
+    .project-5 .project-container {
+      padding-bottom: 60px !important;
+      margin-bottom: 30px !important;
+    }
+    
+    /* Add margin to the last element in pastoral live */
+    .project-5 .media-container:last-child {
+      margin-bottom: 60px !important;
+      padding-bottom: 30px !important;
+    }
+    
+    /* Also target the last element.data if it exists */
+    .project-5 .element.data:last-child {
+      margin-bottom: 60px !important;
+      padding-bottom: 30px !important;
+    }
+  }
+}
 }
 
 #bouncingImagesLyr0 {
@@ -426,7 +490,26 @@ body {
 
     .project-item, .gallery-item {
         margin-bottom: 8vw;
-        width: 100%;
+        /* Width will be controlled by the more specific mobile rules below */
+    }
+    
+    /* Disable menu hover transforms on mobile to prevent movement */
+    .main-nav a:hover span,
+    .main-nav a[href="index.html"]:hover span,
+    .main-nav a[href="bio.html"]:hover span,
+    .main-nav a[href="contact.html"]:hover span {
+        transform: none !important;
+        transition: none !important;
+    }
+    
+    /* Ensure menu items don't move on mobile */
+    .main-nav a {
+        transform: none !important;
+        transition: color 0.3s ease !important;
+    }
+    
+    .main-nav a:hover {
+        transform: none !important;
     }
 }
 
@@ -3532,65 +3615,7 @@ body::before {
 }
 
 @media (max-width: 768px) {
-  .project-1 .project-container,
-  .project-2 .project-container,
-  .project-3 .project-container,
-  .project-4 .project-container {
-    width: 100vw !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    height: auto !important;
-    min-height: 100vh !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    padding-top: 60px !important;
-  }
-
-  .project-1 .media-container,
-  .project-2 .media-container,
-  .project-3 .media-container,
-  .project-4 .media-container {
-    width: 100vw !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0 !important;
-  }
-
-  .project-1 .video-section,
-  .project-2 .video-section,
-  .project-3 .video-section,
-  .project-4 .video-section {
-    width: 100vw !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: #000 !important;
-  }
-
-  .project-1 .project-video,
-  .project-2 .project-video,
-  .project-3 .project-video,
-  .project-4 .project-video {
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: 100vw !important;
-    max-height: 100vh !important;
-    object-fit: contain !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    z-index: 1 !important;
-  }
+  /* Removed conflicting mobile overrides that forced full-screen black video containers */
 }
 
 /* Removed mobile override that hid ::before/::after on project links */
@@ -3821,6 +3846,7 @@ body::before {
 /* Performance specific styles */
 .performance-video {
   margin-bottom: 2rem;
+  background: transparent !important; /* Always transparent, never black */
 }
 
 .performance-video iframe {
@@ -3831,6 +3857,7 @@ body::before {
 
 .performance-gallery {
   margin-top: 2rem;
+  background: transparent !important; /* Always transparent, never black */
 }
 
 .performance-gallery h3 {
@@ -4334,5 +4361,164 @@ body::before {
     object-fit: contain !important; /* no cropping */
     max-width: 100% !important;
     max-height: 100% !important;
+  }
+}
+
+/* Crossfade state classes must win over resets */
+.CrossfadeGallery .crossfade-image.visible { opacity: 1 !important; }
+.CrossfadeGallery .crossfade-image.fade-in { opacity: 1 !important; }
+.CrossfadeGallery .crossfade-image.fade-out { opacity: 0 !important; }
+.CrossfadeGallery .crossfade-image.hidden { opacity: 0 !important; }
+
+/* Mobile video layout: match first pastoral video margins across all live pages */
+@media (max-width: 768px) {
+  /* Shared mobile video container for projects 1, 3, 5 */
+  .project-1 .video-section,
+  .project-3 .video-section,
+  .project-5 .video-section,
+  .performance-video {
+    position: relative !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 20px !important; /* Equal side margins */
+    box-sizing: border-box !important;
+    background: transparent !important; /* No black boxes on mobile */
+    height: auto !important;
+    min-height: auto !important;
+    margin: 16px 0 !important; /* Consistent vertical rhythm */
+  }
+
+  .project-1 .project-video,
+  .project-3 .project-video,
+  .project-5 .project-video,
+  .performance-video iframe {
+    position: relative !important;
+    z-index: 1 !important;
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
+
+/* Ensure performance containers are never black, even in desktop live pages */
+.project-5 .performance-video,
+.project-5 .performance-gallery {
+  background: transparent !important; /* Override any inherited black backgrounds */
+}
+
+/* Also ensure the element.data container is transparent */
+.project-5 .element.data {
+  background: transparent !important;
+}
+
+/* Ensure MediaSlider container is also transparent */
+.project-5 .performance-gallery .MediaSlider,
+.project-5 .performance-gallery .media-slider {
+  background: transparent !important;
+}
+
+/* Ensure all slideshow containers are transparent */
+.project-5 .performance-gallery * {
+  background: transparent !important;
+}
+
+/* Override any inherited black backgrounds from parent containers */
+.project-5 .element.data,
+.project-5 .element.data *,
+.project-5 .performance-video,
+.project-5 .performance-video *,
+.project-5 .performance-gallery,
+.project-5 .performance-gallery * {
+  background: transparent !important;
+}
+
+/* Ensure project container itself is transparent */
+.project-5.project-container {
+  background: transparent !important;
+}
+
+/* Fix LICITIR video centering on mobile */
+@media (max-width: 768px) {
+  .project-3 .video-section {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 20px !important; /* Same margins as other live pages */
+    box-sizing: border-box !important;
+    background: transparent !important;
+    height: auto !important;
+    min-height: auto !important;
+    margin: 16px 0 !important;
+  }
+  
+  .project-3 .project-video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+}
+
+/* Force transparent background for first slideshow - highest specificity */
+.project-5 .element.data .performance-gallery,
+.project-5 .element.data .performance-gallery *,
+.project-5 .element.data .performance-video,
+.project-5 .element.data .performance-video * {
+  background: transparent !important;
+}
+
+/* Also target the MediaSlider component specifically */
+.project-5 .performance-gallery .MediaSlider,
+.project-5 .performance-gallery .media-slider,
+.project-5 .performance-gallery .slider-container,
+.project-5 .performance-gallery .slider-btn {
+  background: transparent !important;
+}
+
+/* === Final overrides (highest precedence) === */
+/* 1) Force transparent backgrounds for first slideshow (.performance-gallery) and its descendants */
+.project-5 .element.data .performance-gallery,
+.project-5 .element.data .performance-gallery *,
+.project-5 .element.data .performance-video,
+.project-5 .element.data .performance-video * {
+  background: transparent !important;
+}
+
+/* 2) Ensure the slider internals never paint a background */
+.project-5 .element.data .performance-gallery .media-slider,
+.project-5 .element.data .performance-gallery .slide,
+.project-5 .element.data .performance-gallery .slider-btn {
+  background: transparent !important;
+}
+
+/* 3) LICITIR video centering on mobile (ultimate override) */
+@media (max-width: 768px) {
+  .project-3 .video-section {
+    background: transparent !important;
+    padding: 0 20px !important;
+    margin: 16px 0 !important;
+    height: auto !important;
+    min-height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .project-3 .project-video,
+  .project-3 iframe.project-video {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    top: auto !important;
+    left: auto !important;
   }
 }

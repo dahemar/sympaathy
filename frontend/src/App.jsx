@@ -302,6 +302,8 @@ const Project = memo(() => {
     }
   }, [projectSlug, projectId])
 
+  const base = import.meta.env.BASE_URL || '/'
+
   const projectData = useMemo(() => {
     switch(projectId) {
       case '1':
@@ -427,8 +429,8 @@ const Project = memo(() => {
                 <div className="performance-gallery">
                   <h3>performance frames</h3>
                   <MediaSlider 
-                    dataUrl="/images%202/performance-frames/index.json"
-                    basePath="/images%202/performance-frames/"
+                    dataUrl={`${base}images%202/performance-frames/index.json`}
+                    basePath={`${base}images%202/performance-frames/`}
                     intervalMs={6000}
                     alt="performance frames from .pastoral show"
                     showNavigation={true}
@@ -438,12 +440,12 @@ const Project = memo(() => {
               <div className="media-container">
                 <div className="image-section">
                   <CrossfadeGallery 
-                    dataUrl="/images%202/pastoral%20gallery/index.json"
-                    basePath="/images%202/pastoral%20gallery/"
+                    dataUrl={`${base}images%202/pastoral%20gallery/index.json`}
+                    basePath={`${base}images%202/pastoral%20gallery/`}
                     intervalMs={5000}
                     alt="Pastoral gallery images"
                     showNavigation={true}
-                    fallbackSrc="/images/pastoral.webp"
+                    fallbackSrc={`${base}images/pastoral.webp`}
                   />
                 </div>
                 <div className="video-section">

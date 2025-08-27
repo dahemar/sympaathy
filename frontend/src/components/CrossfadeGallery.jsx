@@ -12,12 +12,12 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     let isMounted = true
     setIsLoading(true)
     setError(null)
-    
-    // Decode URL to handle spaces and special characters properly
-    const decodedDataUrl = decodeURIComponent(dataUrl)
-    console.log('CrossfadeGallery: Fetching data from:', decodedDataUrl)
-    
-    fetch(decodedDataUrl)
+
+    // Use provided (encoded) URL directly
+    const requestUrl = dataUrl
+    console.log('CrossfadeGallery: Fetching data from:', requestUrl)
+
+    fetch(requestUrl)
       .then((r) => {
         console.log('CrossfadeGallery: Response status:', r.status)
         if (!r.ok) {
@@ -50,16 +50,14 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
 
   const currentSrc = useMemo(() => {
     if (files.length && basePath) {
-      const decodedBasePath = decodeURIComponent(basePath)
-      return decodedBasePath + files[index]
+      return basePath + files[index]
     }
     return fallbackSrc || ''
   }, [files, basePath, index, fallbackSrc])
 
   const preloadAndSwap = useCallback((targetIndex) => {
     if (!files.length || !basePath) return
-    const decodedBasePath = decodeURIComponent(basePath)
-    const nextSrc = decodedBasePath + files[targetIndex]
+    const nextSrc = basePath + files[targetIndex]
     const img = new Image()
     img.onload = () => {
       setPreviousSrc(currentSrc)
