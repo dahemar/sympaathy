@@ -19,6 +19,9 @@ const useLoadAtTop = () => {
 
 const Layout = memo(({ children }) => {
   const [showBackToTop, setShowBackToTop] = useState(false)
+  
+  // Use the hook to ensure pages load at top
+  useLoadAtTop()
 
   const handleScroll = useCallback(() => {
     if (window.innerWidth <= 768) {

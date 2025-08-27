@@ -7,6 +7,7 @@ import { memo, useEffect, useMemo, useState, useCallback } from 'react'
 export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '', showNavigation = true }) => {
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
+  const [isNavigating, setIsNavigating] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -36,14 +37,20 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
   const currentSrc = useMemo(() => (hasImages ? basePath + files[index] : ''), [hasImages, basePath, files, index])
 
   const goPrev = useCallback(() => {
-    if (!hasImages) return
+    if (!hasImages || isNavigating) return
+    setIsNavigating(true)
     setIndex((i) => (i - 1 + files.length) % files.length)
-  }, [files, hasImages])
+    // Reset navigation state after a short delay
+    setTimeout(() => setIsNavigating(false), 300)
+  }, [files, hasImages, isNavigating])
 
   const goNext = useCallback(() => {
-    if (!hasImages) return
+    if (!hasImages || isNavigating) return
+    setIsNavigating(true)
     setIndex((i) => (i + 1) % files.length)
-  }, [files, hasImages])
+    // Reset navigation state after a short delay
+    setTimeout(() => setIsNavigating(false), 300)
+  }, [files, hasImages, isNavigating])
 
   if (!hasImages) return null
 

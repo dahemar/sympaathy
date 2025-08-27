@@ -3374,6 +3374,45 @@ a {
     .menu a:hover span {
         display: none;
     }
+    
+    /* Disable all hover transforms to prevent menu movement on mobile */
+    .main-nav a:hover span,
+    .main-nav a[href="index.html"]:hover span,
+    .main-nav a[href="bio.html"]:hover span,
+    .main-nav a[href="contact.html"]:hover span,
+    .main-nav a:hover,
+    .main-nav a {
+        transform: none !important;
+        transition: none !important;
+    }
+    
+    /* Ensure menu items don't move on mobile */
+    .main-nav a {
+        transform: none !important;
+        transition: color 0.3s ease !important;
+    }
+    
+    .main-nav a:hover {
+        transform: none !important;
+    }
+    
+    /* Prevent scramble effect from moving menu items on mobile */
+    .scramble {
+        transform: none !important;
+        transition: none !important;
+    }
+    
+    .scramble.visible {
+        transform: none !important;
+        transition: none !important;
+    }
+    
+    /* Ensure scramble doesn't affect layout on mobile */
+    .scramble + *,
+    .scramble ~ * {
+        position: static !important;
+        transform: none !important;
+    }
 }
 
 @media (max-width: 768px) {

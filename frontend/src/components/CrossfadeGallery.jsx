@@ -7,6 +7,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [isFading, setIsFading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isNavigating, setIsNavigating] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -82,16 +83,22 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   }, [files, index, intervalMs, preloadAndSwap])
 
   const goPrev = useCallback(() => {
-    if (files.length <= 1) return
+    if (files.length <= 1 || isFading || isNavigating) return
+    setIsNavigating(true)
     const prevIndex = (index - 1 + files.length) % files.length
     preloadAndSwap(prevIndex)
-  }, [files, index, preloadAndSwap])
+    // Reset navigation state after transition completes
+    setTimeout(() => setIsNavigating(false), 400)
+  }, [files, index, preloadAndSwap, isFading, isNavigating])
 
   const goNext = useCallback(() => {
-    if (files.length <= 1) return
+    if (files.length <= 1 || isFading || isNavigating) return
+    setIsNavigating(true)
     const nextIndex = (index + 1) % files.length
     preloadAndSwap(nextIndex)
-  }, [files, index, preloadAndSwap])
+    // Reset navigation state after transition completes
+    setTimeout(() => setIsNavigating(false), 400)
+  }, [files, index, preloadAndSwap, isFading, isNavigating])
 
   if (isLoading) {
     console.log('CrossfadeGallery: Loading data, showing nothing')
