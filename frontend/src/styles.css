@@ -4009,7 +4009,7 @@ body::before {
     transition: none !important;
     animation: none !important;
   }
-  
+
   /* Ensure CrossfadeGallery is visible on mobile */
   .CrossfadeGallery {
     display: block !important;
@@ -4186,6 +4186,38 @@ body::before {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important; /* container visible (not images) */
+  }
+  
+  /* Ensure CrossfadeGallery images are visible and properly positioned */
+  .project-5 .CrossfadeGallery .crossfade-image {
+    height: 40vh !important;
+    min-height: 220px !important;
+    max-height: 320px !important;
+    width: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    object-fit: cover !important;
+    opacity: 0 !important; /* Start with opacity 0, let state classes control */
+    transition: opacity 0.3s ease !important;
+  }
+  
+  /* Global CrossfadeGallery rules for mobile */
+  .CrossfadeGallery .crossfade-image {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: opacity 0.3s ease !important;
+  }
+  
+  .CrossfadeGallery .crossfade-container {
+    position: relative !important;
+    overflow: hidden !important;
+    transition: none !important;
+    animation: none !important;
   }
 }
 
