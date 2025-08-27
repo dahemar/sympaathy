@@ -4230,6 +4230,12 @@ body::before {
     position: relative !important;
     z-index: 1 !important;
     overflow: hidden !important;
+    /* Center video section and add equal margins */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 20px !important; /* Equal margins on both sides */
+    box-sizing: border-box !important;
   }
   
   .project-1 .project-video,
@@ -4243,35 +4249,11 @@ body::before {
     /* Prevent floating play button */
     -webkit-appearance: none !important;
     appearance: none !important;
-  }
-  
-  /* Specific fix for HTML5 video in Safari mobile */
-  .project-1 .project-video {
-    /* Force video controls to stay within bounds */
+    /* Center video and control size */
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
     object-fit: contain !important;
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    max-height: 100% !important;
-    /* Prevent Safari from creating floating elements */
-    -webkit-user-select: none !important;
-    user-select: none !important;
-    /* Fix z-index stacking */
-    z-index: 1 !important;
-  }
-  
-  /* Ensure video and Instagram widget have same width */
-  .project-1 .video-section,
-  .project-1 .instagram-widget {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  .project-1 .video-section .project-video,
-  .project-1 .instagram-widget .instagram-embed {
-    width: 100% !important;
-    max-width: 100% !important;
   }
 }
 
