@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useState, useEffect } from 'react'
+import { memo, useMemo, useCallback, useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
@@ -8,11 +8,16 @@ import { useImageLoader } from './hooks/useImageLoader.js'
 // Custom hook to scroll to top on route changes in mobile
 const useScrollToTopOnRouteChange = () => {
   const location = useLocation()
+  const prevPathRef = useRef(location.pathname)
   
   useEffect(() => {
-    // Only scroll to top on mobile devices and only on route changes
-    if (window.innerWidth <= 768) {
-      window.scrollTo(0, 0)
+    // Only scroll to top on mobile devices and only when actually changing pages
+    if (window.innerWidth <= 768 && prevPathRef.current !== location.pathname) {
+      // Small delay to ensure the page has rendered
+      setTimeout(() => {
+        window.scrollTo(0, 0)
+      }, 100)
+      prevPathRef.current = location.pathname
     }
   }, [location.pathname])
 }
