@@ -1,12 +1,27 @@
 import { memo, useMemo, useCallback, useState, useEffect } from 'react'
-import { Routes, Route, Link, useParams } from 'react-router-dom'
+import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
 import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
 import { useImageLoader } from './hooks/useImageLoader.js'
 
+// Custom hook to scroll to top on route changes in mobile
+const useScrollToTopOnRouteChange = () => {
+  const location = useLocation()
+  
+  useEffect(() => {
+    // Only scroll to top on mobile devices
+    if (window.innerWidth <= 768) {
+      window.scrollTo(0, 0)
+    }
+  }, [location.pathname])
+}
+
 const Layout = memo(({ children }) => {
   const [showBackToTop, setShowBackToTop] = useState(false)
+  
+  // Use the custom hook for automatic scroll to top
+  useScrollToTopOnRouteChange()
 
   const handleScroll = useCallback(() => {
     if (window.innerWidth <= 768) {
@@ -21,8 +36,55 @@ const Layout = memo(({ children }) => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
+  // Additional effect to handle window resize and ensure scroll to top on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        // When switching to mobile view, scroll to top
+        window.scrollTo(0, 0)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Effect to ensure pages load at top when initially mounted on mobile
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      // Ensure page loads at top on mobile
+      window.scrollTo(0, 0)
+    }
+  }, [])
+
+  // Effect to enable smooth scrolling on mobile
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      // Enable smooth scrolling on mobile
+      document.documentElement.style.scrollBehavior = 'smooth'
+    } else {
+      // Disable smooth scrolling on desktop
+      document.documentElement.style.scrollBehavior = 'auto'
+    }
+
+    return () => {
+      // Reset scroll behavior when component unmounts
+      document.documentElement.style.scrollBehavior = 'auto'
+    }
+  }, [])
+
   const scrollToTop = useCallback(() => {
-    window.scrollTo(0, 0)
+    if (window.innerWidth <= 768) {
+      // Smooth scroll to top on mobile
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      })
+    } else {
+      // Instant scroll to top on desktop
+      window.scrollTo(0, 0)
+    }
   }, [])
 
   return (
@@ -92,8 +154,8 @@ const Home = memo(() => {
       to: "/diamantista-live",
       className: "project-link project-live",
       dataTitle: "diamantista live",
-      mobileSrc: "/images/diamantista-mobile.webp",
-      desktopSrc: "/images/diamantista.webp",
+      mobileSrc: "/images/diamantista-center-mobile.webp",
+      desktopSrc: "/images/diamantista-center.webp",
       alt: "Project 1",
       ref: image1Ref,
       caption: "diamantista live"
@@ -384,12 +446,12 @@ const Project = memo(() => {
                     loading="lazy" />
                 </div>
                 <div className="performance-gallery">
-                  <h3>Performance Frames</h3>
+                  <h3>performance frames</h3>
                   <MediaSlider 
                     dataUrl="/images%202/performance-frames/index.json"
                     basePath="/images%202/performance-frames/"
                     intervalMs={6000}
-                    alt="Performance frames from .pastoral show"
+                    alt="performance frames from .pastoral show"
                     showNavigation={true}
                   />
                 </div>

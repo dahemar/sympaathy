@@ -1044,7 +1044,7 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
     transform: translateZ(0);
     backface-visibility: hidden;
-    animation: text-blur 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* Remove animation delay for instant hover effect */
 }
 
 .main-nav a:hover::after {
@@ -1102,7 +1102,7 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(251, 252, 255, 0.15);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: none; /* Remove transition delay for instant hover */
     z-index: -1;
     filter: blur(12px);
 }
@@ -1112,20 +1112,10 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
     transform: translateZ(0);
     backface-visibility: hidden;
-    animation: text-blur 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    /* Remove animation delay for instant hover effect */
 }
 
-@keyframes text-blur {
-    0% {
-        filter: blur(0);
-    }
-    20% {
-        filter: blur(2px);
-    }
-    100% {
-        filter: blur(0);
-    }
-}
+/* Remove unused text-blur animation */
 
 .main-nav a:hover::before {
     width: 180%;
@@ -3744,14 +3734,15 @@ body::before {
 }
 
 .crossfade-image {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative; /* Change from absolute to relative like MediaSlider */
+  top: auto; /* Remove absolute positioning */
+  left: auto;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
+  opacity: 1; /* Always visible, no opacity transitions */
+  /* Remove transition property */
+  display: block; /* Ensure it's always displayed */
 }
 
 .crossfade-image.loaded {
@@ -3954,6 +3945,214 @@ body::before {
     max-height: 300px;
   }
   
+  /* Specific mobile rules for pastoral live to align both slideshows */
+  .project-5 .performance-gallery {
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .project-5 .media-container {
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Ensure both slideshows have consistent spacing in mobile */
+  .project-5 .performance-gallery,
+  .project-5 .media-container .image-section {
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+  }
+  
+  /* Ensure CrossfadeGallery is visible on mobile */
+  .project-5 .CrossfadeGallery {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  .project-5 .CrossfadeGallery .crossfade-container {
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  .project-5 .CrossfadeGallery .crossfade-image {
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    width: 100% !important;
+    position: relative !important;
+    object-fit: cover !important;
+  }
+  
+  /* Force CrossfadeGallery images to be visible on mobile */
+  .project-5 .CrossfadeGallery .crossfade-image.loaded {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+  
+  /* Ensure proper image sizing on mobile */
+  .project-5 .CrossfadeGallery img {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  
+  /* Remove any opacity transitions that might cause black flashes */
+  .project-5 .CrossfadeGallery .crossfade-image,
+  .project-5 .CrossfadeGallery .crossfade-container {
+    transition: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  
+  /* Global CrossfadeGallery fixes - no opacity transitions */
+  .CrossfadeGallery .crossfade-image {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    opacity: 1 !important;
+    transition: none !important;
+    display: block !important;
+    object-fit: cover !important;
+  }
+  
+  .CrossfadeGallery .crossfade-container {
+    position: relative !important;
+    overflow: visible !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* Ensure smooth image transitions without black flashes */
+  .CrossfadeGallery img {
+    opacity: 1 !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  /* Additional aggressive rules to force visibility */
+  .project-5 .CrossfadeGallery,
+  .project-5 .image-section .CrossfadeGallery,
+  .project-5 .media-container .CrossfadeGallery {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+    margin-bottom: 30px !important;
+    z-index: 1 !important;
+  }
+  
+  /* Force all CrossfadeGallery elements to be visible */
+  .project-5 .CrossfadeGallery *,
+  .project-5 .CrossfadeGallery .crossfade-container,
+  .project-5 .CrossfadeGallery .crossfade-image {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  /* Ensure CrossfadeGallery images work like MediaSlider on mobile */
+  .project-5 .CrossfadeGallery .crossfade-image {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    opacity: 1 !important;
+    transition: none !important;
+    display: block !important;
+    object-fit: cover !important;
+  }
+  
+  /* Ensure CrossfadeGallery container is visible */
+  .project-5 .image-section {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: none !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+    margin-bottom: 30px !important;
+  }
+  
+  /* Ensure CrossfadeGallery images are visible */
+  .project-5 .CrossfadeGallery .crossfade-image,
+  .project-5 .CrossfadeGallery .crossfade-container {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    min-height: 250px !important;
+    max-height: 500px !important;
+    width: 100% !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+  
+  /* Ensure CrossfadeGallery navigation buttons are visible and functional */
+  .project-5 .CrossfadeGallery .crossfade-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 20 !important;
+    background: transparent !important;
+    color: white !important;
+    border: none !important;
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    font-size: 1.5rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  .project-5 .CrossfadeGallery .crossfade-btn.prev {
+    left: 10px !important;
+  }
+  
+  .project-5 .CrossfadeGallery .crossfade-btn.next {
+    right: 10px !important;
+  }
+  
+  /* Ensure proper spacing between performance gallery and CrossfadeGallery */
+  .project-5 .performance-gallery {
+    margin-bottom: 40px !important;
+  }
+  
+  .project-5 .media-container {
+    margin-top: 20px !important;
+  }
+  
   /* Performance video and gallery stacking */
   .performance-video {
     margin-bottom: 1rem;
@@ -4044,4 +4243,46 @@ body::before {
 
 .video-fallback a:hover {
   background: rgba(0, 0, 0, 0.2);
+}
+
+/* Double-buffer crossfade states */
+.CrossfadeGallery .crossfade-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.CrossfadeGallery .crossfade-image.visible {
+  opacity: 1;
+}
+
+.CrossfadeGallery .crossfade-image.fade-in {
+  opacity: 1;
+}
+
+.CrossfadeGallery .crossfade-image.fade-out {
+  opacity: 0;
+}
+
+.CrossfadeGallery .crossfade-image.hidden {
+  opacity: 0;
+}
+
+/* Ensure container maintains a stable aspect ratio to prevent layout shift */
+.CrossfadeGallery.crossfade-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobile: lock a safe height band so the video below doesn't move */
+@media (max-width: 768px) {
+  .project-5 .image-section .CrossfadeGallery.crossfade-container {
+    min-height: 280px;   /* safe lower bound */
+    max-height: 420px;   /* safe upper bound */
+  }
 }

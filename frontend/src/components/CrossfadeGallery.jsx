@@ -3,7 +3,8 @@ import { memo, useEffect, useMemo, useState, useCallback } from 'react'
 export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, alt = '', fallbackSrc, showNavigation = false }) => {
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
-  const [loaded, setLoaded] = useState(false)
+  const [previousSrc, setPreviousSrc] = useState('')
+  const [isFading, setIsFading] = useState(false)
 
   useEffect(() => {
     let isMounted = true
@@ -11,52 +12,86 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load gallery data'))))
       .then((arr) => {
         if (isMounted && Array.isArray(arr) && arr.length > 0) {
-          setFiles(arr.filter(Boolean))
+          const filtered = arr.filter(Boolean)
+          setFiles(filtered)
           setIndex(0)
+          setPreviousSrc('')
+          setIsFading(false)
         }
       })
       .catch(() => {})
-    return () => {
-      isMounted = false
-    }
+    return () => { isMounted = false }
   }, [dataUrl])
 
+  const currentSrc = useMemo(() => (files.length ? basePath + files[index] : (fallbackSrc || '')), [files, basePath, index, fallbackSrc])
+
+  const preloadAndSwap = useCallback((targetIndex) => {
+    if (!files.length) return
+    const nextSrc = basePath + files[targetIndex]
+    const img = new Image()
+    img.onload = () => {
+      setPreviousSrc(currentSrc)
+      setIndex(targetIndex)
+      setIsFading(true)
+      // Match CSS transition duration
+      setTimeout(() => setIsFading(false), 600)
+    }
+    img.src = nextSrc
+  }, [files, basePath, currentSrc])
+
   useEffect(() => {
-    if (files.length <= 1) return
+    if (files.length <= 1 || !intervalMs) return
     const id = setInterval(() => {
-      setLoaded(false)
-      setIndex((i) => (i + 1) % files.length)
+      const nextIndex = (index + 1) % files.length
+      preloadAndSwap(nextIndex)
     }, intervalMs)
     return () => clearInterval(id)
-  }, [files, intervalMs])
-
-  const currentSrc = useMemo(() => (files.length ? basePath + files[index] : fallbackSrc), [files, basePath, index, fallbackSrc])
-  const onLoad = useCallback(() => setLoaded(true), [])
+  }, [files, index, intervalMs, preloadAndSwap])
 
   const goPrev = useCallback(() => {
     if (files.length <= 1) return
-    setLoaded(false)
-    setIndex((i) => (i - 1 + files.length) % files.length)
-  }, [files])
+    const prevIndex = (index - 1 + files.length) % files.length
+    preloadAndSwap(prevIndex)
+  }, [files, index, preloadAndSwap])
 
   const goNext = useCallback(() => {
     if (files.length <= 1) return
-    setLoaded(false)
-    setIndex((i) => (i + 1) % files.length)
-  }, [files])
+    const nextIndex = (index + 1) % files.length
+    preloadAndSwap(nextIndex)
+  }, [files, index, preloadAndSwap])
 
   if (!files.length && !fallbackSrc) return null
 
+  if (!files.length && fallbackSrc) {
+    return (
+      <div className="crossfade-container CrossfadeGallery">
+        <img
+          src={fallbackSrc}
+          alt={alt || 'gallery fallback image'}
+          className="crossfade-image visible"
+          loading="lazy"
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+    )
+  }
+
   return (
-    <div className="crossfade-container">
-      {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+    <div className="crossfade-container CrossfadeGallery">
+      {previousSrc ? (
+        <img
+          src={previousSrc}
+          alt={alt || 'gallery image previous'}
+          className={`crossfade-image ${isFading ? 'fade-out' : 'hidden'}`}
+          loading="eager"
+        />
+      ) : null}
       <img
         key={currentSrc}
         src={currentSrc}
-        alt={alt || 'gallery image'}
-        className={`crossfade-image${loaded ? ' loaded' : ''}`}
-        loading="lazy"
-        onLoad={onLoad}
+        alt={alt || 'gallery image current'}
+        className={`crossfade-image ${isFading ? 'fade-in' : 'visible'}`}
+        loading="eager"
       />
       {showNavigation && files.length > 1 && (
         <>
