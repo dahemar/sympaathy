@@ -4227,4 +4227,18 @@ body::before {
     /* Fix z-index stacking */
     z-index: 1 !important;
   }
+  
+  /* Ensure video and Instagram widget have same width */
+  .project-1 .video-section,
+  .project-1 .instagram-widget {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  .project-1 .video-section .project-video,
+  .project-1 .instagram-widget .instagram-embed {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 }
