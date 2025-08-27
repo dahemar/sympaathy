@@ -5,9 +5,11 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [index, setIndex] = useState(0)
   const [previousSrc, setPreviousSrc] = useState('')
   const [isFading, setIsFading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     let isMounted = true
+    setIsLoading(true)
     console.log('CrossfadeGallery: Fetching data from:', dataUrl)
     fetch(dataUrl)
       .then((r) => {
@@ -23,10 +25,14 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
           setIndex(0)
           setPreviousSrc('')
           setIsFading(false)
+          setIsLoading(false)
+        } else {
+          setIsLoading(false)
         }
       })
       .catch((error) => {
         console.error('CrossfadeGallery: Error loading data:', error)
+        setIsLoading(false)
       })
     return () => { isMounted = false }
   }, [dataUrl])
@@ -67,6 +73,11 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     const nextIndex = (index + 1) % files.length
     preloadAndSwap(nextIndex)
   }, [files, index, preloadAndSwap])
+
+  if (isLoading) {
+    console.log('CrossfadeGallery: Loading data, showing nothing')
+    return null
+  }
 
   if (!files.length && !fallbackSrc) {
     console.log('CrossfadeGallery: No files and no fallback, returning null')
