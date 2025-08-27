@@ -1,5 +1,5 @@
-import { Routes, Route, Link, useParams, memo, useMemo, useCallback } from 'react'
-import { useState, useEffect } from 'react'
+import { memo, useMemo, useCallback, useState, useEffect } from 'react'
+import { Routes, Route, Link, useParams } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { useImageLoader } from './hooks/useImageLoader.js'
 
