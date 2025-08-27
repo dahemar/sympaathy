@@ -4281,13 +4281,13 @@ body::before {
   .project-1 .media-container,
   .project-3 .media-container,
   .project-5 .media-container {
-    height: 70vh;               /* coherent vertical height */
+    height: 70vh;
     min-height: 520px;
     max-height: 80vh;
     align-items: stretch;
   }
 
-  /* Image and video sections should fill the band */
+  /* Image and video sections fill the band */
   .project-1 .image-section,
   .project-3 .image-section,
   .project-5 .image-section,
@@ -4295,26 +4295,32 @@ body::before {
   .project-3 .video-section,
   .project-5 .video-section {
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000; /* letterbox for contain */
   }
 
-  /* Images fill their section with cover to avoid distortion */
+  /* Use contain to avoid cropping images */
   .project-1 .project-image,
   .project-3 .project-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* no cropping */
   }
 
-  /* Videos fill their section */
+  /* Videos fill container without cropping */
   .project-1 .project-video,
   .project-3 .project-video,
   .project-5 .project-video,
   .video-section iframe.project-video {
     width: 100% !important;
     height: 100% !important;
+    object-fit: contain; /* for <video>; safe for others */
+    background: #000;
   }
 
-  /* CrossfadeGallery should fill its section on desktop */
+  /* CrossfadeGallery should fill its section without cropping */
   .project-5 .image-section .CrossfadeGallery.crossfade-container {
     height: 100% !important;
     min-height: 0 !important;
@@ -4322,5 +4328,7 @@ body::before {
   }
   .project-5 .CrossfadeGallery .crossfade-image {
     height: 100% !important;
+    object-fit: contain !important; /* no cropping */
+    background: #000;
   }
 }
