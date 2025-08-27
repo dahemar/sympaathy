@@ -10,7 +10,7 @@ const useScrollToTopOnRouteChange = () => {
   const location = useLocation()
   
   useEffect(() => {
-    // Only scroll to top on mobile devices
+    // Only scroll to top on mobile devices and only on route changes
     if (window.innerWidth <= 768) {
       window.scrollTo(0, 0)
     }
@@ -36,26 +36,8 @@ const Layout = memo(({ children }) => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
-  // Additional effect to handle window resize and ensure scroll to top on mobile
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        // When switching to mobile view, scroll to top
-        window.scrollTo(0, 0)
-      }
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  // Effect to ensure pages load at top when initially mounted on mobile
-  useEffect(() => {
-    if (window.innerWidth <= 768) {
-      // Ensure page loads at top on mobile
-      window.scrollTo(0, 0)
-    }
-  }, [])
+  // Remove aggressive resize and initial load scroll behavior
+  // Only keep route change scroll behavior
 
   // Effect to enable smooth scrolling on mobile
   useEffect(() => {
@@ -154,8 +136,8 @@ const Home = memo(() => {
       to: "/diamantista-live",
       className: "project-link project-live",
       dataTitle: "diamantista live",
-      mobileSrc: "/images/diamantista-center-mobile.webp",
-      desktopSrc: "/images/diamantista-center.webp",
+      mobileSrc: "/images/diamantista-mobile.webp",
+      desktopSrc: "/images/diamantista.webp",
       alt: "Project 1",
       ref: image1Ref,
       caption: "diamantista live"
