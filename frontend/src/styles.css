@@ -4236,6 +4236,10 @@ body::before {
     justify-content: center !important;
     padding: 0 20px !important; /* Equal margins on both sides */
     box-sizing: border-box !important;
+    /* Remove black background on mobile */
+    background: transparent !important;
+    height: auto !important;
+    min-height: auto !important;
   }
   
   .project-1 .project-video,
@@ -4249,10 +4253,11 @@ body::before {
     /* Prevent floating play button */
     -webkit-appearance: none !important;
     appearance: none !important;
-    /* Center video and control size */
+    /* Better video size for mobile */
     width: 100% !important;
     max-width: 100% !important;
     height: auto !important;
+    min-height: 200px !important;
     object-fit: contain !important;
   }
 }
