@@ -4275,7 +4275,7 @@ body::before {
   }
 }
 
-/* Desktop equalized heights for live pages */
+/* Desktop equalized heights for live pages - ONLY on desktop */
 @media (min-width: 769px) {
   /* Set a consistent vertical band for live media rows */
   .project-1 .media-container,
@@ -4287,7 +4287,7 @@ body::before {
     align-items: stretch !important;
   }
 
-  /* Image and video sections fill the band with black background */
+  /* Image and video sections fill the band with black background - ONLY on desktop */
   .project-1 .image-section,
   .project-3 .image-section,
   .project-5 .image-section,
@@ -4298,11 +4298,11 @@ body::before {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    background: #000 !important; /* letterbox for contain */
+    background: #000 !important; /* letterbox for contain - ONLY on desktop */
     overflow: hidden !important;
   }
 
-  /* Use contain to avoid cropping images */
+  /* Use contain to avoid cropping images - ONLY on desktop */
   .project-1 .project-image,
   .project-3 .project-image {
     width: 100% !important;
@@ -4312,7 +4312,7 @@ body::before {
     max-height: 100% !important;
   }
 
-  /* Videos fill container without cropping */
+  /* Videos fill container without cropping - ONLY on desktop */
   .project-1 .project-video,
   .project-3 .project-video,
   .project-5 .project-video,
@@ -4324,7 +4324,7 @@ body::before {
     max-height: 100% !important;
   }
 
-  /* CrossfadeGallery should fill its section without cropping */
+  /* CrossfadeGallery should fill its section without cropping - ONLY on desktop */
   .project-5 .image-section .CrossfadeGallery.crossfade-container {
     height: 100% !important;
     min-height: 0 !important;
