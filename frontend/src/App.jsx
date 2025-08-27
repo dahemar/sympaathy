@@ -1,6 +1,8 @@
 import { memo, useMemo, useCallback, useState, useEffect } from 'react'
 import { Routes, Route, Link, useParams } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
+import { MediaSlider } from './components/MediaSlider.jsx'
+import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
 import { useImageLoader } from './hooks/useImageLoader.js'
 
 const Layout = memo(({ children }) => {
@@ -62,6 +64,29 @@ const Home = memo(() => {
   const image6Ref = useImageLoader()
 
   const projectLinks = useMemo(() => [
+    // Updated order and thumbnails (no separate performance card)
+    {
+      id: 3,
+      to: "/project/3",
+      className: "project-link project-licitir",
+      dataTitle: "licitir live",
+      mobileSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
+      desktopSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
+      alt: "LICITIR live",
+      ref: image3Ref,
+      caption: "licitir live"
+    },
+    {
+      id: 6,
+      to: "/project/6",
+      className: "project-link project-pastoral-ep",
+      dataTitle: "pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos",
+      mobileSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.JPG",
+      desktopSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.JPG",
+      alt: "Pastoral EP",
+      ref: image6Ref,
+      caption: ".pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos"
+    },
     {
       id: 1,
       to: "/project/1",
@@ -85,28 +110,6 @@ const Home = memo(() => {
       caption: "diamantista - LOVE IS VITAL"
     },
     {
-      id: 3,
-      to: "/project/3",
-      className: "project-link project-licitir",
-      dataTitle: "licitir live",
-      mobileSrc: "/images/licitir-mobile.webp",
-      desktopSrc: "/images/licitir.webp",
-      alt: "Project 3",
-      ref: image3Ref,
-      caption: "licitir live"
-    },
-    {
-      id: 4,
-      to: "/project/4",
-      className: "project-link project-licitir-ep",
-      dataTitle: "licitir - Tomorrow we dream of sleeping in a garden of camellias",
-      mobileSrc: "/images/licitir%20ep-mobile.webp",
-      desktopSrc: "/images/licitir%20ep.webp",
-      alt: "Project 4",
-      ref: image4Ref,
-      caption: "LICITIR - Tomorrow we dream of sleeping in a garden of camellias"
-    },
-    {
       id: 5,
       to: "/project/5",
       className: "project-link project-pastoral",
@@ -118,15 +121,15 @@ const Home = memo(() => {
       caption: ".pastoral live"
     },
     {
-      id: 6,
-      to: "/project/6",
-      className: "project-link project-pastoral-ep",
-      dataTitle: "pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos",
-      mobileSrc: "/images/pastoral%20ep-mobile.webp",
-      desktopSrc: "/images/pastoral%20ep.webp",
-      alt: "Project 6",
-      ref: image6Ref,
-      caption: ".pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos"
+      id: 4,
+      to: "/project/4",
+      className: "project-link project-licitir-ep",
+      dataTitle: "licitir - Tomorrow we dream of sleeping in a garden of camellias",
+      mobileSrc: "/images/licitir%20ep-mobile.webp",
+      desktopSrc: "/images/licitir%20ep.webp",
+      alt: "Project 4",
+      ref: image4Ref,
+      caption: "LICITIR - Tomorrow we dream of sleeping in a garden of camellias"
     }
   ], [image1Ref, image2Ref, image3Ref, image4Ref, image5Ref, image6Ref])
 
@@ -234,7 +237,7 @@ Contact.displayName = 'Contact'
 
 const Project = memo(() => {
   const { id } = useParams()
-  
+
   const projectData = useMemo(() => {
     switch(id) {
       case '1':
@@ -257,6 +260,7 @@ const Project = memo(() => {
           content: (
             <>
               <div className="element data">
+                <h2><ScrambleText delay={0}>diamantista - LOVE IS VITAL</ScrambleText></h2>
                 <p>an exercise in solitude, drifting through a recollection of all my mistakes, written on excerpts from the fractured dams that held your mind in place, drinking from the sword that drips your endless bleeding</p>
                 <p>honeydew under the morning light, mesmerizing my pitiful gaze</p>
                 <p><strong>Released on September 30th, 2024</strong></p>
@@ -297,6 +301,7 @@ const Project = memo(() => {
           content: (
             <>
               <div className="element data">
+                <h2><ScrambleText delay={0}>LICITIR - Tomorrow we dream of sleeping in a garden of camellias</ScrambleText></h2>
                 <p><strong>Released on December 23rd, 2024</strong></p>
                 <p>Materialized, recorded, arranged, dismantled, produced and mixed in candlelit softness, in a Berlin room during 2024.</p>
                 <p><strong>Mastered by Ludwig Wandinger.</strong></p>
@@ -321,16 +326,45 @@ const Project = memo(() => {
         return {
           title: ".pastoral live",
           content: (
-            <div className="media-container">
-              <div className="image-section">
-                <img src="/images/pastoral.webp" alt="pastoral live" className="project-image" loading="lazy" />
+            <>
+              <div className="element data">
+                <div className="performance-video">
+                  <iframe 
+                    src="https://www.youtube.com/embed/iX0uRjRQ9JA" 
+                    title=".pastoral performance" 
+                    frameBorder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowFullScreen 
+                    loading="lazy" />
+                </div>
+                <div className="performance-gallery">
+                  <h3>Performance Frames</h3>
+                  <MediaSlider 
+                    dataUrl="/images%202/performance-frames/index.json"
+                    basePath="/images%202/performance-frames/"
+                    intervalMs={3000}
+                    alt="Performance frames from .pastoral show"
+                  />
+                </div>
               </div>
-              <div className="video-section">
-                <iframe className="project-video" 
-                  src="https://www.youtube.com/embed/WtsBI93REOU?start=2748"
-                  frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen loading="lazy" />
+              <div className="media-container">
+                <div className="image-section">
+                  <CrossfadeGallery 
+                    dataUrl="/images%202/pastoral%20gallery/index.json"
+                    basePath="/images%202/pastoral%20gallery/"
+                    intervalMs={4000}
+                    alt="Pastoral live performance photos"
+                    fallbackSrc="/images/pastoral.webp"
+                    showNavigation={true}
+                  />
+                </div>
+                <div className="video-section">
+                  <iframe className="project-video" 
+                    src="https://www.youtube.com/embed/WtsBI93REOU?start=2748"
+                    frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen loading="lazy" />
+                </div>
               </div>
-            </div>
+            </>
           )
         }
       case '6':
@@ -339,6 +373,7 @@ const Project = memo(() => {
           content: (
             <>
               <div className="element data">
+                <h2><ScrambleText delay={0}>.pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos</ScrambleText></h2>
                 <p>A fool thought to emerge from such a magnum fracture in the timespace continuum unscathed. There are still trials to face and the body will soon enough give in.</p>
                 <p>Be our esteemed companion, sweeping through the perils of a withered heart, through confusion, desolation, fracture, but also through the joy of discovery, the promise of contentment with oneself.</p>
                 <p>The world was never ours, never satiated no matter how big the sacrifice. Leaves fall, leaving the heart naked once again.</p>

@@ -78,9 +78,8 @@ export const useScramble = (text, delay = 0) => {
     if (!scramblerRef.current || isVisibleRef.current) return
     
     isVisibleRef.current = true
-    scramblerRef.current.isAnimating = true
     
-    // Set initial text immediately
+    // Set initial text immediately and make visible
     if (elRef.current) {
       elRef.current.innerText = text
       elRef.current.classList.add('visible')

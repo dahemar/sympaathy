@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns="https://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="./files/styles.css"> <!-- Considera si esto debería ser /files/styles.css si works.html está en la raíz -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Averia+Sans+Libre:wght@300;400;700&family=Headland+One&family=Maskdown+One&display=swap" rel="stylesheet">
+        <script src="./files/jquery.min.js" defer></script> <!-- Misma consideración para la ruta -->
+        <script src="./files/scramble.js" defer></script>
+        <script src="./files/image-loader.js" defer></script>
+        <script src="./files/video-hover.js" defer></script>
+        <script src="./files/project-transition.js" defer></script>
+    
+        <title>Sympaathy</title>
+    
+        <link href="https://sympaathy.com/favicon.ico" rel="icon" type="image/x-icon"> <!-- Actualiza si tienes tu propio favicon y está en otra ruta -->
+        <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    
+        <!-- === METADATOS PARA COMPARTIR (OPEN GRAPH y TWITTER CARDS) === -->
+        <meta property="og:title" content="Sympaathy" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://sympaathy.com/html.html" /> <!-- URL CANÓNICA DE ESTA PÁGINA -->
+        <meta property="og:image" content="https://sympaathy.com/images/pastoral.webp" /> <!-- URL ABSOLUTA Y PÚBLICA DE LA IMAGEN -->
+        <meta property="og:image:width" content="420" /> <!-- Dimensiones reales de tu imagen pastoral.webp -->
+        <meta property="og:image:height" content="420" />
+        <meta property="og:image:type" content="image/webp" />
+        <meta property="og:site_name" content="Sympaathy" />
+
+
+    </head>
+<body>
+    <nav class="main-nav">
+        <div class="main-nav-left">
+            <a href="#" class="scramble"></a>
+        </div>
+        <div class="main-nav-right">
+            <a href="index.html" class="scramble"><span>c</span><span>u</span><span>r</span><span>r</span><span>e</span><span>n</span><span>t</span> <span>w</span><span>o</span><span>r</span><span>k</span><span>s</span></a>
+            <a href="bio.html" class="scramble"><span>b</span><span>i</span><span>o</span></a>
+            <a href="contact.html" class="scramble"><span>c</span><span>o</span><span>n</span><span>t</span><span>a</span><span>c</span><span>t</span></a>
+        </div>
+    </nav>
+
+    <div class="projects-grid">
+        <a href="project-1.html" class="project-link project-live" data-title="diamantista live">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/diamantista-mobile.webp">
+                <source srcset="images/diamantista.webp">
+                <img src="images/diamantista.webp"
+                     alt="Project 1"
+            </picture>
+            <div class="project-caption">diamantista live</div>
+        </a>
+        <a href="project-2.html" class="project-link project-ep" data-title="diamantista - LOVE IS VITAL">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/diamantista ep-mobile.webp"> <!-- Nota el espacio si tu archivo original lo tenía -->
+                <source srcset="images/diamantista ep.webp">
+                <img src="images/diamantista ep.webp"
+                     alt="Project 2"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">diamantista - LOVE IS VITAL</div>
+        </a>
+        <a href="project-3.html" class="project-link project-licitir" data-title="licitir live">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/licitir-mobile.webp">
+                <source srcset="images/licitir.webp">
+                <img src="images/licitir.webp"
+                     alt="Project 3"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">LICITIR live</div>
+        </a>
+        <a href="project-4.html" class="project-link project-licitir-ep" data-title="licitir - Tomorrow we dream of sleeping in a garden of camellias">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/licitir ep-mobile.webp"> <!-- Nota el espacio si tu archivo original lo tenía -->
+                <source srcset="images/licitir ep.webp">
+                <img src="images/licitir ep.webp"
+                     alt="Project 4"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">LICITIR - Tomorrow we dream of sleeping in a garden of camellias</div>
+        </a>
+        <a href="project-5.html" class="project-link project-pastoral" data-title="pastoral live">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/pastoral-mobile.webp">
+                <source srcset="images/pastoral.webp">
+                <img src="images/pastoral.webp"
+                     alt="Project 5"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">.pastoral live</div>
+        </a>
+        <a href="project-6.html" class="project-link project-pastoral-ep" data-title="pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos">
+            <picture>
+                <source media="(max-width: 768px)" srcset="images/pastoral ep-mobile.webp"> <!-- Nota el espacio si tu archivo original lo tenía -->
+                <source srcset="images/pastoral ep.webp">
+                <img src="images/pastoral ep.webp"
+                     alt="Project 6"
+                     loading="lazy"
+                     decoding="async"
+                     width="420"
+                     height="420">
+            </picture>
+            <div class="project-caption">.pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos</div>
+        </a>
+    </div>
+
+    <!-- Estilos específicos para el proyecto ep -->
+    <style>
+        .project-live::after,
+        .project-ep::after,
+        .project-licitir::after,
+        .project-licitir-ep::after,
+        .project-pastoral::after,
+        .project-pastoral-ep::after {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            transform: none;
+            color: #8A9197;
+            font-family: 'EB Garamond', serif;
+            font-style: normal;
+            font-size: clamp(0.8em, 1.5vw, 1.2em);
+            opacity: 0;
+            transition: opacity 0.3s ease, color 0.3s;
+            z-index: 3;
+            pointer-events: none;
+            width: 90%;
+            text-align: left;
+            line-height: 1.2;
+            animation: none;
+        }
+
+        @keyframes scramble-text {
+            0% {
+                opacity: 0.2;
+                filter: blur(2px);
+                letter-spacing: 0.2em;
+            }
+            40% {
+                opacity: 0.7;
+                filter: blur(1px);
+                letter-spacing: 0.1em;
+            }
+            80% {
+                opacity: 1;
+                filter: blur(0.2px);
+                letter-spacing: 0.02em;
+            }
+            100% {
+                opacity: 1;
+                filter: blur(0);
+                letter-spacing: 0;
+            }
+        }
+
+        .project-ep::after {
+            content: 'diamantista - LOVE IS VITAL';
+        }
+
+        .project-licitir::after {
+            content: 'LICITIR live';
+        }
+
+        .project-licitir-ep::after {
+            content: 'LICITIR - Tomorrow we dream of sleeping in a garden of camellias';
+        }
+
+        .project-pastoral::after {
+            content: '.pastoral live';
+        }
+
+        .project-pastoral-ep::after {
+            content: '.pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos';
+        }
+
+        .project-live:hover::after,
+        .project-ep:hover::after,
+        .project-licitir:hover::after,
+        .project-licitir-ep:hover::after,
+        .project-pastoral:hover::after,
+        .project-pastoral-ep:hover::after {
+            opacity: 1;
+            font-style: italic;
+            color: #fff;
+            animation: scramble-text 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- VERSIÓN MÓVIL DESDE CERO --- */
+        @media (max-width: 768px) {
+            html, body {
+                height: auto !important;
+                min-height: 100vh;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            body {
+                margin: 0;
+                padding: 0;
+                background: #000;
+                color: #8A9197;
+                font-family: 'Headland One', serif;
+                font-size: 16px;
+            }
+            .main-nav {
+                border: none !important;
+                background: #000 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .main-nav-right {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100vw;
+                height: 100%;
+                padding: 0 12px;
+                box-sizing: border-box;
+            }
+            .main-nav a {
+                color: #8A9197;
+                font-family: 'EB Garamond', serif;
+                font-size: clamp(0.85em, 3.5vw, 1.1em);
+                font-style: normal;
+                font-weight: 500;
+                text-decoration: none;
+                transition: none;
+                box-shadow: none;
+                filter: none;
+                outline: none;
+                text-align: center;
+                line-height: 60px;
+                white-space: nowrap;
+                padding: 0.2em 0.3em !important;
+            }
+            .main-nav a:hover,
+            .main-nav a:active {
+                color: #fff;
+                font-style: italic;
+                transition: none;
+                box-shadow: none;
+                filter: none;
+            }
+            .main-nav-left { display: none; }
+
+            /* Ajustes para pantallas más pequeñas */
+            @media (max-width: 450px) {
+                .main-nav-right {
+                    padding: 0 8px;
+                }
+                .main-nav a {
+                    font-size: clamp(0.75em, 3vw, 0.95em);
+                    padding: 0.2em 0.2em !important;
+                }
+            }
+
+            @media (max-width: 360px) {
+                .main-nav-right {
+                    padding: 0 6px;
+                }
+                .main-nav a {
+                    font-size: clamp(0.7em, 2.5vw, 0.85em);
+                    padding: 0.2em 0.15em !important;
+                }
+            }
+
+            .projects-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 32px;
+                width: 100vw;
+                max-width: 100vw;
+                margin-top: 48px;
+                padding: 24px 0 64px 0;
+                box-sizing: border-box;
+                align-items: center;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .project-link {
+                position: static;
+                width: 92vw;
+                max-width: 420px;
+                height: auto;
+                overflow: visible;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                background: none;
+                box-shadow: none;
+                border-radius: 0;
+                transition: none;
+            }
+            .project-link img {
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+                transition: none;
+                filter: none;
+                margin-bottom: 12px;
+        }
+            .project-link::after,
+            .project-link:hover::after {
+                content: none !important;
+                display: none !important;
+                transition: none !important;
+                animation: none !important;
+            }
+            #backToTop {
+                display: block;
+                position: fixed;
+                right: 18px;
+                bottom: 10px;
+                z-index: 200;
+                background: none;
+                color: #fff;
+                border: none;
+                border-radius: 0;
+                padding: 0;
+                font-size: 1.1em;
+                font-family: 'EB Garamond', serif;
+                opacity: 0.85;
+                box-shadow: none;
+                cursor: pointer;
+                transition: opacity 0.2s;
+                text-decoration: underline;
+            }
+            #backToTop:hover {
+                opacity: 1;
+                text-decoration: none;
+                background: none;
+            }
+        }
+    </style>
+
+    <!-- Botón Back to Top solo para móvil -->
+    <button id="backToTop" style="display:none;">↑ back to top</button>
+
+    <script>
+    // Mostrar el botón solo cuando se hace scroll hacia abajo
+    window.addEventListener('scroll', function() {
+        var btn = document.getElementById('backToTop');
+        if (window.innerWidth <= 768) {
+            if (window.scrollY > 120) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        } else {
+            btn.style.display = 'none';
+        }
+    });
+    // Scroll instantáneo al top
+    if (document.getElementById('backToTop')) {
+        document.getElementById('backToTop').onclick = function() {
+            window.scrollTo(0, 0);
+        };
+    }
+    </script>
+
+    <script>
+    // Mostrar títulos de proyectos con animación al hacer scroll en móvil
+    if (window.innerWidth <= 768) {
+        document.addEventListener('DOMContentLoaded', function() {
+            const projects = document.querySelectorAll('.project-link');
+            const options = {
+                threshold: 0.3
+            };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    } else {
+                        entry.target.classList.remove('visible');
+                    }
+                });
+            }, options);
+            projects.forEach(project => observer.observe(project));
+        });
+    }
+    </script>
+
+    <script>
+    // Fogonazo blanco en menú al hacer click (solo escritorio)
+    if (window.innerWidth > 768) {
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.main-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Solo si es un enlace interno
+                    const href = this.getAttribute('href');
+                    if (href && !href.startsWith('http') && !href.startsWith('mailto:') && !href.startsWith('#')) {
+                        e.preventDefault();
+                        this.classList.add('flash');
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 220);
+                    }
+                });
+            });
+        });
+    }
+    </script>
+</body>
+</html>

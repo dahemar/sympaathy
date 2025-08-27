@@ -45,6 +45,8 @@ jobs:
           # Ensure images used by the app are available at /images/*
           mkdir -p frontend/dist/images
           if [ -d images ]; then cp -R images/* frontend/dist/images/; fi
+          # Copy images 2 folder for new performance content
+          if [ -d "frontend/public/images 2" ]; then cp -R "frontend/public/images 2" frontend/dist/; fi
           # React Router fallback for GitHub Pages
           cp frontend/dist/index.html frontend/dist/404.html
       
