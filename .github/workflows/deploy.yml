@@ -38,6 +38,16 @@ jobs:
           cd frontend
           npm run build
       
+      - name: Prepare artifact (CNAME, images, 404)
+        run: |
+          # Copy custom domain CNAME into dist if present
+          if [ -f CNAME ]; then cp CNAME frontend/dist/CNAME; fi
+          # Ensure images used by the app are available at /images/*
+          mkdir -p frontend/dist/images
+          if [ -d images ]; then cp -R images/* frontend/dist/images/; fi
+          # React Router fallback for GitHub Pages
+          cp frontend/dist/index.html frontend/dist/404.html
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
