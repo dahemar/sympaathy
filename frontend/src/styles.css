@@ -4188,3 +4188,43 @@ body::before {
     opacity: 1 !important; /* container visible (not images) */
   }
 }
+
+/* Safari mobile fixes for video elements */
+@media (max-width: 768px) {
+  /* Fix floating play button and z-index issues in Safari mobile */
+  .project-1 .video-section,
+  .project-3 .video-section,
+  .project-5 .video-section {
+    position: relative !important;
+    z-index: 1 !important;
+    overflow: hidden !important;
+  }
+  
+  .project-1 .project-video,
+  .project-3 .project-video,
+  .project-5 .project-video {
+    position: relative !important;
+    z-index: 1 !important;
+    /* Safari mobile specific fixes */
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+    /* Prevent floating play button */
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+  
+  /* Specific fix for HTML5 video in Safari mobile */
+  .project-1 .project-video {
+    /* Force video controls to stay within bounds */
+    object-fit: contain !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    /* Prevent Safari from creating floating elements */
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    /* Fix z-index stacking */
+    z-index: 1 !important;
+  }
+}
