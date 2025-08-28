@@ -3546,35 +3546,37 @@ a {
     align-self: flex-start;
   }
 
-  /* Back to Top button */
-  #backToTop {
-    display: block !important;
-    position: fixed !important;
-    right: 18px !important;
-    bottom: 10px !important;
-    z-index: 100000 !important; /* ensure above everything */
-    background: rgba(0,0,0,0.8) !important;
-    color: #fff !important;
-    border: 2px solid #fff !important;
-    border-radius: 5px !important;
-    padding: 10px 15px !important;
-    font-size: 1.1em !important;
-    font-family: 'EB Garamond', serif !important;
-    opacity: 1 !important;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3) !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-    text-decoration: none !important;
-    pointer-events: auto !important;
-    min-width: 120px !important;
-    text-align: center !important;
-  }
 
-  #backToTop:hover {
-    opacity: 1;
-    text-decoration: none;
-    background: none;
-  }
+
+/* Global Back to Top button styles - Must override all other position rules */
+#backToTop,
+button#backToTop,
+#backToTop.project-link,
+#backToTop[class*="project"] {
+  display: block !important;
+  position: fixed !important;
+  right: 18px !important;
+  bottom: 10px !important;
+  z-index: 10000 !important;
+  background: none !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  font-size: 1.1em !important;
+  font-family: 'EB Garamond', serif !important;
+  opacity: 0.85 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s !important;
+  text-decoration: underline !important;
+  pointer-events: auto !important;
+}
+
+#backToTop:hover {
+  opacity: 1;
+  text-decoration: none;
+  background: none;
 }
 
 .project-caption {

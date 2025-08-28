@@ -1,4 +1,5 @@
 import { memo, useMemo, useCallback, useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
@@ -10,10 +11,18 @@ const useLoadAtTop = () => {
   const location = useLocation()
   
   useEffect(() => {
-    // Set scroll position to top without scrolling animation
-    window.scrollY = 0
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
+    // Disable browser's automatic scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+    
+    // Set scroll position to top without animation
+    if (document.documentElement) {
+      document.documentElement.scrollTop = 0
+    }
+    if (document.body) {
+      document.body.scrollTop = 0
+    }
   }, [location.pathname])
 }
 
@@ -25,9 +34,7 @@ const Layout = memo(({ children }) => {
 
   const handleScroll = useCallback(() => {
     // Show back-to-top on any viewport once user has scrolled down
-    const shouldShow = window.scrollY > 120
-    console.log('Scroll position:', window.scrollY, 'Should show back to top:', shouldShow)
-    setShowBackToTop(shouldShow)
+    setShowBackToTop(window.scrollY > 120)
   }, [])
   
   // Also check on resize to handle orientation changes
@@ -45,9 +52,17 @@ const Layout = memo(({ children }) => {
   }, [])
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    // Listen to scroll on document instead of window for better compatibility
+    const handleScrollEvent = () => {
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+      const shouldShow = scrollY > 120
+      console.log('Scroll detected, scrollY:', scrollY, 'shouldShow:', shouldShow)
+      setShowBackToTop(shouldShow)
+    }
+    
+    document.addEventListener('scroll', handleScrollEvent, { passive: true })
+    return () => document.removeEventListener('scroll', handleScrollEvent)
+  }, [])
 
   // Remove aggressive resize and initial load scroll behavior
   // Only keep route change scroll behavior
@@ -101,15 +116,10 @@ const Layout = memo(({ children }) => {
       </div>
       </nav>
       {children}
-      {showBackToTop && (
-        <button id="backToTop" onClick={scrollToTop}>
-          ↑ back to top
-        </button>
+      {showBackToTop && typeof document !== 'undefined' && createPortal(
+        <button id="backToTop" onClick={scrollToTop}>↑ back to top</button>,
+        document.body
       )}
-      {/* Debug info */}
-      <div style={{position: 'fixed', top: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '5px', fontSize: '12px', zIndex: 10001}}>
-        showBackToTop: {showBackToTop.toString()}, scrollY: {typeof window !== 'undefined' ? window.scrollY : 'N/A'}
-      </div>
     </>
   )
 })
