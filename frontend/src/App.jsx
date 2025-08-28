@@ -1,5 +1,4 @@
 import { memo, useMemo, useCallback, useState, useEffect } from 'react'
-import { createPortal } from 'react-dom'
 import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
@@ -11,18 +10,10 @@ const useLoadAtTop = () => {
   const location = useLocation()
   
   useEffect(() => {
-    // Disable browser's automatic scroll restoration
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual'
-    }
-    
-    // Set scroll position to top without animation
-    if (document.documentElement) {
-      document.documentElement.scrollTop = 0
-    }
-    if (document.body) {
-      document.body.scrollTop = 0
-    }
+    // Set scroll position to top without scrolling animation
+    window.scrollY = 0
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
   }, [location.pathname])
 }
 
@@ -52,17 +43,9 @@ const Layout = memo(({ children }) => {
   }, [])
 
   useEffect(() => {
-    // Listen to scroll on document instead of window for better compatibility
-    const handleScrollEvent = () => {
-      const scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-      const shouldShow = scrollY > 120
-      console.log('Scroll detected, scrollY:', scrollY, 'shouldShow:', shouldShow)
-      setShowBackToTop(shouldShow)
-    }
-    
-    document.addEventListener('scroll', handleScrollEvent, { passive: true })
-    return () => document.removeEventListener('scroll', handleScrollEvent)
-  }, [])
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
 
   // Remove aggressive resize and initial load scroll behavior
   // Only keep route change scroll behavior
@@ -116,9 +99,10 @@ const Layout = memo(({ children }) => {
       </div>
       </nav>
       {children}
-      {showBackToTop && typeof document !== 'undefined' && createPortal(
-        <button id="backToTop" onClick={scrollToTop}>↑ back to top</button>,
-        document.body
+      {showBackToTop && (
+        <button id="backToTop" onClick={scrollToTop}>
+          ↑ back to top
+        </button>
       )}
     </>
   )
