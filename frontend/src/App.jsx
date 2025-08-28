@@ -24,11 +24,10 @@ const Layout = memo(({ children }) => {
   useLoadAtTop()
 
   const handleScroll = useCallback(() => {
-    if (window.innerWidth <= 768) {
-      setShowBackToTop(window.scrollY > 120)
-    } else {
-      setShowBackToTop(false)
-    }
+    // Show back-to-top on any viewport once user has scrolled down
+    const shouldShow = window.scrollY > 120
+    console.log('Scroll position:', window.scrollY, 'Should show back to top:', shouldShow)
+    setShowBackToTop(shouldShow)
   }, [])
   
   // Also check on resize to handle orientation changes
@@ -107,6 +106,10 @@ const Layout = memo(({ children }) => {
           ↑ back to top
         </button>
       )}
+      {/* Debug info */}
+      <div style={{position: 'fixed', top: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '5px', fontSize: '12px', zIndex: 10001}}>
+        showBackToTop: {showBackToTop.toString()}, scrollY: {typeof window !== 'undefined' ? window.scrollY : 'N/A'}
+      </div>
     </>
   )
 })
