@@ -471,7 +471,7 @@ const Project = memo(() => {
                   <MediaSlider 
                     dataUrl={`${base}images%202/performance-frames/index.json`}
                     basePath={`${base}images%202/performance-frames/`}
-                    intervalMs={6000}
+                    intervalMs={5000}
                     alt="performance frames from .pastoral show"
                     showNavigation={true}
                   />

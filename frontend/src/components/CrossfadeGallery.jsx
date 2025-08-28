@@ -8,6 +8,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isNavigating, setIsNavigating] = useState(false)
+  const [lastManualNavigation, setLastManualNavigation] = useState(0)
 
   useEffect(() => {
     let isMounted = true
@@ -75,18 +76,32 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
 
   useEffect(() => {
     if (files.length <= 1 || !intervalMs) return
-    const id = setInterval(() => {
-      const nextIndex = (index + 1) % files.length
-      preloadAndSwap(nextIndex)
-    }, intervalMs)
-    return () => clearInterval(id)
-  }, [files, index, intervalMs, preloadAndSwap])
+    
+    let timeoutId
+    const scheduleNext = () => {
+      const timeSinceLastNav = Date.now() - lastManualNavigation
+      const delay = Math.max(intervalMs, intervalMs - timeSinceLastNav)
+      
+      timeoutId = setTimeout(() => {
+        const nextIndex = (index + 1) % files.length
+        preloadAndSwap(nextIndex)
+        scheduleNext() // Schedule next iteration
+      }, delay)
+    }
+    
+    scheduleNext() // Start the cycle
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+    }
+  }, [files, index, intervalMs, preloadAndSwap, lastManualNavigation])
 
   const goPrev = useCallback(() => {
     if (files.length <= 1 || isFading || isNavigating) return
     setIsNavigating(true)
     const prevIndex = (index - 1 + files.length) % files.length
     preloadAndSwap(prevIndex)
+    setLastManualNavigation(Date.now())
     // Reset navigation state after transition completes
     setTimeout(() => setIsNavigating(false), 400)
   }, [files, index, preloadAndSwap, isFading, isNavigating])
@@ -96,6 +111,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     setIsNavigating(true)
     const nextIndex = (index + 1) % files.length
     preloadAndSwap(nextIndex)
+    setLastManualNavigation(Date.now())
     // Reset navigation state after transition completes
     setTimeout(() => setIsNavigating(false), 400)
   }, [files, index, preloadAndSwap, isFading, isNavigating])

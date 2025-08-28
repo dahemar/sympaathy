@@ -8,6 +8,7 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
   const [isNavigating, setIsNavigating] = useState(false)
+  const [lastManualNavigation, setLastManualNavigation] = useState(0)
 
   useEffect(() => {
     let isMounted = true
@@ -27,11 +28,24 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
 
   useEffect(() => {
     if (!intervalMs || files.length <= 1) return
-    const id = setInterval(() => {
-      setIndex((i) => (i + 1) % files.length)
-    }, intervalMs)
-    return () => clearInterval(id)
-  }, [files, intervalMs])
+    
+    let timeoutId
+    const scheduleNext = () => {
+      const timeSinceLastNav = Date.now() - lastManualNavigation
+      const delay = Math.max(intervalMs, intervalMs - timeSinceLastNav)
+      
+      timeoutId = setTimeout(() => {
+        setIndex((i) => (i + 1) % files.length)
+        scheduleNext() // Schedule next iteration
+      }, delay)
+    }
+    
+    scheduleNext() // Start the cycle
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+    }
+  }, [files, intervalMs, lastManualNavigation])
 
   const hasImages = files.length > 0
   const currentSrc = useMemo(() => (hasImages ? basePath + files[index] : ''), [hasImages, basePath, files, index])
@@ -40,6 +54,7 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
     if (!hasImages || isNavigating) return
     setIsNavigating(true)
     setIndex((i) => (i - 1 + files.length) % files.length)
+    setLastManualNavigation(Date.now())
     // Reset navigation state after a short delay
     setTimeout(() => setIsNavigating(false), 300)
   }, [files, hasImages, isNavigating])
@@ -48,6 +63,7 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
     if (!hasImages || isNavigating) return
     setIsNavigating(true)
     setIndex((i) => (i + 1) % files.length)
+    setLastManualNavigation(Date.now())
     // Reset navigation state after a short delay
     setTimeout(() => setIsNavigating(false), 300)
   }, [files, hasImages, isNavigating])
