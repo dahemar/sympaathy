@@ -20,6 +20,9 @@ const useLoadAtTop = () => {
 const Layout = memo(({ children }) => {
   const [showBackToTop, setShowBackToTop] = useState(false)
   
+  // Debug: Log when Layout mounts
+  console.log('Layout component mounted, showBackToTop:', showBackToTop)
+  
   // Use the hook to ensure pages load at top
   useLoadAtTop()
 
