@@ -5,17 +5,7 @@ import { MediaSlider } from './components/MediaSlider.jsx'
 import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
 import { useImageLoader } from './hooks/useImageLoader.js'
 
-// Hook to ensure pages load at the top without scrolling
-const useLoadAtTop = () => {
-  const location = useLocation()
-  
-  useEffect(() => {
-    // Set scroll position to top without scrolling animation
-    window.scrollY = 0
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
-  }, [location.pathname])
-}
+// Hook removed - was interfering with scroll detection
 
 const Layout = memo(({ children }) => {
   const [showBackToTop, setShowBackToTop] = useState(false)
@@ -23,8 +13,7 @@ const Layout = memo(({ children }) => {
   // Debug: Log when Layout mounts
   console.log('Layout component mounted, showBackToTop:', showBackToTop)
   
-  // Use the hook to ensure pages load at top
-  useLoadAtTop()
+  // Hook removed - was interfering with scroll detection
 
   // Scroll handler is now defined inline in useEffect
   
@@ -66,10 +55,22 @@ const Layout = memo(({ children }) => {
     // Check initial state
     scrollHandler()
     
-    // Add event listener
-    window.addEventListener('scroll', scrollHandler, { passive: true })
+    // Debug: Check scroll position every second
+    const intervalId = setInterval(() => {
+      console.log('Interval check - scrollY:', window.scrollY, 'documentElement.scrollTop:', document.documentElement.scrollTop, 'body.scrollTop:', document.body.scrollTop)
+    }, 1000)
     
-    return () => window.removeEventListener('scroll', scrollHandler)
+    // Add event listener to multiple scrollable elements
+    window.addEventListener('scroll', scrollHandler, { passive: true })
+    document.documentElement.addEventListener('scroll', scrollHandler, { passive: true })
+    document.body.addEventListener('scroll', scrollHandler, { passive: true })
+    
+    return () => {
+      clearInterval(intervalId)
+      window.removeEventListener('scroll', scrollHandler)
+      document.documentElement.removeEventListener('scroll', scrollHandler)
+      document.body.removeEventListener('scroll', scrollHandler)
+    }
   }, [])
 
   // Remove aggressive resize and initial load scroll behavior
@@ -129,13 +130,6 @@ const Layout = memo(({ children }) => {
           ↑ back to top
         </button>
       )}
-      {/* Debug info */}
-      <div style={{position: 'fixed', top: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '10px', fontSize: '12px', zIndex: 10001}}>
-        Debug: showBackToTop = {showBackToTop.toString()}<br/>
-        Window width: {window.innerWidth}px<br/>
-        Scroll Y: {window.scrollY}px<br/>
-        Is mobile: {(window.innerWidth <= 768).toString()}
-      </div>
     </>
   )
 })
