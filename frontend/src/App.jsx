@@ -24,11 +24,15 @@ const Layout = memo(({ children }) => {
   useLoadAtTop()
 
   const handleScroll = useCallback(() => {
-    // Show back-to-top on any viewport once user has scrolled down
-    setShowBackToTop(window.scrollY > 120)
+    // Only show back-to-top on mobile when scrolled down
+    if (window.innerWidth <= 768) {
+      setShowBackToTop(window.scrollY > 120)
+    } else {
+      setShowBackToTop(false)
+    }
   }, [])
   
-  // Also check on resize to handle orientation changes
+  // Check on resize to handle orientation changes
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -44,6 +48,12 @@ const Layout = memo(({ children }) => {
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
+    
+    // Check initial state on mount
+    if (window.innerWidth <= 768) {
+      setShowBackToTop(window.scrollY > 120)
+    }
+    
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
