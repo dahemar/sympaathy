@@ -26,27 +26,7 @@ const Layout = memo(({ children }) => {
   // Use the hook to ensure pages load at top
   useLoadAtTop()
 
-  const handleScroll = useCallback(() => {
-    // Only show back-to-top on mobile when scrolled down
-    const isMobile = window.innerWidth <= 768
-    const hasScrolled = window.scrollY > 120
-    const shouldShow = isMobile && hasScrolled
-    
-    console.log('Scroll debug:', {
-      windowWidth: window.innerWidth,
-      scrollY: window.scrollY,
-      isMobile,
-      hasScrolled,
-      shouldShow,
-      currentState: showBackToTop
-    })
-    
-    if (isMobile) {
-      setShowBackToTop(hasScrolled)
-    } else {
-      setShowBackToTop(false)
-    }
-  }, [showBackToTop])
+  // Scroll handler is now defined inline in useEffect
   
   // Check on resize to handle orientation changes
   useEffect(() => {
@@ -63,15 +43,34 @@ const Layout = memo(({ children }) => {
   }, [])
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    
-    // Check initial state on mount
-    if (window.innerWidth <= 768) {
-      setShowBackToTop(window.scrollY > 120)
+    // Add scroll listener
+    const scrollHandler = () => {
+      const isMobile = window.innerWidth <= 768
+      const hasScrolled = window.scrollY > 120
+      
+      console.log('Scroll event fired:', {
+        windowWidth: window.innerWidth,
+        scrollY: window.scrollY,
+        isMobile,
+        hasScrolled,
+        shouldShow: isMobile && hasScrolled
+      })
+      
+      if (isMobile) {
+        setShowBackToTop(hasScrolled)
+      } else {
+        setShowBackToTop(false)
+      }
     }
     
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    // Check initial state
+    scrollHandler()
+    
+    // Add event listener
+    window.addEventListener('scroll', scrollHandler, { passive: true })
+    
+    return () => window.removeEventListener('scroll', scrollHandler)
+  }, [])
 
   // Remove aggressive resize and initial load scroll behavior
   // Only keep route change scroll behavior
