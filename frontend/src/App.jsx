@@ -30,6 +30,20 @@ const Layout = memo(({ children }) => {
       setShowBackToTop(false)
     }
   }, [])
+  
+  // Also check on resize to handle orientation changes
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setShowBackToTop(window.scrollY > 120)
+      } else {
+        setShowBackToTop(false)
+      }
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
