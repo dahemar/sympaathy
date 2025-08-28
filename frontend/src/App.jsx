@@ -25,12 +25,25 @@ const Layout = memo(({ children }) => {
 
   const handleScroll = useCallback(() => {
     // Only show back-to-top on mobile when scrolled down
-    if (window.innerWidth <= 768) {
-      setShowBackToTop(window.scrollY > 120)
+    const isMobile = window.innerWidth <= 768
+    const hasScrolled = window.scrollY > 120
+    const shouldShow = isMobile && hasScrolled
+    
+    console.log('Scroll debug:', {
+      windowWidth: window.innerWidth,
+      scrollY: window.scrollY,
+      isMobile,
+      hasScrolled,
+      shouldShow,
+      currentState: showBackToTop
+    })
+    
+    if (isMobile) {
+      setShowBackToTop(hasScrolled)
     } else {
       setShowBackToTop(false)
     }
-  }, [])
+  }, [showBackToTop])
   
   // Check on resize to handle orientation changes
   useEffect(() => {
@@ -114,6 +127,13 @@ const Layout = memo(({ children }) => {
           ↑ back to top
         </button>
       )}
+      {/* Debug info */}
+      <div style={{position: 'fixed', top: '10px', left: '10px', background: 'rgba(0,0,0,0.8)', color: 'white', padding: '10px', fontSize: '12px', zIndex: 10001}}>
+        Debug: showBackToTop = {showBackToTop.toString()}<br/>
+        Window width: {window.innerWidth}px<br/>
+        Scroll Y: {window.scrollY}px<br/>
+        Is mobile: {(window.innerWidth <= 768).toString()}
+      </div>
     </>
   )
 })
