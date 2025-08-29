@@ -53,6 +53,8 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
     }
   }, [files, intervalMs, lastManualNavigation, autoPlayPaused])
   
+  const hasImages = files.length > 0
+  
   // Preload adjacent images when index changes
   useEffect(() => {
     if (hasImages && files.length > 1) {
@@ -80,8 +82,6 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
       })
     }
   }, [index, hasImages, files, generateImageSources, preloadedImages])
-
-  const hasImages = files.length > 0
   
   // Generate optimized image sources with WebP fallback
   const generateImageSources = useCallback((filename) => {
