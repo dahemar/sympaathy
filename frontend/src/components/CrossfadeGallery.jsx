@@ -3,7 +3,7 @@ import { memo, useEffect, useMemo, useState, useCallback } from 'react'
 export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, alt = '', fallbackSrc, showNavigation = false }) => {
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
-  const [previousSrc, setPreviousSrc] = useState('')
+  const [previousImageSources, setPreviousImageSources] = useState({ webp: '', original: '' })
   const [isFading, setIsFading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -36,7 +36,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
           console.log('CrossfadeGallery: Filtered files:', filtered)
           setFiles(filtered)
           setIndex(0)
-          setPreviousSrc('')
+          setPreviousImageSources({ webp: '', original: '' })
           setIsFading(false)
           setIsLoading(false)
         } else {
@@ -77,7 +77,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     
     // Check if already preloaded
     if (preloadedImages.has(nextSrc)) {
-      setPreviousSrc(currentImageSources.original)
+      setPreviousImageSources(currentImageSources)
       setIndex(targetIndex)
       setIsFading(true)
       setTimeout(() => setIsFading(false), 300)
@@ -87,7 +87,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     const img = new Image()
     img.onload = () => {
       setPreloadedImages(prev => new Set([...prev, nextSrc]))
-      setPreviousSrc(currentImageSources.original)
+      setPreviousImageSources(currentImageSources)
       setIndex(targetIndex)
       setIsFading(true)
       setTimeout(() => setIsFading(false), 300)
@@ -230,11 +230,11 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   console.log('CrossfadeGallery: Rendering with', files.length, 'files, current index:', index)
   return (
     <div className="crossfade-container CrossfadeGallery">
-      {previousSrc ? (
+      {previousImageSources.original ? (
         <picture>
-          <source srcSet={previousSrc.replace(/\.[^/.]+$/, '.webp')} type="image/webp" />
+          <source srcSet={previousImageSources.webp} type="image/webp" />
           <img
-            src={previousSrc}
+            src={previousImageSources.original}
             alt={alt || 'gallery image previous'}
             className={`crossfade-image ${isFading ? 'fade-out' : 'hidden'}`}
             loading="eager"

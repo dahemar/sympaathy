@@ -163,8 +163,14 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
       )}
       {!showNavigation && (
         <div className="slide">
-          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-          <img src={currentSrc} alt={alt || 'slider image'} loading="lazy" />
+          <picture>
+            <source srcSet={currentImageSources.webp} type="image/webp" />
+            <img 
+              src={currentImageSources.original} 
+              alt={alt || 'slider image'} 
+              loading="lazy" 
+            />
+          </picture>
         </div>
       )}
     </div>

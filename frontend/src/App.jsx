@@ -151,8 +151,8 @@ const Home = memo(() => {
       to: "/licitir-live",
       className: "project-link project-licitir",
       dataTitle: "licitir live",
-      mobileSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
-      desktopSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
+      mobileSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
+      desktopSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
       alt: "LICITIR live",
       ref: image3Ref,
       caption: "LICITIR live"
@@ -162,8 +162,8 @@ const Home = memo(() => {
       to: "/pastoral-ep",
       className: "project-link project-pastoral-ep",
       dataTitle: "pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos",
-      mobileSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.JPG",
-      desktopSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.JPG",
+      mobileSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
+      desktopSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
       alt: "Pastoral EP",
       ref: image6Ref,
       caption: ".pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos"
