@@ -1,23 +1,19 @@
-import { useRef, useCallback, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 
 export const useImageLoader = () => {
   const imgRef = useRef(null)
 
-  const handleLoad = useCallback(() => {
-    if (imgRef.current) {
-      imgRef.current.classList.add('loaded')
-    }
-  }, [])
-
-  const handleError = useCallback(() => {
-    if (imgRef.current) {
-      imgRef.current.classList.add('error')
-    }
-  }, [])
-
   useEffect(() => {
     const img = imgRef.current
     if (!img) return
+
+    const handleLoad = () => {
+      img.classList.add('loaded')
+    }
+
+    const handleError = () => {
+      img.classList.add('error')
+    }
 
     // Check if image is already loaded
     if (img.complete) {
@@ -31,7 +27,7 @@ export const useImageLoader = () => {
       img.removeEventListener('load', handleLoad)
       img.removeEventListener('error', handleError)
     }
-  }, [handleLoad, handleError])
+  }, [])
 
   return imgRef
 }

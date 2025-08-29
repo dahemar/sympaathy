@@ -1,9 +1,8 @@
-import { memo, useMemo, useCallback, useState, useEffect } from 'react'
+import { memo, useMemo, useCallback, useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
 import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
-import { useImageLoader } from './hooks/useImageLoader.js'
 
 // Hook removed - was interfering with scroll detection
 
@@ -137,12 +136,12 @@ const Layout = memo(({ children }) => {
 Layout.displayName = 'Layout'
 
 const Home = memo(() => {
-  const image1Ref = useImageLoader()
-  const image2Ref = useImageLoader()
-  const image3Ref = useImageLoader()
-  const image4Ref = useImageLoader()
-  const image5Ref = useImageLoader()
-  const image6Ref = useImageLoader()
+  const image1Ref = useRef(null)
+  const image2Ref = useRef(null)
+  const image3Ref = useRef(null)
+  const image4Ref = useRef(null)
+  const image5Ref = useRef(null)
+  const image6Ref = useRef(null)
 
   const projectLinks = useMemo(() => [
     // Updated order and thumbnails (no separate performance card)
