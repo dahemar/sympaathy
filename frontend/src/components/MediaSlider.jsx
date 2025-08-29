@@ -55,8 +55,31 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
   
   // Preload adjacent images when index changes
   useEffect(() => {
-    preloadAdjacentImages()
-  }, [index, preloadAdjacentImages])
+    if (hasImages && files.length > 1) {
+      const nextIndex = (index + 1) % files.length
+      const prevIndex = (index - 1 + files.length) % files.length
+      
+      const nextSources = generateImageSources(files[nextIndex])
+      const prevSources = generateImageSources(files[prevIndex])
+      
+      const imagesToPreload = [
+        nextSources.webp,
+        nextSources.original,
+        prevSources.webp,
+        prevSources.original
+      ]
+      
+      imagesToPreload.forEach(src => {
+        if (src && !preloadedImages.has(src)) {
+          const img = new Image()
+          img.onload = () => {
+            setPreloadedImages(prev => new Set([...prev, src]))
+          }
+          img.src = src
+        }
+      })
+    }
+  }, [index, hasImages, files, generateImageSources, preloadedImages])
 
   const hasImages = files.length > 0
   
@@ -76,33 +99,7 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
     return generateImageSources(files[index])
   }, [hasImages, files, index, generateImageSources])
   
-  // Preload next and previous images for smooth transitions
-  const preloadAdjacentImages = useCallback(() => {
-    if (!hasImages || files.length <= 1) return
-    
-    const nextIndex = (index + 1) % files.length
-    const prevIndex = (index - 1 + files.length) % files.length
-    
-    const nextSources = generateImageSources(files[nextIndex])
-    const prevSources = generateImageSources(files[prevIndex])
-    
-    const imagesToPreload = [
-      nextSources.webp,
-      nextSources.original,
-      prevSources.webp,
-      prevSources.original
-    ]
-    
-    imagesToPreload.forEach(src => {
-      if (src && !preloadedImages.has(src)) {
-        const img = new Image()
-        img.onload = () => {
-          setPreloadedImages(prev => new Set([...prev, src]))
-        }
-        img.src = src
-      }
-    })
-  }, [hasImages, files, index, generateImageSources, preloadedImages])
+
 
   const goPrev = useCallback(() => {
     if (!hasImages || isNavigating) return
