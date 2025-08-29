@@ -6,13 +6,9 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target: 'es2015',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
+    // Use Vite's default (esbuild) minifier; terser can introduce issues in some cases
+    minify: true,
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
