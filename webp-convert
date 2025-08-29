@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Comando simple para convertir imágenes a WebP
+# Uso: webp-convert [directorio] [calidad]
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo "🚀 WebP Converter - Convierte imágenes a WebP manteniendo originales"
+    echo ""
+    echo "Uso:"
+    echo "  webp-convert                    # Convertir en directorio actual"
+    echo "  webp-convert images/            # Convertir en directorio específico"
+    echo "  webp-convert images/ 90         # Convertir con calidad específica"
+    echo ""
+    echo "Ejemplos:"
+    echo "  webp-convert"
+    echo "  webp-convert frontend/public/images\\ 2/"
+    echo "  webp-convert images/ 95"
+    exit 0
+fi
+
+DIR="${1:-.}"
+QUALITY="${2:-80}"
+
+# Ejecutar el script principal
+./convert-to-webp.sh -q "$QUALITY" "$DIR"

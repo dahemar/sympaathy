@@ -9,6 +9,8 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [error, setError] = useState(null)
   const [isNavigating, setIsNavigating] = useState(false)
   const [lastManualNavigation, setLastManualNavigation] = useState(0)
+  const [autoPlayPaused, setAutoPlayPaused] = useState(false)
+  const [preloadedImages, setPreloadedImages] = useState(new Set())
 
   useEffect(() => {
     let isMounted = true
@@ -50,42 +52,68 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     return () => { isMounted = false }
   }, [dataUrl])
 
-  const currentSrc = useMemo(() => {
+  // Generate optimized image sources with WebP fallback
+  const generateImageSources = useCallback((filename) => {
+    if (!filename || !basePath) return { webp: '', original: '' }
+    
+    const baseName = filename.replace(/\.[^/.]+$/, '') // Remove extension
+    const webpPath = `${basePath}${baseName}.webp`
+    const originalPath = `${basePath}${filename}`
+    
+    return { webp: webpPath, original: originalPath }
+  }, [basePath])
+  
+  const currentImageSources = useMemo(() => {
     if (files.length && basePath) {
-      return basePath + files[index]
+      return generateImageSources(files[index])
     }
-    return fallbackSrc || ''
-  }, [files, basePath, index, fallbackSrc])
+    return { webp: fallbackSrc || '', original: fallbackSrc || '' }
+  }, [files, basePath, index, fallbackSrc, generateImageSources])
 
   const preloadAndSwap = useCallback((targetIndex) => {
     if (!files.length || !basePath) return
-    const nextSrc = basePath + files[targetIndex]
-    const img = new Image()
-    img.onload = () => {
-      setPreviousSrc(currentSrc)
+    const nextSources = generateImageSources(files[targetIndex])
+    const nextSrc = nextSources.webp || nextSources.original
+    
+    // Check if already preloaded
+    if (preloadedImages.has(nextSrc)) {
+      setPreviousSrc(currentImageSources.original)
       setIndex(targetIndex)
       setIsFading(true)
-      // Match CSS transition duration
+      setTimeout(() => setIsFading(false), 300)
+      return
+    }
+    
+    const img = new Image()
+    img.onload = () => {
+      setPreloadedImages(prev => new Set([...prev, nextSrc]))
+      setPreviousSrc(currentImageSources.original)
+      setIndex(targetIndex)
+      setIsFading(true)
       setTimeout(() => setIsFading(false), 300)
     }
     img.onerror = () => {
       console.error('CrossfadeGallery: Failed to load image:', nextSrc)
     }
     img.src = nextSrc
-  }, [files, basePath, currentSrc])
+  }, [files, basePath, currentImageSources, preloadedImages, generateImageSources])
 
   useEffect(() => {
-    if (files.length <= 1 || !intervalMs) return
+    if (files.length <= 1 || !intervalMs || autoPlayPaused) return
     
     let timeoutId
     const scheduleNext = () => {
+      if (autoPlayPaused) return // Don't schedule if paused
+      
       const timeSinceLastNav = Date.now() - lastManualNavigation
       const delay = Math.max(intervalMs, intervalMs - timeSinceLastNav)
       
       timeoutId = setTimeout(() => {
-        const nextIndex = (index + 1) % files.length
-        preloadAndSwap(nextIndex)
-        scheduleNext() // Schedule next iteration
+        if (!autoPlayPaused) { // Double check before executing
+          const nextIndex = (index + 1) % files.length
+          preloadAndSwap(nextIndex)
+          scheduleNext() // Schedule next iteration
+        }
       }, delay)
     }
     
@@ -94,26 +122,66 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     return () => {
       if (timeoutId) clearTimeout(timeoutId)
     }
-  }, [files, index, intervalMs, preloadAndSwap, lastManualNavigation])
-
+    }, [files, index, intervalMs, preloadAndSwap, lastManualNavigation, autoPlayPaused])
+  
+  // Preload adjacent images for smooth transitions
+  useEffect(() => {
+    if (!files.length || files.length <= 1) return
+    
+    const nextIndex = (index + 1) % files.length
+    const prevIndex = (index - 1 + files.length) % files.length
+    
+    const nextSources = generateImageSources(files[nextIndex])
+    const prevSources = generateImageSources(files[prevIndex])
+    
+    const imagesToPreload = [
+      nextSources.webp,
+      nextSources.original,
+      prevSources.webp,
+      prevSources.original
+    ]
+    
+    imagesToPreload.forEach(src => {
+      if (src && !preloadedImages.has(src)) {
+        const img = new Image()
+        img.onload = () => {
+          setPreloadedImages(prev => new Set([...prev, src]))
+        }
+        img.src = src
+      }
+    })
+  }, [index, files, generateImageSources, preloadedImages])
+  
   const goPrev = useCallback(() => {
     if (files.length <= 1 || isFading || isNavigating) return
     setIsNavigating(true)
+    setAutoPlayPaused(true) // Pause auto-play immediately
+    
     const prevIndex = (index - 1 + files.length) % files.length
     preloadAndSwap(prevIndex)
     setLastManualNavigation(Date.now())
-    // Reset navigation state after transition completes
-    setTimeout(() => setIsNavigating(false), 400)
+    
+    // Resume auto-play after 5 seconds
+    setTimeout(() => {
+      setAutoPlayPaused(false)
+      setIsNavigating(false)
+    }, 5000)
   }, [files, index, preloadAndSwap, isFading, isNavigating])
 
   const goNext = useCallback(() => {
     if (files.length <= 1 || isFading || isNavigating) return
     setIsNavigating(true)
+    setAutoPlayPaused(true) // Pause auto-play immediately
+    
     const nextIndex = (index + 1) % files.length
     preloadAndSwap(nextIndex)
     setLastManualNavigation(Date.now())
-    // Reset navigation state after transition completes
-    setTimeout(() => setIsNavigating(false), 400)
+    
+    // Resume auto-play after 5 seconds
+    setTimeout(() => {
+      setAutoPlayPaused(false)
+      setIsNavigating(false)
+    }, 5000)
   }, [files, index, preloadAndSwap, isFading, isNavigating])
 
   if (isLoading) {
@@ -163,20 +231,26 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   return (
     <div className="crossfade-container CrossfadeGallery">
       {previousSrc ? (
+        <picture>
+          <source srcSet={previousSrc.replace(/\.[^/.]+$/, '.webp')} type="image/webp" />
+          <img
+            src={previousSrc}
+            alt={alt || 'gallery image previous'}
+            className={`crossfade-image ${isFading ? 'fade-out' : 'hidden'}`}
+            loading="eager"
+          />
+        </picture>
+      ) : null}
+      <picture>
+        <source srcSet={currentImageSources.webp} type="image/webp" />
         <img
-          src={previousSrc}
-          alt={alt || 'gallery image previous'}
-          className={`crossfade-image ${isFading ? 'fade-out' : 'hidden'}`}
+          key={currentImageSources.original}
+          src={currentImageSources.original}
+          alt={alt || 'gallery image current'}
+          className={`crossfade-image ${isFading ? 'fade-in' : 'visible'}`}
           loading="eager"
         />
-      ) : null}
-      <img
-        key={currentSrc}
-        src={currentSrc}
-        alt={alt || 'gallery image current'}
-        className={`crossfade-image ${isFading ? 'fade-in' : 'visible'}`}
-        loading="eager"
-      />
+      </picture>
       {showNavigation && files.length > 1 && (
         <>
           <button className="crossfade-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
