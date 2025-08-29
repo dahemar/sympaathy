@@ -3888,6 +3888,38 @@ body::before {
   }
 }
 
+/* Slideshow click/tap reliability fixes (iOS Safari) */
+.media-slider,
+.crossfade-container {
+  position: relative;
+  z-index: 0;
+}
+
+/* Ensure media doesn't intercept taps so buttons receive them */
+.media-slider .slide img,
+.crossfade-container .crossfade-image {
+  pointer-events: none;
+}
+
+/* Make controls always interactive and responsive to taps */
+.slider-btn,
+.crossfade-btn {
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* Increase touch target on mobile */
+@media (max-width: 768px) {
+  .slider-btn,
+  .crossfade-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 1.6rem;
+  }
+}
+
 /* Performance specific styles */
 .performance-video {
   margin-bottom: 2rem;
