@@ -7,7 +7,6 @@ import { memo, useEffect, useMemo, useState, useCallback } from 'react'
 export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '', showNavigation = true }) => {
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
-  const [isNavigating, setIsNavigating] = useState(false)
   const [lastManualNavigation, setLastManualNavigation] = useState(0)
   const [autoPlayPaused, setAutoPlayPaused] = useState(false)
   const [preloadedImages, setPreloadedImages] = useState(new Set())
@@ -54,7 +53,18 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
   }, [files, intervalMs, lastManualNavigation, autoPlayPaused])
   
   const hasImages = files.length > 0
-  
+
+  // Generate optimized image sources with WebP fallback (must be declared before effects that depend on it)
+  const generateImageSources = useCallback((filename) => {
+    if (!filename) return { webp: '', original: '' }
+
+    const baseName = filename.replace(/\.[^/.]+$/, '') // Remove extension
+    const webpPath = `${basePath}${baseName}.webp`
+    const originalPath = `${basePath}${filename}`
+
+    return { webp: webpPath, original: originalPath }
+  }, [basePath])
+
   // Preload adjacent images when index changes
   useEffect(() => {
     if (hasImages && files.length > 1) {
@@ -83,16 +93,7 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
     }
   }, [index, hasImages, files, generateImageSources, preloadedImages])
   
-  // Generate optimized image sources with WebP fallback
-  const generateImageSources = useCallback((filename) => {
-    if (!filename) return { webp: '', original: '' }
-    
-    const baseName = filename.replace(/\.[^/.]+$/, '') // Remove extension
-    const webpPath = `${basePath}${baseName}.webp`
-    const originalPath = `${basePath}${filename}`
-    
-    return { webp: webpPath, original: originalPath }
-  }, [basePath])
+  // (moved generateImageSources above)
   
   const currentImageSources = useMemo(() => {
     if (!hasImages) return { webp: '', original: '' }
@@ -102,34 +103,30 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
 
 
   const goPrev = useCallback(() => {
-    if (!hasImages || isNavigating) return
-    setIsNavigating(true)
+    if (!hasImages) return
     setAutoPlayPaused(true) // Pause auto-play immediately
     
     setIndex((i) => (i - 1 + files.length) % files.length)
     setLastManualNavigation(Date.now())
     
-    // Resume auto-play after 5 seconds
+    // Resume auto-play after 3 seconds (reduced from 5)
     setTimeout(() => {
       setAutoPlayPaused(false)
-      setIsNavigating(false)
-    }, 5000)
-  }, [files, hasImages, isNavigating])
+    }, 3000)
+  }, [files, hasImages])
 
   const goNext = useCallback(() => {
-    if (!hasImages || isNavigating) return
-    setIsNavigating(true)
+    if (!hasImages) return
     setAutoPlayPaused(true) // Pause auto-play immediately
     
     setIndex((i) => (i + 1) % files.length)
     setLastManualNavigation(Date.now())
     
-    // Resume auto-play after 5 seconds
+    // Resume auto-play after 3 seconds (reduced from 5)
     setTimeout(() => {
       setAutoPlayPaused(false)
-      setIsNavigating(false)
-    }, 5000)
-  }, [files, hasImages, isNavigating])
+    }, 3000)
+  }, [files, hasImages])
 
   if (!hasImages) return null
 

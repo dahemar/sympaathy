@@ -7,7 +7,6 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [isFading, setIsFading] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [isNavigating, setIsNavigating] = useState(false)
   const [lastManualNavigation, setLastManualNavigation] = useState(0)
   const [autoPlayPaused, setAutoPlayPaused] = useState(false)
   const [preloadedImages, setPreloadedImages] = useState(new Set())
@@ -153,36 +152,32 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   }, [index, files, generateImageSources, preloadedImages])
   
   const goPrev = useCallback(() => {
-    if (files.length <= 1 || isFading || isNavigating) return
-    setIsNavigating(true)
+    if (files.length <= 1 || isFading) return
     setAutoPlayPaused(true) // Pause auto-play immediately
     
     const prevIndex = (index - 1 + files.length) % files.length
     preloadAndSwap(prevIndex)
     setLastManualNavigation(Date.now())
     
-    // Resume auto-play after 5 seconds
+    // Resume auto-play after 3 seconds (reduced from 5)
     setTimeout(() => {
       setAutoPlayPaused(false)
-      setIsNavigating(false)
-    }, 5000)
-  }, [files, index, preloadAndSwap, isFading, isNavigating])
+    }, 3000)
+  }, [files, index, preloadAndSwap, isFading])
 
   const goNext = useCallback(() => {
-    if (files.length <= 1 || isFading || isNavigating) return
-    setIsNavigating(true)
+    if (files.length <= 1 || isFading) return
     setAutoPlayPaused(true) // Pause auto-play immediately
     
     const nextIndex = (index + 1) % files.length
     preloadAndSwap(nextIndex)
     setLastManualNavigation(Date.now())
     
-    // Resume auto-play after 5 seconds
+    // Resume auto-play after 3 seconds (reduced from 5)
     setTimeout(() => {
       setAutoPlayPaused(false)
-      setIsNavigating(false)
-    }, 5000)
-  }, [files, index, preloadAndSwap, isFading, isNavigating])
+    }, 3000)
+  }, [files, index, preloadAndSwap, isFading])
 
   if (isLoading) {
     console.log('CrossfadeGallery: Loading data, showing nothing')
