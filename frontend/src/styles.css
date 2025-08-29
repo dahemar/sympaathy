@@ -1,6 +1,12 @@
 @charset "UTF-8";
 /* jackself.com v3.0 May 2024 */
 
+/* Ensure font-style changes are always immediate */
+* {
+    transition-property: color, opacity, transform, background, width, height, filter, backdrop-filter !important;
+    transition-property: color, opacity, transform, background, width, height, filter, backdrop-filter, box-shadow !important;
+}
+
 /* Efecto de blur general al cargar la página */
 body {
     filter: blur(15px);
@@ -106,7 +112,7 @@ a:hover::before {
 .menu a {
     color: #5A5F6B;
     opacity: 0.85;
-    transition: all 0.4s ease;
+    transition: color 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
     font-family: 'EB Garamond', serif;
     font-weight: 500;
     display: inline-block;
@@ -118,9 +124,10 @@ a:hover::before {
     color: #fff;
     opacity: 1;
     font-family: 'EB Garamond', serif;
-    font-style: italic;
+    font-style: italic !important;
     transform: translateZ(0);
     backface-visibility: hidden;
+    transition: font-style 0s !important; /* Force immediate font-style change */
 }
 
 .menu a::before {
