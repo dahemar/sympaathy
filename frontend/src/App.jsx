@@ -2,7 +2,6 @@ import { memo, useMemo, useCallback, useState, useEffect, useRef } from 'react'
 import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
-import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 
 // Hook removed - was interfering with scroll detection
@@ -479,7 +478,7 @@ const Project = memo(() => {
               </div>
               <div className="media-container">
                 <div className="image-section">
-                  <CrossfadeGallery 
+                  <MediaSlider 
                     dataUrl={`${base}images%202/pastoral%20gallery/index.json`}
                     basePath={`${base}images%202/pastoral%20gallery/`}
                     intervalMs={5000}
