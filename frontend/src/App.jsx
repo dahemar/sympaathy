@@ -3,6 +3,7 @@ import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
 import { CrossfadeGallery } from './components/CrossfadeGallery.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
 
 // Hook removed - was interfering with scroll detection
 
@@ -559,6 +560,7 @@ Project.displayName = 'Project'
 export default function App() {
   return (
     <Layout>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/bio" element={<Bio />} />
