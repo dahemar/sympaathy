@@ -157,20 +157,6 @@ const Home = memo(() => {
     })
   }, [])
 
-  // Preload adjacent images on hover
-  const preloadAdjacentImages = useCallback((currentIndex) => {
-    const adjacentIndices = [
-      (currentIndex - 1 + projectLinks.length) % projectLinks.length,
-      (currentIndex + 1) % projectLinks.length
-    ]
-    
-    adjacentIndices.forEach(index => {
-      const project = projectLinks[index]
-      const img = new Image()
-      img.src = project.desktopSrc
-    })
-  }, [])
-
   const projectLinks = useMemo(() => [
     // Updated order and thumbnails (no separate performance card)
     {
@@ -243,13 +229,12 @@ const Home = memo(() => {
 
   return (
     <div className="projects-grid">
-      {projectLinks.map(({ id, to, className, dataTitle, mobileSrc, desktopSrc, alt, ref, caption }, index) => (
+      {projectLinks.map(({ id, to, className, dataTitle, mobileSrc, desktopSrc, alt, ref, caption }) => (
         <Link 
           key={id} 
           to={to} 
           className={className} 
           data-title={dataTitle}
-          onMouseEnter={() => preloadAdjacentImages(index)}
         >
           <picture>
             <source media="(max-width: 768px)" srcSet={mobileSrc} />
