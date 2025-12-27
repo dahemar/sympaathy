@@ -148,10 +148,19 @@ const Home = memo(() => {
     const criticalImages = [
       "/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
       "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
-      "/images/diamantista-dramatic.webp"
+      "/images/diamantista-dramatic.webp",
+      "/images/diamantista%20ep.webp"
     ]
     
+    // Preload using link elements for better browser support
     criticalImages.forEach(src => {
+      const link = document.createElement('link')
+      link.rel = 'preload'
+      link.as = 'image'
+      link.href = src
+      document.head.appendChild(link)
+      
+      // Also preload using Image object as fallback
       const img = new Image()
       img.src = src
     })

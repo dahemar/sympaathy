@@ -97,10 +97,10 @@ html {
     font-style: normal;
 }
 
+/* Fallback: original font files are missing, use Headland One instead */
 @font-face {
-    font-family: 'XXII Ultimate-Black-Metal';
-    src: url('/archive_2024/fonts/XXII Ultimate-Black-Metal.woff2') format('woff2'),
-         url('/archive_2024/fonts/XXII Ultimate-Black-Metal.woff') format('woff');
+    font-family: 'Headland One';
+    src: local('Headland One'), local('HeadlandOne');
     font-weight: normal;
     font-style: normal;
 }
@@ -866,7 +866,7 @@ h1, h2, h3, h4, h5, h6 {
         opacity: 0.5;
     }
     55%, 95% {
-        font-family: 'XXII Ultimate-Black-Metal', serif;
+        font-family: 'Headland One', serif;
         filter: blur(0);
         opacity: 1;
     }
