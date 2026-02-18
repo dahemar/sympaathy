@@ -81,9 +81,10 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
       return { webp: filename.toLowerCase().endsWith('.webp') ? filename : '', original: filename, isVideo: false, videoSrc: '' }
     }
 
-    // Root-relative paths: optionally prefix with R2 base
+    // Root-relative paths (start with '/'): treat as local site assets.
+    // Do NOT automatically prefix with R2_BASE so local files continue working.
     if (filename.startsWith('/')) {
-      const original = R2_BASE ? joinBase(R2_BASE, filename) : filename
+      const original = filename
       if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: original }
       return { webp: filename.toLowerCase().endsWith('.webp') ? original : '', original, isVideo: false, videoSrc: '' }
     }

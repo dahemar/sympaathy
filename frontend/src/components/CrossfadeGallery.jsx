@@ -49,22 +49,54 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     return () => { isMounted = false }
   }, [dataUrl])
 
-  // Generate optimized image sources with WebP fallback
+  // Generate optimized image/video sources, using VITE_R2_BASE when available.
+  const R2_BASE = (import.meta.env.VITE_R2_BASE || '').replace(/\/$/, '')
+  const joinBase = (base, path) => base ? `${base}/${path.replace(/^\/+/, '')}` : path
+
   const generateImageSources = useCallback((filename) => {
-    if (!filename || !basePath) return { webp: '', original: '' }
-    
+    if (!filename) return { webp: '', original: '', isVideo: false, videoSrc: '' }
+
+    const isVideo = /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(filename)
+
+    if (!basePath && !R2_BASE) {
+      // No base provided; treat filenames as absolute or relative as-is
+      if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: filename }
+      return { webp: filename.toLowerCase().endsWith('.webp') ? filename : '', original: filename, isVideo: false, videoSrc: '' }
+    }
+
+    // Absolute URL
+    if (/^https?:\/\//i.test(filename)) {
+      if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: filename }
+      return { webp: filename.toLowerCase().endsWith('.webp') ? filename : '', original: filename, isVideo: false, videoSrc: '' }
+    }
+
+    // Root-relative paths (start with '/'): treat as local site assets.
+    // Do NOT automatically prefix with R2_BASE so local files continue working.
+    if (filename.startsWith('/')) {
+      const original = filename
+      if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: original }
+      return { webp: filename.toLowerCase().endsWith('.webp') ? original : '', original, isVideo: false, videoSrc: '' }
+    }
+
+    const base = basePath || R2_BASE
+    const baseClean = (base || '').replace(/\/$/, '')
+    if (isVideo) {
+      const videoSrc = baseClean ? `${baseClean}/${filename}` : filename
+      return { webp: '', original: '', isVideo: true, videoSrc }
+    }
+
     const baseName = filename.replace(/\.[^/.]+$/, '') // Remove extension
-    const webpPath = `${basePath}${baseName}.webp`
-    const originalPath = `${basePath}${filename}`
-    
-    return { webp: webpPath, original: originalPath }
+    const webpPath = baseClean ? `${baseClean}/${baseName}.webp` : `${baseName}.webp`
+    const originalPath = baseClean ? `${baseClean}/${filename}` : filename
+
+    return { webp: webpPath, original: originalPath, isVideo: false, videoSrc: '' }
   }, [basePath])
   
   const currentImageSources = useMemo(() => {
-    if (files.length && basePath) {
+    if (files.length) {
       return generateImageSources(files[index])
     }
-    return { webp: fallbackSrc || '', original: fallbackSrc || '' }
+    return { webp: fallbackSrc || '', original: fallbackSrc || '', isVideo: false, videoSrc: '' }
   }, [files, basePath, index, fallbackSrc, generateImageSources])
 
   // Auto-play functionality (simplified)
@@ -200,26 +232,45 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   return (
     <div className="crossfade-container CrossfadeGallery">
       {previousImageSources.original ? (
-        <picture>
-          <source srcSet={previousImageSources.webp} type="image/webp" />
-          <img
-            src={previousImageSources.original}
-            alt={alt || 'gallery image previous'}
+        previousImageSources.isVideo ? (
+          <video
+            src={previousImageSources.videoSrc}
             className="crossfade-image hidden"
+            preload="metadata"
+          />
+        ) : (
+          <picture>
+            <source srcSet={previousImageSources.webp} type="image/webp" />
+            <img
+              src={previousImageSources.original}
+              alt={alt || 'gallery image previous'}
+              className="crossfade-image hidden"
+              loading="eager"
+            />
+          </picture>
+        )
+      ) : null}
+
+      {currentImageSources.isVideo ? (
+        <video
+          key={currentImageSources.videoSrc}
+          src={currentImageSources.videoSrc}
+          className="crossfade-image visible"
+          controls
+          preload="auto"
+        />
+      ) : (
+        <picture>
+          <source srcSet={currentImageSources.webp} type="image/webp" />
+          <img
+            key={currentImageSources.original}
+            src={currentImageSources.original}
+            alt={alt || 'gallery image current'}
+            className="crossfade-image visible"
             loading="eager"
           />
         </picture>
-      ) : null}
-      <picture>
-        <source srcSet={currentImageSources.webp} type="image/webp" />
-        <img
-          key={currentImageSources.original}
-          src={currentImageSources.original}
-          alt={alt || 'gallery image current'}
-          className="crossfade-image visible"
-          loading="eager"
-        />
-      </picture>
+      )}
       {showNavigation && files.length > 1 && (
         <>
           <button className="crossfade-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
