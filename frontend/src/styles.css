@@ -67,7 +67,6 @@ html, body {
 html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
   font-weight: 400;
 }
 
@@ -259,6 +258,349 @@ body {
     padding: 4rem 2rem;
 }
 
+/* Releases page layout (inspired by music grid) */
+.releases-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 3rem 1.75rem 4.5rem;
+}
+
+.releases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.releases-grid picture {
+    display: block;
+    background: #0b0b0b;
+    border-radius: 0;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+}
+
+.releases-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.97);
+    transition: filter 0.25s ease;
+}
+
+.releases-grid .release-card {
+    position: relative;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    padding: 0 0 40px;
+    box-shadow: none;
+    transition: filter 0.2s ease;
+    height: auto;
+    display: block;
+}
+
+.releases-grid .release-card:hover {
+    transform: none;
+}
+
+.releases-grid .release-card:hover img {
+    filter: brightness(1.08);
+}
+
+.releases-grid .project-caption {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    padding: 0;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: #E4E7EC;
+    letter-spacing: 0.01em;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    text-align: left;
+    pointer-events: none;
+}
+
+.slider-placeholder {
+    min-height: 220px;
+    border: 1px dashed rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1.5rem;
+    color: #b1b5c1;
+    background: rgba(255,255,255,0.01);
+    border-radius: 8px;
+}
+
+.slider-placeholder strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.releases-grid .release-card:hover .project-caption {
+    opacity: 1;
+}
+
+/* Live captions (match Releases behavior) */
+.live-grid .project-caption {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    padding: 0;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: #E4E7EC;
+    letter-spacing: 0.01em;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    text-align: left;
+    pointer-events: none;
+}
+
+.live-card:hover .project-caption {
+    opacity: 1;
+}
+
+@media (min-width: 769px) {
+  .releases-grid .project-caption {
+    top: calc(100% - 24px);
+  }
+}
+
+@media (max-width: 768px) {
+  .releases-grid .project-caption {
+    top: calc(100% - 24px);
+    opacity: 0;
+    padding-bottom: 4px;
+    animation: fadeInCaption 0.5s ease-out 0.3s forwards;
+  }
+}
+
+@keyframes fadeInCaption {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Live captions mimic releases while keeping natural rectangles */
+.live-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+    width: 100%;
+    align-items: stretch;
+    overflow: visible; /* allow captions to overflow below cards */
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: calc(3rem + 36px) 1.75rem 4.5rem; /* match releases-page + 36px */
+    height: auto;
+}
+
+.live-grid picture {
+    display: block;
+    background: #0b0b0b;
+    border-radius: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.live-grid img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.95);
+    transition: filter 0.25s ease;
+}
+
+.live-card {
+    position: relative;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    padding: 0 0 40px;
+    box-shadow: none;
+    height: auto !important;            /* override .project-link height:100% */
+    overflow: visible !important;       /* ensure caption is not clipped */
+    display: block;
+}
+
+.live-grid .project-link:hover img {
+    opacity: 1 !important; /* neutralize global hover that hides image */
+}
+
+/* Disable default hover pseudo-captions and flashlight for live grid */
+.live-grid .project-link::before,
+.live-grid .project-link::after,
+.live-grid .live-card::before,
+.live-grid .live-card::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+@media (max-width: 768px) {
+  .live-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 18px;
+    padding: calc(2.25rem + 36px) 40px 3rem; /* match releases-page mobile + 36px */
+  }
+  .live-grid .live-card {
+    padding: 0 0 40px;
+  }
+  .live-grid .project-caption {
+    position: static !important;
+    display: block !important;
+    opacity: 1 !important;
+    margin-top: 8px !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+  .live-grid .live-card {
+    position: relative;
+    padding-bottom: 0 !important;
+  }
+  .live-card:hover {
+    transform: none;
+  }
+  .live-card:hover img {
+    filter: brightness(0.97);
+  }
+  .live-card:hover .project-caption {
+    opacity: 1;
+  }
+}
+
+/* Disable default hover pseudo-captions for releases */
+.releases-grid .project-link::before,
+.releases-grid .project-link::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.releases-grid .release-card::before,
+.releases-grid .release-card::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+@media (min-width: 769px) {
+  .releases-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - 140px);
+  }
+  .releases-grid {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .releases-page {
+    padding: 2.25rem 0 3rem;
+  }
+  .releases-grid picture {
+    aspect-ratio: 1 / 1;
+  }
+  .releases-grid .project-link::before,
+  .releases-grid .project-link::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  /* Match Live: keep comfortable side gutters on mobile */
+  .releases-page .projects-grid {
+    padding-left: 40px !important;
+    padding-right: 12px !important; /* -28px */
+    box-sizing: border-box !important;
+  }
+}
+
+/* Contact page: allow full-width content (e.g., Instagram embed) */
+.contact-container {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 15vh 10vw 10vw 10vw !important; /* match Bio: top 15vh, left/right 10vw, bottom 10vw */
+    display: block !important; /* override .container grid layout */
+    grid-template-columns: none !important;
+    box-sizing: border-box !important;
+}
+
+.contact-container .writings-grid {
+    display: block !important;
+    width: 100% !important;
+}
+
+.contact-container .writing-category {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.contact-container .element {
+    display: block !important;
+    width: 100% !important;
+    grid-column: unset !important;
+    box-sizing: border-box !important;
+}
+
+.contact-container .instagram-widget {
+    margin-top: 2rem;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    width: 100% !important;
+    max-width: none !important;
+    display: block !important;
+    grid-column: unset !important;
+    box-sizing: border-box !important;
+}
+
+.contact-container .instagram-embed {
+    width: 100%;
+    height: 70vh;
+    min-height: 420px;
+    display: block;
+}
+
+.contact-container .instagram-fallback {
+    text-align: left;
+    padding: 1rem 0 0;
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 4rem 2rem !important; /* match Bio mobile: similar to line 259 */
+  }
+  .contact-container .instagram-embed {
+    height: 60vh;
+    min-height: 360px;
+  }
+}
+
 .element {
 	margin: 0;
 	padding: 0;
@@ -340,7 +682,7 @@ body {
     text-align: center;
 }
 
-.container a:hover {
+.container a:not(.contact-link):hover {
     color: #fff;
     font-family: 'EB Garamond', serif;
     font-style: italic;
@@ -400,33 +742,32 @@ body {
     padding-bottom: 40px !important;
     margin-bottom: 20px !important;
   }
-  
-  /* Add bottom margin to pastoral live page on desktop too */
-  @media (min-width: 769px) {
-    .project-5.project-container {
-      padding-bottom: 60px !important;
-      margin-bottom: 30px !important;
-    }
-    
-    /* Also target the space-separated version */
-    .project-5 .project-container {
-      padding-bottom: 60px !important;
-      margin-bottom: 30px !important;
-    }
-    
-    /* Add margin to the last element in pastoral live */
-    .project-5 .media-container:last-child {
-      margin-bottom: 60px !important;
-      padding-bottom: 30px !important;
-    }
-    
-    /* Also target the last element.data if it exists */
-    .project-5 .element.data:last-child {
-      margin-bottom: 60px !important;
-      padding-bottom: 30px !important;
-    }
-  }
 }
+
+/* Add bottom margin to pastoral live page on desktop too */
+@media (min-width: 769px) {
+  .project-5.project-container {
+    padding-bottom: 60px !important;
+    margin-bottom: 30px !important;
+  }
+  
+  /* Also target the space-separated version */
+  .project-5 .project-container {
+    padding-bottom: 60px !important;
+    margin-bottom: 30px !important;
+  }
+  
+  /* Add margin to the last element in pastoral live */
+  .project-5 .media-container:last-child {
+    margin-bottom: 60px !important;
+    padding-bottom: 30px !important;
+  }
+  
+  /* Also target the last element.data if it exists */
+  .project-5 .element.data:last-child {
+    margin-bottom: 60px !important;
+    padding-bottom: 30px !important;
+  }
 }
 
 #bouncingImagesLyr0 {
@@ -529,8 +870,7 @@ body {
     margin-top: 2em;
 }
 
-.contact-item {
-}
+/* (removed empty .contact-item ruleset) */
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Averia Sans Libre', cursive;
@@ -1068,11 +1408,17 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: flex-end !important;
     font-family: 'EB Garamond', serif !important;
     font-weight: 500 !important;
+    border-bottom: 1px solid rgba(138, 145, 151, 0.6);
 }
 
 .main-nav-right {
-    display: flex;
-    gap: 40px;
+    /* Use grid so item positions are fixed relative to the page (no shifts on italic) */
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 90px 55px 45px 85px; /* releases, live, bio, contact */
+    column-gap: 44px;
+    justify-content: end;
+    align-items: center;
 }
 
 .main-nav-left {
@@ -1083,17 +1429,18 @@ h1, h2, h3, h4, h5, h6 {
     color: #8A9197;
     text-decoration: none;
     position: relative;
-    padding: 0.2em 0.4em;
-    margin: 0 -0.4em;
+    padding: 0.2em 0;
+    margin: 0;
     display: inline-block;
-    min-width: 1.2em;
     text-align: center;
+    /* Fixed widths to prevent layout shift on italic hover */
+    box-sizing: border-box;
     transition: all 0.3s ease;
     font-family: 'EB Garamond', serif;
     font-weight: 500;
     font-style: normal;
-    width: auto;
-    min-width: 120px;
+    width: 100%;
+    min-width: 0;
     box-sizing: border-box;
     white-space: nowrap;
     filter: blur(0);
@@ -1131,7 +1478,7 @@ h1, h2, h3, h4, h5, h6 {
         opacity: 0.5;
     }
     55%, 95% {
-        font-family: 'XXII Ultimate-Black-Metal', serif;
+        font-family: 'Headland One', serif;
         filter: blur(0);
         opacity: 1;
     }
@@ -1146,7 +1493,37 @@ h1, h2, h3, h4, h5, h6 {
     font-style: italic;
     transform: translateZ(0);
     backface-visibility: hidden;
-    /* Remove animation delay for instant hover effect */
+}
+
+/* Prevent layout shift when menu becomes italic on mobile */
+@media (max-width: 768px) {
+  .main-nav-right {
+    justify-content: center;
+    grid-template-columns: 75px 45px 38px 70px; /* tighter mobile widths */
+    column-gap: 18px;
+  }
+  .main-nav-right a {
+    text-align: center;
+  }
+}
+
+/* (removed empty .desktop-nav-stable ruleset) */
+@media (min-width: 769px) {
+  .main-nav {
+    height: auto !important;
+  }
+  .main-nav-right {
+    /* Keep grid on desktop; do not override with flex gap */
+    display: grid !important;
+    grid-auto-flow: column !important;
+    grid-template-columns: 90px 55px 45px 85px !important;
+    column-gap: 44px !important;
+  }
+  .main-nav a {
+    font-size: 1.32rem !important;
+    line-height: 1.32 !important;
+    white-space: nowrap !important;
+  }
 }
 
 .main-nav a:hover::after {
@@ -1197,54 +1574,24 @@ h1, h2, h3, h4, h5, h6 {
 .main-nav a::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(251, 252, 255, 0.15);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: none; /* Remove transition delay for instant hover */
-    z-index: -1;
-    filter: blur(12px);
+    bottom: 6px;
+    left: 20%;
+    width: 60%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transition: opacity 0.25s ease;
 }
 
 .main-nav a:hover {
-    color: #fff;
+    color: #f8f9fb;
     font-style: italic;
-    transform: translateZ(0);
+    transform: none;
     backface-visibility: hidden;
-    /* Remove animation delay for instant hover effect */
 }
-
-/* Remove unused text-blur animation */
 
 .main-nav a:hover::before {
-    width: 180%;
-    height: 220%;
-    background: rgba(251, 252, 255, 0.25);
-    animation: light-flicker 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes light-flicker {
-    0% {
-        background: rgba(251, 252, 255, 0.15);
-    }
-    20% {
-        background: rgba(251, 252, 255, 0.3);
-    }
-    40% {
-        background: rgba(251, 252, 255, 0.2);
-    }
-    60% {
-        background: rgba(251, 252, 255, 0.25);
-    }
-    80% {
-        background: rgba(251, 252, 255, 0.18);
-    }
-    100% {
-        background: rgba(251, 252, 255, 0.25);
-    }
+    opacity: 1;
 }
 
 /* Grid para las imágenes */
@@ -1257,6 +1604,61 @@ h1, h2, h3, h4, h5, h6 {
     height: calc(100vh - 160px);
     width: calc(100% - 120px);
     overflow: hidden; /* Asegura que no haya scroll dentro del grid */
+}
+
+/* Live page uses `.projects-grid live-grid` — override the base `.projects-grid` block */
+.projects-grid.live-grid {
+    /* Layout + spacing should follow Releases-like grid, not the 3x2 fixed viewport grid */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-rows: none;
+    gap: 23px; /* match previous desktop spacing */
+
+    width: 100%;
+    max-width: none;
+    margin: 64px auto 0; /* +36px + 28px */
+    padding: calc(3rem + 36px) 51px 4.5rem; /* match previous desktop side margins */
+    box-sizing: border-box;
+
+    height: auto;
+    overflow: visible;
+}
+
+/* Ensure Releases page grid is not affected by the large fixed .projects-grid rules
+   defined earlier for the homepage — force releases-specific layout here. */
+.releases-page .projects-grid.releases-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  grid-template-rows: none !important;
+  gap: 32px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  height: auto !important;
+  padding: 3rem 1.75rem 4.5rem !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+/* Live grid items should keep natural rectangles (not forced absolute-fill cropping) */
+.projects-grid.live-grid .project-link {
+    height: auto;
+    overflow: visible;
+}
+
+/* Live grid: enforce consistent landscape thumbnails (as before) */
+.projects-grid.live-grid picture {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #0b0b0b;
+}
+
+.projects-grid.live-grid picture img,
+.projects-grid.live-grid picture .hover-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* Estilos móviles para la galería */
@@ -1273,6 +1675,34 @@ h1, h2, h3, h4, h5, h6 {
         align-items: center !important;
         height: auto !important;
         overflow: visible !important;
+    }
+
+    /* Live: match Releases mobile top spacing and side margins */
+    .projects-grid.live-grid {
+        margin-top: 108px !important; /* 48px + 36px + 24px */
+        padding-left: 32px !important;
+        padding-right: 32px !important;
+        padding-top: 0 !important; /* margin-top drives the top spacing */
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+        height: auto !important;
+        align-items: stretch !important;
+    }
+
+    .projects-grid.live-grid .project-link {
+        width: 100% !important;
+        max-width: none !important;
+        align-items: stretch !important;
+    }
+    
+    .projects-grid.live-grid .project-link img,
+    .projects-grid.live-grid .project-link .hover-video {
+        position: static !important;
+        height: auto !important;
+        display: block !important;
+        object-fit: cover !important;
     }
     
     .project-link {
@@ -1729,7 +2159,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Refinamiento de la página About */
 .container {
     margin: 15vh auto 10vw;
-    padding: 0 10vw;
+    padding: 0 calc(10vw - 18px);
     max-width: 1800px;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -2198,18 +2628,20 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
     /* Navegación móvil */
     .main-nav {
-        padding: 20px 15px;
+        padding: 12px 10px;
         background: rgba(255,255,255,0.98);
         backdrop-filter: blur(10px);
+        box-sizing: border-box;
+        width: 100%;
     }
 
     .main-nav a {
-        font-size: 16px;
+        font-size: clamp(0.9em, 3.4vw, 1.05em);
+        padding: 0.15em 0.25em;
+        white-space: nowrap;
     }
 
-    .main-nav-right {
-        gap: 20px;
-    }
+    /* (removed empty .main-nav-right ruleset; overridden by stable nav rules at end) */
 
     /* Layout de proyecto */
     .project-detail {
@@ -2304,10 +2736,54 @@ h1, h2, h3, h4, h5, h6 {
         object-fit: cover;
     }
 
-    .project-image,
-    .image-section {
+    .project-image {
         display: none !important;
     }
+}
+
+/* =========================================================
+   Stable nav: fixed positions (no shifting on italic/hover)
+   Put at end so it wins over earlier responsive blocks.
+   ========================================================= */
+.main-nav .main-nav-right {
+  display: grid !important;
+  grid-auto-flow: column !important;
+  grid-template-columns: 90px 55px 45px 85px !important; /* releases, live, bio, contact */
+  column-gap: 44px !important;
+  justify-content: end !important;
+  align-items: center !important;
+}
+
+.main-nav .main-nav-right > a {
+  width: 100% !important;
+  min-width: 0 !important;
+  text-align: center !important;
+}
+
+/* Avoid real italic (glyph width changes); simulate italic to prevent any jitter */
+.main-nav a:hover {
+  font-style: normal !important;
+}
+.main-nav a:hover .scramble {
+  display: inline-block;
+  transform: skewX(-12deg);
+}
+
+@media (max-width: 768px) {
+  .main-nav .main-nav-right {
+    grid-template-columns: repeat(4, 1fr) !important;
+    column-gap: 0 !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  /* Mobile nav side margins */
+  .main-nav {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    width: calc(100% - 30px) !important;
+    box-sizing: border-box !important;
+  }
 }
 
 /* Ajustes adicionales para pantallas muy pequeñas */
@@ -2503,6 +2979,7 @@ a {
     color: #fff !important;
     opacity: 0.8;
     font-style: normal !important;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.55), 0 0 12px rgba(255, 255, 255, 0.35);
 }
 
 .contact-link::after {
@@ -2526,27 +3003,11 @@ a {
     animation: font-switch 2s infinite;
 }
 
-/* Efecto de nube para los enlaces de contacto */
-.contact-link::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(251, 252, 255, 0.15);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: none;
-    z-index: -1;
-    filter: blur(12px);
-}
-
+/* Desactiva aura difusa en contacto/bio; se mantiene solo el texto */
+.contact-link::before,
 .contact-link:hover::before {
-    width: 180%;
-    height: 220%;
-    background: rgba(251, 252, 255, 0.25);
-    animation: light-flicker 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    display: none !important;
+    content: none !important;
 }
 
 /* Estilos específicos para el proyecto licitir */
@@ -2958,7 +3419,19 @@ a {
     color: #fff;
     font-size: 2em;
     margin: 0;
+    padding-left: 7px;
+    padding-right: 7px;
     text-align: center;
+}
+
+/* Live detail pages: add +10px left padding to titles */
+.project-container[class*="-live"] > .project-title {
+    padding-left: 17px;
+}
+
+/* Live detail: bring slideshow 1 closer to the title */
+.project-live-detail .performance-gallery {
+  margin-top: 0rem;
 }
 
 .media-container {
@@ -2967,6 +3440,8 @@ a {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     height: 100%;
+    align-items: stretch;
+    grid-auto-rows: 1fr;
 }
 
 .image-section, .video-section {
@@ -2978,6 +3453,16 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 100%;
+}
+
+.image-section .media-slider,
+.image-section .media-slider .slide,
+.image-section picture,
+.image-section img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
 }
 
 .project-image {
@@ -2991,8 +3476,8 @@ a {
 
 .project-video {
     width: 100%;
-    height: auto;
-    max-height: 100%;
+    height: 100%;
+    max-height: none;
     object-fit: contain;
 }
 
@@ -3080,31 +3565,35 @@ a {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
-        height: 60px !important;
-        min-height: 60px !important;
-        max-height: 60px !important;
+        min-height: 56px !important;
+        height: auto !important;
+        max-height: none !important;
         background: #000 !important;
         border: none !important;
         box-shadow: none !important;
+        border-bottom: 1px solid rgba(138, 145, 151, 0.6) !important;
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 8px 10px !important;
     }
     .main-nav-right {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        width: 100vw !important;
-        height: 100% !important;
-        padding: 0 12px !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 0 !important;
         box-sizing: border-box !important;
         border: none !important;
         background: none !important;
         margin: 0 !important;
+        gap: 6px !important;
+        flex-wrap: nowrap !important;
+        overflow: hidden !important;
     }
     .main-nav a {
         color: #8A9197 !important;
         font-family: 'EB Garamond', serif !important;
-        font-size: clamp(0.85em, 3.5vw, 1.1em) !important;
+        font-size: clamp(0.85em, 3.2vw, 1.0em) !important;
         font-style: normal !important;
         font-weight: 500 !important;
         text-decoration: none !important;
@@ -3113,9 +3602,9 @@ a {
         filter: none !important;
         outline: none !important;
         text-align: center !important;
-        line-height: 60px !important;
+        line-height: 1.15 !important;
         white-space: nowrap !important;
-        padding: 0.2em 0.3em !important;
+        padding: 0.16em 0.22em !important;
         margin: 0 !important;
         background: none !important;
         border: none !important;
@@ -3271,10 +3760,16 @@ a {
 
 .project-1 .project-title,
 .project-3 .project-title,
-.project-5 .project-title {
-    text-align: center !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+.project-5 .project-title,
+.project-diamantista-live .project-title,
+.project-licitir-live .project-title,
+.project-pastoral-live .project-title {
+    text-align: left !important;
+    align-self: flex-start !important;
+    padding-left: 17px !important; /* 7px base + 10px extra */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 0.5rem !important;
 }
 
 .video-section iframe.project-video {
@@ -3403,15 +3898,22 @@ a {
         transform: none !important;
     }
     
-    /* Prevent scramble effect from moving menu items on mobile */
+    /* Prevent scramble layout shift on mobile but keep animation */
     .scramble {
         transform: none !important;
-        transition: none !important;
+        transition: opacity 0.3s ease !important;
+        filter: none !important;
     }
     
     .scramble.visible {
         transform: none !important;
-        transition: none !important;
+        filter: none !important;
+    }
+    
+    /* Make glitch characters less jarring on mobile */
+    .glitching {
+        opacity: 0.7 !important;
+        animation: none !important;
     }
     
     /* Ensure scramble doesn't affect layout on mobile */
@@ -3512,7 +4014,7 @@ a {
 }
 
 @media (max-width: 768px) {
-  .project-link::after {
+  .releases-grid .project-link::after {
     display: block !important;
     content: attr(data-title);
     position: absolute;
@@ -3531,7 +4033,7 @@ a {
     line-height: 1.2;
     animation: none;
   }
-  .project-link.visible::after {
+  .releases-grid .project-link.visible::after {
     opacity: 1;
     font-style: italic;
     color: #fff;
@@ -3626,8 +4128,8 @@ body::before {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0) 100%);
-  filter: blur(80px);
+  background: transparent;
+  filter: none;
   pointer-events: none;
   z-index: -1;
 }
@@ -3765,6 +4267,8 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #000;
+  contain: layout style;
 }
 
 .slide {
@@ -3773,12 +4277,127 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #000;
+}
+
+.project-live-detail .slide {
+  aspect-ratio: 16 / 9;
+}
+
+/* Mobile Live detail: show slideshow1, slideshow2, video in vertical stack */
+@media (max-width: 768px) {
+  .project-live-detail {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 17px !important;
+    gap: 17px !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+  
+  .project-live-detail .project-detail-content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 17px !important;
+  }
+  
+  .project-live-detail .element.data,
+  .project-live-detail .performance-gallery {
+    display: block !important;
+    width: 100% !important;
+  }
+  
+  .project-live-detail .media-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 17px !important;
+    height: auto !important;
+  }
+  
+  .project-live-detail .image-section {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+  }
+  
+  .project-live-detail .video-section {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+  }
+  
+  .project-live-detail .image-section .media-slider,
+  .project-live-detail .video-section .project-video {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 9 !important;
+  }
 }
 
 .slide img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  background: #000;
+}
+
+/* Landing slideshow fills viewport under nav */
+.landing-hero {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  margin-top: 80px;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.landing-hero .media-slider {
+  flex: 1;
+  height: calc(100vh - 80px - 40px);
+  align-items: center;
+}
+
+/* Landing: fixed horizontal frame for all slides */
+.landing-hero .slide {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1706 / 1145;
+}
+
+.landing-hero .slide img {
+  width: 100%;
+  height: 100%;
+}
+
+/* Desktop: crop to fill the horizontal frame */
+@media (min-width: 769px) {
+  .landing-hero .slide img {
+    object-fit: cover;
+  }
+}
+
+/* Mobile: keep full image visible + no scroll */
+@media (max-width: 768px) {
+  .landing-hero {
+    min-height: calc(100vh - 56px);
+    margin-top: 56px;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .landing-hero .media-slider {
+    height: calc(100vh - 56px);
+  }
+  .landing-hero .slide img {
+    object-fit: contain;
+  }
 }
 
 .slider-btn {
@@ -4174,6 +4793,8 @@ body::before {
   height: auto;
   min-height: 100vh;
   overflow: visible;
+  background: #000 !important;
+  align-items: flex-start;
 }
 
 @media (max-width: 768px) {
@@ -4183,6 +4804,7 @@ body::before {
     height: auto !important;
     min-height: auto !important;
     overflow: visible !important;
+    background: #000 !important;
   }
 }
 
@@ -4526,7 +5148,7 @@ body::before {
 
 /* Ensure project container itself is transparent */
 .project-5.project-container {
-  background: transparent !important;
+  background: #000 !important;
 }
 
 /* Fix LICITIR video centering on mobile */
@@ -4605,4 +5227,160 @@ body::before {
     top: auto !important;
     left: auto !important;
   }
+}
+
+/* =========================================================
+   FINAL NAV OVERRIDES (must be last in file)
+   Fix mobile side margins + prevent any layout shift on hover.
+   ========================================================= */
+@media (max-width: 768px) {
+  .main-nav {
+    /* Keep top/bottom padding from existing mobile menu, but control side margins */
+    padding: 8px 13px !important; /* base */
+    padding-left: 10px !important; /* -3px left margin */
+    box-sizing: border-box !important;
+  }
+
+  .main-nav .main-nav-right {
+    /* Flex + fixed item widths => positions don't depend on text width */
+    display: flex !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    align-items: center !important;
+    gap: 0 !important;
+    /* Ensure perfectly centered group with symmetric side margins */
+    margin-left: 2px !important;
+    margin-right: 2px !important;
+    width: calc(100% - 4px) !important;
+    box-sizing: border-box !important;
+  }
+
+  .main-nav .main-nav-right > a {
+    text-align: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Fixed slots (order is stable: releases, live, bio, contact) */
+  .main-nav .main-nav-right > a:nth-child(1) { width: 75px !important; }
+  .main-nav .main-nav-right > a:nth-child(2) { width: 45px !important; }
+  .main-nav .main-nav-right > a:nth-child(3) { width: 38px !important; }
+  .main-nav .main-nav-right > a:nth-child(4) { width: 70px !important; }
+
+  /* Simulate italic without reflow */
+  .main-nav a:hover {
+    font-style: normal !important;
+  }
+  .main-nav a:hover .scramble {
+    display: inline-block;
+    transform: skewX(-12deg) !important;
+  }
+}
+
+/* =========================================================
+   FINAL BIO MOBILE PADDING (iPhone/Safari-safe)
+   Ensure Bio side margins don't shrink due to vw-based rules.
+   ========================================================= */
+@media (max-width: 768px) {
+  .bio-container {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: max(2rem, calc(2rem + env(safe-area-inset-left))) !important;
+    padding-right: max(2rem, calc(2rem + env(safe-area-inset-right))) !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* =========================================================
+   FINAL DESKTOP NAV OVERRIDES
+   Shift menu 8px left + increase spacing by 20%
+   ========================================================= */
+@media (min-width: 769px) {
+  .main-nav .main-nav-right {
+    /* 44px * 1.2 ~= 52.8px */
+    column-gap: 53px !important;
+    transform: translateX(-8px) !important; /* shift the group 8px left */
+  }
+}
+
+/* =========================================================
+   GLOBAL MOBILE INSET: remove 14px from left/right everywhere
+   Includes fixed menu + all routed pages (text/images/grids).
+   ========================================================= */
+@media (max-width: 768px) {
+  .page-content {
+    margin-left: -14px !important;
+    margin-right: -14px !important;
+    width: calc(100% + 28px) !important;
+    box-sizing: border-box !important;
+  }
+
+  .main-nav {
+    left: -14px !important;
+    width: calc(100% + 28px) !important;
+  }
+}
+
+/* Landing (mobile): absolutely no scroll + remove any overflow indicators */
+@media (max-width: 768px) {
+  html.page-landing,
+  body.page-landing {
+    height: 100% !important;
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+
+  /* Override the global inset on Landing so nothing extends beyond viewport */
+  .page-content.is-landing {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Ensure landing hero fits exactly and doesn't overflow horizontally */
+  .page-content.is-landing .landing-hero {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* =========================================================
+   TYPE SCALE TWEAKS
+   Reduce: live detail titles + Bio titles + Bio body text.
+   ========================================================= */
+@media (max-width: 768px) {
+  .project-container .project-title {
+    font-size: 1.05em !important;
+  }
+  .bio-container .element.data h2 {
+    font-size: 1.05em !important;
+  }
+
+  .bio-container .element.data p {
+    font-size: 0.78em !important;
+    line-height: 1.55 !important;
+  }
+}
+
+/* Faster "italic" animation (we simulate italic via skew to avoid reflow) */
+.main-nav a {
+  transition: color 120ms ease-out !important;
+}
+
+.main-nav a .scramble {
+  display: inline-block;
+  transform: none;
+  transition: transform 120ms ease-out;
+  will-change: transform;
+}
+
+.main-nav a:hover {
+  font-style: normal !important;
+}
+
+.main-nav a:hover .scramble {
+  transform: skewX(-12deg) !important;
 }
