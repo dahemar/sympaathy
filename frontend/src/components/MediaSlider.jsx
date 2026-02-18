@@ -1,17 +1,24 @@
 import { memo, useEffect, useMemo, useState, useCallback } from 'react'
 
-// MediaSlider expects a dataUrl that returns an array of image filenames (strings)
-// and a basePath where those images live. Example:
-// dataUrl: "/images%202/performance-frames/index.json"
-// basePath: "/images%202/performance-frames/"
-export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '', showNavigation = true }) => {
+// MediaSlider can consume either:
+// 1) dataUrl + basePath (legacy: dataUrl returns ["file1.jpg", ...])
+// 2) images: an array of absolute or root-relative URLs (new: Google Sheets)
+export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 6000, alt = '', showNavigation = true }) => {
   const [files, setFiles] = useState([])
   const [index, setIndex] = useState(0)
   const [lastManualNavigation, setLastManualNavigation] = useState(0)
   const [autoPlayPaused, setAutoPlayPaused] = useState(false)
   const [preloadedImages, setPreloadedImages] = useState(new Set())
 
+  // When images are passed directly, prefer them over dataUrl fetch.
   useEffect(() => {
+    if (Array.isArray(images) && images.length) {
+      setFiles(images.filter(Boolean))
+      setIndex(0)
+      return
+    }
+    if (!dataUrl) return
+
     let isMounted = true
     fetch(dataUrl)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Failed to load slider data'))))
@@ -25,7 +32,12 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
     return () => {
       isMounted = false
     }
-  }, [dataUrl])
+  }, [dataUrl, images])
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log('[MediaSlider]', { mode: Array.isArray(images) ? 'images' : 'dataUrl', count: files.length, sample: files.slice(0, 3) })
+  }, [files, images])
 
   useEffect(() => {
     if (!intervalMs || files.length <= 1 || autoPlayPaused) return
@@ -54,15 +66,41 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
   
   const hasImages = files.length > 0
 
-  // Generate optimized image sources with WebP fallback (must be declared before effects that depend on it)
+  // Generate optimized image/video sources, using VITE_R2_BASE when available.
+  const R2_BASE = (import.meta.env.VITE_R2_BASE || '').replace(/\/$/, '')
+  const joinBase = (base, path) => base ? `${base}/${path.replace(/^\/+/, '')}` : path
+
   const generateImageSources = useCallback((filename) => {
-    if (!filename) return { webp: '', original: '' }
+    if (!filename) return { webp: '', original: '', isVideo: false, videoSrc: '' }
+
+    const isVideo = /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(filename)
+
+    // Absolute URL -> respect as-is
+    if (/^https?:\/\//i.test(filename)) {
+      if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: filename }
+      return { webp: filename.toLowerCase().endsWith('.webp') ? filename : '', original: filename, isVideo: false, videoSrc: '' }
+    }
+
+    // Root-relative paths: optionally prefix with R2 base
+    if (filename.startsWith('/')) {
+      const original = R2_BASE ? joinBase(R2_BASE, filename) : filename
+      if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: original }
+      return { webp: filename.toLowerCase().endsWith('.webp') ? original : '', original, isVideo: false, videoSrc: '' }
+    }
+
+    // Relative paths: use `basePath` if provided, otherwise R2_BASE
+    const base = basePath || R2_BASE
+    const baseClean = (base || '').replace(/\/$/, '')
+    if (isVideo) {
+      const videoSrc = baseClean ? `${baseClean}/${filename}` : filename
+      return { webp: '', original: '', isVideo: true, videoSrc }
+    }
 
     const baseName = filename.replace(/\.[^/.]+$/, '') // Remove extension
-    const webpPath = `${basePath}${baseName}.webp`
-    const originalPath = `${basePath}${filename}`
+    const webpPath = baseClean ? `${baseClean}/${baseName}.webp` : `${baseName}.webp`
+    const originalPath = baseClean ? `${baseClean}/${filename}` : filename
 
-    return { webp: webpPath, original: originalPath }
+    return { webp: webpPath, original: originalPath, isVideo: false, videoSrc: '' }
   }, [basePath])
 
   // Preload adjacent images when index changes
@@ -73,14 +111,14 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
       
       const nextSources = generateImageSources(files[nextIndex])
       const prevSources = generateImageSources(files[prevIndex])
-      
+
       const imagesToPreload = [
         nextSources.webp,
         nextSources.original,
         prevSources.webp,
         prevSources.original
       ]
-      
+
       imagesToPreload.forEach(src => {
         if (src && !preloadedImages.has(src)) {
           const img = new Image()
@@ -96,7 +134,7 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
   // (moved generateImageSources above)
   
   const currentImageSources = useMemo(() => {
-    if (!hasImages) return { webp: '', original: '' }
+    if (!hasImages) return { webp: '', original: '', isVideo: false, videoSrc: '' }
     return generateImageSources(files[index])
   }, [hasImages, files, index, generateImageSources])
   
@@ -137,19 +175,35 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
           <button className="slider-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
           <div className="slide">
             <picture>
-              <source srcSet={currentImageSources.webp} type="image/webp" />
-              <img 
-                src={currentImageSources.original} 
-                alt={alt || 'slider image'} 
-                loading="eager"
-                decoding="async"
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'contain',
-                  willChange: 'transform'
-                }}
-              />
+                  {currentImageSources.isVideo ? (
+                    <video
+                      src={currentImageSources.videoSrc}
+                      controls
+                      preload={index === 0 ? 'auto' : 'metadata'}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    />
+                  ) : (
+                    <>
+                      <source srcSet={currentImageSources.webp} type="image/webp" />
+                      <img 
+                        src={currentImageSources.original} 
+                        alt={alt || 'slider image'} 
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
+                        onError={(e) => {
+                          // eslint-disable-next-line no-console
+                          console.warn('[MediaSlider] image failed', e?.currentTarget?.src)
+                        }}
+                        style={{ 
+                          width: '100%', 
+                          height: '100%', 
+                          objectFit: 'contain',
+                          willChange: 'opacity, transform'
+                        }}
+                      />
+                    </>
+                  )}
             </picture>
           </div>
           <button className="slider-btn next" onClick={goNext} aria-label="Next">›</button>
@@ -163,6 +217,10 @@ export const MediaSlider = memo(({ dataUrl, basePath, intervalMs = 6000, alt = '
               src={currentImageSources.original} 
               alt={alt || 'slider image'} 
               loading="lazy" 
+              onError={(e) => {
+                // eslint-disable-next-line no-console
+                console.warn('[MediaSlider] image failed', e?.currentTarget?.src)
+              }}
             />
           </picture>
         </div>
