@@ -1,5 +1,8 @@
-slug,title,video_src,video_title,primary_slider_id,secondary_slider_id
-diamantista-live,diamantista live,/images/diamantista.mp4,Diamantista live clip,,
-licitir-live,LICITIR live,https://www.youtube.com/embed/vF7xEWjdFu0,LICITIR live,,
-pastoral-live,.pastoral live,https://www.youtube.com/embed/WtsBI93REOU?start=2748,Pastoral live,pastoral-performance,pastoral-gallery
+
+slug,title,video_src,video_title,primary_slider_id,secondary_slider_id,detail_header,detail_text
+diamantista-live,diamantista live,/images/diamantista.mp4,Diamantista live clip,,,,Detalle sobre Diamantista live.
+licitir-live,LICITIR live,https://www.youtube.com/embed/vF7xEWjdFu0,LICITIR live,,,,Licitir live info: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+pastoral-live,.pastoral live,https://www.youtube.com/embed/WtsBI93REOU?start=2748,Pastoral live,pastoral-performance,pastoral-gallery,Sobre Pastoral,"Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor."
 

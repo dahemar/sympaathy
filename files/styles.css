@@ -2584,7 +2584,7 @@ a {
 .project-container {
     width: 100%;
     height: calc(100vh - 80px);
-    margin-top: 80px;
+    margin-top: 0;
     padding: 20px;
     box-sizing: border-box;
     display: flex;

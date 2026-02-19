@@ -298,7 +298,7 @@ const Releases = memo(({ releases }) => {
                 src={image} 
                 alt={title} 
                 loading={index < 4 ? "eager" : "lazy"}
-                fetchpriority={index < 2 ? "high" : "auto"}
+                fetchPriority={index < 2 ? "high" : "auto"}
                 onLoad={() => markLoaded(href)}
                 onError={() => markLoaded(href)}
               />
@@ -346,7 +346,7 @@ const Live = memo(({ liveProjects }) => {
               onError={() => markLoaded(slug)}
             />
           </picture>
-          {loadedByKey[slug] ? <div className="project-caption">{title}</div> : null}
+          {/* headers removed for live cards */}
         </Link>
       ))}
     </div>
@@ -406,14 +406,14 @@ const Contact = memo(({ links }) => {
             />
           </div>
         </div>
+        </div>
       </div>
-    </div>
   )
 })
 
 Contact.displayName = 'Contact'
 
-const LiveDetail = memo(({ primaryImages, secondaryImages, video }) => {
+const LiveDetail = memo(({ primaryImages, secondaryImages, video, detailHeader = '', detailText = '' }) => {
   const renderSliderOrPlaceholder = (slider, placeholder) => {
     if (!slider || slider.length === 0) {
       return (
@@ -495,6 +495,21 @@ const LiveDetail = memo(({ primaryImages, secondaryImages, video }) => {
           </div>
         </div>
       </div>
+      <div className="project-extra-section">
+        <h3 className="project-extra-header">
+          {detailHeader ? <ScrambleText delay={0}>{detailHeader}</ScrambleText> : ''}
+        </h3>
+        <div className="project-extra-body">
+          {detailText ? (
+            splitLines(detailText).map((paragraph, idx) => (
+              <p key={idx}>{parseRichText(paragraph)}</p>
+            ))
+          ) : (
+            // keep container present so editors can see the section in layout
+            <p className="project-extra-empty" />
+          )}
+        </div>
+      </div>
     </div>
   )
 })
@@ -504,6 +519,10 @@ LiveDetail.displayName = 'LiveDetail'
 const Project = memo(({ liveDetailMap, dataLoaded }) => {
   const { projectSlug } = useParams()
   const projectData = liveDetailMap[projectSlug]
+
+  // Debug: show project data parsed from Sheets
+  // eslint-disable-next-line no-console
+  console.debug('[Project] projectData', projectSlug, projectData)
 
   useEffect(() => {
     // Only redirect if data has finished loading AND project is not found
@@ -521,14 +540,24 @@ const Project = memo(({ liveDetailMap, dataLoaded }) => {
 
   return (
     <div className={`project-container project-${projectSlug}`}>
-      <h2 className="project-title">
-        <ScrambleText delay={0}>{projectData.title}</ScrambleText>
-      </h2>
-      <LiveDetail
-        primaryImages={projectData.primaryImages}
-        secondaryImages={projectData.secondaryImages}
-        video={projectData.video}
-      />
+      {(() => {
+        const isDev = import.meta.env.DEV
+        const sampleHeader = 'About this project'
+        const sampleText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.\n\nSuspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.`
+
+        const detailHeader = projectData.detail_header || (isDev ? sampleHeader : '')
+        const detailText = projectData.detail_text || (isDev ? sampleText : '')
+
+        return (
+          <LiveDetail
+            primaryImages={projectData.primaryImages}
+            secondaryImages={projectData.secondaryImages}
+            video={projectData.video}
+            detailHeader={detailHeader}
+            detailText={detailText}
+          />
+        )
+      })()}
     </div>
   )
 })
@@ -613,7 +642,10 @@ export default function App() {
           title: row.title || slug,
           video: inferVideo(row),
           primaryImages: row.primary_slider_id ? sortedSlides[row.primary_slider_id] || [] : null,
-          secondaryImages: row.secondary_slider_id ? sortedSlides[row.secondary_slider_id] || [] : null
+          secondaryImages: row.secondary_slider_id ? sortedSlides[row.secondary_slider_id] || [] : null,
+          // Editable section fields from Sheets
+          detail_header: row.detail_header || row.detailHeader || '',
+          detail_text: row.detail_text || row.detailText || ''
         }
         return acc
       }, {})

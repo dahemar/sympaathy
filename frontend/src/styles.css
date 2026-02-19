@@ -3426,7 +3426,7 @@ a {
 .project-container {
     width: 100%;
     height: calc(100vh - 80px);
-    margin-top: 80px;
+  margin-top: 0;
     padding: 20px;
     box-sizing: border-box;
     display: flex;
@@ -3452,17 +3452,45 @@ a {
 
 /* Live detail: bring slideshow 1 closer to the title */
 .project-live-detail .performance-gallery {
-  margin-top: 0rem;
+  margin-top: 36px;
+  /* Make the first slideshow grow to fill available space so it's as large as possible */
+  display: block;
+  flex: 1 1 auto;
+  min-height: 60vh;
+}
+
+/* Editable extra section under project detail */
+.project-extra-section {
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.project-extra-header {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  color: #fff;
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+}
+.project-extra-body p {
+  margin: 0 0 0.75rem 0;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.9);
+}
+
+@media (orientation: portrait), (max-width: 768px) {
+  .project-extra-header { font-size: 1.1rem; }
+  .project-extra-section { margin-top: 1rem; padding: 0.75rem 0; }
 }
 
 .media-container {
-    flex: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    height: 100%;
-    align-items: stretch;
-    grid-auto-rows: 1fr;
+  /* keep media container compact so the primary slideshow can grow */
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+  grid-auto-rows: 1fr;
 }
 
 .image-section, .video-section {
@@ -3475,6 +3503,16 @@ a {
     align-items: center;
     justify-content: center;
     min-height: 100%;
+}
+
+/* Ensure the media-slider inside the performance-gallery fills the area */
+.project-live-detail .performance-gallery .media-slider,
+.project-live-detail .performance-gallery .media-slider .slide,
+.project-live-detail .performance-gallery picture,
+.project-live-detail .performance-gallery img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 
 .image-section .media-slider,
