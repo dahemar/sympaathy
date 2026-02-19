@@ -301,6 +301,13 @@ body {
   }
 }
 
+/* Restore top padding on desktop so Releases page keeps its original top spacing */
+@media (min-width: 769px) {
+  .projects-grid.releases-grid {
+    padding-top: 100px; /* matches the base .projects-grid original top padding */
+  }
+}
+
 .releases-grid picture {
     display: block;
     background: #0b0b0b;
