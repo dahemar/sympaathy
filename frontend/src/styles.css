@@ -1331,6 +1331,77 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
 }
 
+/* Force 4:5 aspect ratio for second slideshow (image-section) and video on all live pages */
+.project-live-detail .media-container .image-section .media-slider .slide,
+.project-live-detail .media-container .image-section picture,
+.project-live-detail .media-container .image-section img {
+  aspect-ratio: 4 / 5 !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important;
+}
+
+.project-live-detail .media-container .video-section .project-video,
+.project-live-detail .media-container .video-section iframe,
+.project-live-detail .media-container .video-section video {
+  aspect-ratio: 4 / 5 !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: cover !important;
+}
+
+@media (max-width: 768px) {
+  .project-live-detail .media-container .image-section .media-slider .slide,
+  .project-live-detail .media-container .image-section picture,
+  .project-live-detail .media-container .image-section img,
+  .project-live-detail .media-container .video-section iframe,
+  .project-live-detail .media-container .video-section .project-video {
+    aspect-ratio: 4 / 5 !important;
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover !important;
+    min-height: 0 !important;
+  }
+}
+
+/* Ensure both columns always match height and inner media fill their column
+   so second slideshow and video always have equal height */
+.project-live-detail .media-container {
+  align-items: stretch;
+}
+.project-live-detail .media-container .image-section,
+.project-live-detail .media-container .video-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+}
+.project-live-detail .media-container .image-section .media-slider,
+.project-live-detail .media-container .image-section picture,
+.project-live-detail .media-container .image-section img,
+.project-live-detail .media-container .video-section iframe,
+.project-live-detail .media-container .video-section .project-video,
+.project-live-detail .media-container .video-section video {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 4 / 5 !important;
+  object-fit: cover !important;
+}
+
+/* Make the video fill the .video-section container completely */
+.project-live-detail .media-container .video-section > video,
+.project-live-detail .media-container .video-section > .project-video,
+.project-live-detail .media-container .video-section > iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
 /* Rectangular images for specific projects */
 .project-2 .project-image,
 .project-4 .project-image,
@@ -3452,11 +3523,18 @@ a {
 
 /* Live detail: bring slideshow 1 closer to the title */
 .project-live-detail .performance-gallery {
-  margin-top: 36px;
+  margin-top: 23px;
   /* Make the first slideshow grow to fill available space so it's as large as possible */
   display: block;
   flex: 1 1 auto;
   min-height: 60vh;
+}
+
+/* Live detail: fixed vertical spacing between slideshow 1 and slideshow 2 (desktop + mobile) */
+.project-live-detail .project-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 /* Editable extra section under project detail */
@@ -4349,7 +4427,7 @@ body::before {
     display: flex !important;
     flex-direction: column !important;
     padding: 17px !important;
-    gap: 17px !important;
+    gap: 12px !important;
     overflow: visible !important;
     height: auto !important;
     min-height: auto !important;
@@ -4358,19 +4436,25 @@ body::before {
   .project-live-detail .project-detail-content {
     display: flex !important;
     flex-direction: column !important;
-    gap: 17px !important;
+    gap: 0 !important;
   }
   
   .project-live-detail .element.data,
-  .project-live-detail .performance-gallery {
+  .project-live-detail .element.data {
     display: block !important;
     width: 100% !important;
+  }
+
+  /* Remove the visual wrapper around the first slideshow on mobile so
+     the slideshow stands alone (no extra container spacing) */
+  .project-live-detail .performance-gallery {
+    display: contents !important;
   }
   
   .project-live-detail .media-container {
     display: flex !important;
     flex-direction: column !important;
-    gap: 17px !important;
+    gap: 12px !important;
     height: auto !important;
   }
   
@@ -4379,6 +4463,24 @@ body::before {
     width: 100% !important;
     height: auto !important;
     min-height: 200px !important;
+  }
+
+  /* Lift the second slideshow 20px upwards on mobile */
+  .project-live-detail .media-container .image-section {
+    margin-top: -20px !important;
+  }
+
+  /* Mobile: ensure video uses fixed 4:5 aspect ratio and isn't absolutely positioned */
+  .project-live-detail .media-container .video-section > video,
+  .project-live-detail .media-container .video-section > .project-video,
+  .project-live-detail .media-container .video-section > iframe {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    object-fit: cover !important;
+    display: block !important;
   }
   
   .project-live-detail .video-section {
@@ -4392,7 +4494,7 @@ body::before {
   .project-live-detail .video-section .project-video {
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 16 / 9 !important;
+    aspect-ratio: 4 / 5 !important;
   }
 }
 
