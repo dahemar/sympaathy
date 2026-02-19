@@ -273,6 +273,34 @@ body {
     align-items: stretch;
 }
 
+/*
+  Releases uses: <div class="projects-grid releases-grid">...
+  The base `.projects-grid` is a fixed 3x2 viewport grid with `height` + `overflow: hidden`,
+  which clips additional rows and hides the hover caption.
+  Override it here so the releases grid grows with content (any number of rows).
+*/
+.projects-grid.releases-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: auto;
+
+    height: auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+/* Keep 2 columns on medium screens so items wrap naturally into multiple rows */
+@media (max-width: 1024px) {
+  .projects-grid.releases-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .releases-grid picture {
     display: block;
     background: #0b0b0b;
@@ -301,6 +329,7 @@ body {
     transition: filter 0.2s ease;
     height: auto;
     display: block;
+  overflow: visible;
 }
 
 .releases-grid .release-card:hover {
@@ -1623,21 +1652,6 @@ h1, h2, h3, h4, h5, h6 {
     height: auto;
     overflow: visible;
 }
-
-  /* Releases page should expand to fit all rows (don't constrain to viewport) */
-  .projects-grid.releases-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    grid-template-rows: none;
-    gap: 32px;
-    width: 100%;
-    max-width: none;
-    margin: 0 auto;
-    padding: 3rem 1.75rem 4.5rem; /* match .releases-page spacing */
-    box-sizing: border-box;
-    height: auto; /* allow grid to grow */
-    overflow: visible; /* show captions outside image box */
-  }
 
 /* Live grid items should keep natural rectangles (not forced absolute-fill cropping) */
 .projects-grid.live-grid .project-link {
