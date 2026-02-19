@@ -2885,21 +2885,6 @@ a {
     }
 }
 
-/* Bring first slideshow up on desktop for live project pages */
-@media (min-width: 769px) {
-    .project-1 .project-container,
-    .project-3 .project-container,
-    .project-5 .project-container {
-        margin-top: 20px; /* was 80px, reduce to pull slideshow upward */
-        height: calc(100vh - 40px); /* keep similar visual height */
-    }
-    .project-1 .media-container,
-    .project-3 .media-container,
-    .project-5 .media-container {
-        gap: 12px;
-    }
-}
-
 @media (max-width: 768px) {
     /* Títulos principales */
     h1, .project-title, .element.data h2 {

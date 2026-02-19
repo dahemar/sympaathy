@@ -1,22 +1,125 @@
-import { memo, useMemo, useCallback, useState, useEffect, useRef } from 'react'
+import { memo, useMemo, useCallback, useState, useEffect } from 'react'
 import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
 import { ScrambleText } from './components/ScrambleText.jsx'
 import { MediaSlider } from './components/MediaSlider.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 
-// Hook removed - was interfering with scroll detection
+const SHEETS_API_KEY = import.meta.env.VITE_SHEETS_API_KEY || 'AIzaSyBHQgbSv588A3qr-Kzeo6YrZ9TbVNlrSkc'
+const SHEET_ID = import.meta.env.VITE_SHEET_ID || '1Zfp7ZajmFph1zqA2K_jK_5Jgf_L-EyuxRkpMpEmKerg'
+
+const SHEETS_ENDPOINT = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`
+const SHEETS_BATCH_ENDPOINT = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values:batchGet`
+
+const DEBUG_SHEETS =
+  import.meta.env.VITE_DEBUG_SHEETS != null
+    ? String(import.meta.env.VITE_DEBUG_SHEETS).toLowerCase() === 'true'
+    : import.meta.env.DEV
+
+const debugLog = (...args) => {
+  if (!DEBUG_SHEETS) return
+  // eslint-disable-next-line no-console
+  console.log('[sheets]', ...args)
+}
+
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+
+const getCachedSheetEntry = (sheetName) => {
+  try {
+    const cached = sessionStorage.getItem(`sheets_${sheetName}`)
+    if (!cached) return null
+    const { data, timestamp } = JSON.parse(cached)
+    if (!Array.isArray(data) || typeof timestamp !== 'number') return null
+    return { data, timestamp }
+  } catch {
+    return null
+  }
+}
+
+const getCachedSheetFresh = (sheetName) => {
+  const entry = getCachedSheetEntry(sheetName)
+  if (!entry) return null
+  if (Date.now() - entry.timestamp > CACHE_TTL) return null
+  return entry.data
+}
+
+const getCachedSheetAny = (sheetName) => {
+  const entry = getCachedSheetEntry(sheetName)
+  return entry?.data || null
+}
+
+const setCachedSheet = (sheetName, data) => {
+  try {
+    sessionStorage.setItem(`sheets_${sheetName}`, JSON.stringify({ data, timestamp: Date.now() }))
+  } catch {
+    // ignore quota errors
+  }
+}
+
+const parseSheetValues = (sheetName, rows) => {
+  if (!Array.isArray(rows) || rows.length === 0) return []
+  const headers = (rows[0] || []).map(h => String(h || '').trim())
+  const parsed = rows.slice(1).map(row => {
+    const entry = {}
+    headers.forEach((h, idx) => {
+      entry[h] = row?.[idx] ?? ''
+    })
+    return entry
+  })
+  debugLog('parsed', sheetName, { headers, rowCount: parsed.length })
+  return parsed
+}
+
+const fetchSheetsBatch = async (sheetNames) => {
+  const params = new URLSearchParams({ key: SHEETS_API_KEY })
+  sheetNames.forEach((name) => params.append('ranges', name))
+  const url = `${SHEETS_BATCH_ENDPOINT}?${params.toString()}`
+  debugLog('batch fetch', url)
+  const res = await fetch(url)
+  if (!res.ok) throw new Error('Failed to fetch sheets batch')
+  const data = await res.json()
+  const ranges = data.valueRanges || []
+  const out = {}
+  for (const vr of ranges) {
+    const rangeName = String(vr.range || '').split('!')[0]
+    if (!rangeName) continue
+    out[rangeName] = parseSheetValues(rangeName, vr.values || [])
+  }
+  return out
+}
+
+const parseNumber = (val, fallback = 0) => {
+  const n = Number(val)
+  return Number.isFinite(n) ? n : fallback
+}
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+const inferVideo = (row) => {
+  const videoSrc = String(row.video_src || '').trim()
+  if (!videoSrc) return null
+
+  // Backward compatible: if video_type exists, respect it.
+  const explicitType = String(row.video_type || '').trim().toLowerCase()
+  if (explicitType && explicitType !== 'none') {
+    return { type: explicitType, src: videoSrc, title: row.video_title || row.title }
+  }
+
+  // Infer type from URL / extension
+  const lower = videoSrc.toLowerCase()
+  const isLocalVideo = /\.(mp4|mov|webm|ogg)(\?.*)?$/.test(lower) || lower.startsWith('/images/') || lower.startsWith('/videos/') || lower.startsWith('/')
+  const isIframe = /youtube\.com|youtu\.be|vimeo\.com|player\.vimeo\.com/.test(lower)
+
+  if (isIframe) return { type: 'iframe', src: videoSrc, title: row.video_title || row.title }
+  if (isLocalVideo) return { type: 'video', src: videoSrc, title: row.video_title || row.title }
+
+  return null
+}
 
 const Layout = memo(({ children }) => {
   const [showBackToTop, setShowBackToTop] = useState(false)
-  
-  // Debug: Log when Layout mounts
-  console.log('Layout component mounted, showBackToTop:', showBackToTop)
-  
-  // Hook removed - was interfering with scroll detection
+  const location = useLocation()
+  const isLanding = location?.pathname === '/'
 
-  // Scroll handler is now defined inline in useEffect
-  
-  // Check on resize to handle orientation changes
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
@@ -31,76 +134,59 @@ const Layout = memo(({ children }) => {
   }, [])
 
   useEffect(() => {
-    // Add scroll listener
+    // Landing page: lock scroll and avoid horizontal overflow in iOS
+    const html = document.documentElement
+    const body = document.body
+    if (isLanding) {
+      html.classList.add('page-landing')
+      body.classList.add('page-landing')
+    } else {
+      html.classList.remove('page-landing')
+      body.classList.remove('page-landing')
+    }
+  }, [isLanding])
+
+  useEffect(() => {
     const scrollHandler = () => {
       const isMobile = window.innerWidth <= 768
       const hasScrolled = window.scrollY > 120
-      
-      console.log('Scroll event fired:', {
-        windowWidth: window.innerWidth,
-        scrollY: window.scrollY,
-        isMobile,
-        hasScrolled,
-        shouldShow: isMobile && hasScrolled
-      })
-      
+
       if (isMobile) {
         setShowBackToTop(hasScrolled)
       } else {
         setShowBackToTop(false)
       }
     }
-    
-    // Check initial state
+
     scrollHandler()
-    
-    // Debug: Check scroll position every second
-    const intervalId = setInterval(() => {
-      console.log('Interval check - scrollY:', window.scrollY, 'documentElement.scrollTop:', document.documentElement.scrollTop, 'body.scrollTop:', document.body.scrollTop)
-    }, 1000)
-    
-    // Add event listener to multiple scrollable elements
+
     window.addEventListener('scroll', scrollHandler, { passive: true })
-    document.documentElement.addEventListener('scroll', scrollHandler, { passive: true })
-    document.body.addEventListener('scroll', scrollHandler, { passive: true })
-    
+
     return () => {
-      clearInterval(intervalId)
       window.removeEventListener('scroll', scrollHandler)
-      document.documentElement.removeEventListener('scroll', scrollHandler)
-      document.body.removeEventListener('scroll', scrollHandler)
     }
   }, [])
 
-  // Remove aggressive resize and initial load scroll behavior
-  // Only keep route change scroll behavior
-
-  // Effect to enable smooth scrolling on mobile
   useEffect(() => {
     if (window.innerWidth <= 768) {
-      // Enable smooth scrolling on mobile
       document.documentElement.style.scrollBehavior = 'smooth'
     } else {
-      // Disable smooth scrolling on desktop
       document.documentElement.style.scrollBehavior = 'auto'
     }
 
     return () => {
-      // Reset scroll behavior when component unmounts
       document.documentElement.style.scrollBehavior = 'auto'
     }
   }, [])
 
   const scrollToTop = useCallback(() => {
     if (window.innerWidth <= 768) {
-      // Smooth scroll to top on mobile
       window.scrollTo({
         top: 0,
         left: 0,
         behavior: 'smooth'
       })
     } else {
-      // Instant scroll to top on desktop
       window.scrollTo(0, 0)
     }
   }, [])
@@ -109,21 +195,26 @@ const Layout = memo(({ children }) => {
     <>
       <nav className="main-nav">
         <div className="main-nav-left">
-          <a href="#" className="scramble"></a>
+          <Link to="/" className="scramble"></Link>
       </div>
         <div className="main-nav-right">
-          <Link to="/">
-            <ScrambleText delay={0}>current works</ScrambleText>
+          <Link to="/releases">
+            <ScrambleText delay={0}>releases</ScrambleText>
+          </Link>
+          <Link to="/live">
+            <ScrambleText delay={100}>live</ScrambleText>
           </Link>
           <Link to="/bio">
-            <ScrambleText delay={100}>bio</ScrambleText>
+            <ScrambleText delay={200}>bio</ScrambleText>
           </Link>
           <Link to="/contact">
-            <ScrambleText delay={200}>contact</ScrambleText>
+            <ScrambleText delay={300}>contact</ScrambleText>
           </Link>
       </div>
       </nav>
-      {children}
+      <div className={`page-content${isLanding ? ' is-landing' : ''}`}>
+        {children}
+      </div>
       {showBackToTop && (
         <button id="backToTop" onClick={scrollToTop}>
           ↑ back to top
@@ -135,186 +226,144 @@ const Layout = memo(({ children }) => {
 
 Layout.displayName = 'Layout'
 
-const Home = memo(() => {
-  const image1Ref = useRef(null)
-  const image2Ref = useRef(null)
-  const image3Ref = useRef(null)
-  const image4Ref = useRef(null)
-  const image5Ref = useRef(null)
-  const image6Ref = useRef(null)
+const parseRichText = (paragraph) => {
+  // Supports link tokens: [[Text|https://...]] and line breaks via [BR]
+  const tokens = paragraph.split(/(\[\[.+?\|https?:\/\/[^\]]+\]\]|\[BR\])/g)
+  return tokens.map((token, idx) => {
+    if (token === '[BR]') {
+      return <br key={`br-${idx}`} />
+    }
+    const linkMatch = token.match(/^\[\[(.+?)\|(https?:\/\/[^\]]+)\]\]$/)
+    if (linkMatch) {
+      const [, text, href] = linkMatch
+      return (
+        <a
+          key={`ln-${idx}`}
+          href={href}
+          className="contact-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {text}
+        </a>
+      )
+    }
+    return <span key={`t-${idx}`}>{token}</span>
+  })
+}
 
-  // Preload critical images (first 3 visible images)
+const splitLines = (text = '') => {
+  // Split on real newlines or escaped \n from Sheets/CSV
+  return text.split(/(?:\r?\n|\\n)/)
+}
+
+const Landing = memo(({ slides }) => {
+  const hasSlides = slides && slides.length > 0
   useEffect(() => {
-    const criticalImages = [
-      "/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
-      "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
-      "/images/diamantista-dramatic.webp",
-      "/images/diamantista%20ep.webp"
-    ]
-    
-    // Preload using link elements for better browser support
-    criticalImages.forEach(src => {
-      const link = document.createElement('link')
-      link.rel = 'preload'
-      link.as = 'image'
-      link.href = src
-      document.head.appendChild(link)
-      
-      // Also preload using Image object as fallback
-      const img = new Image()
-      img.src = src
-    })
+    debugLog('Landing slides', { count: slides?.length || 0, slides })
+  }, [slides])
+  return (
+    <div className="landing-hero">
+      {hasSlides ? (
+        <MediaSlider images={slides} intervalMs={6000} alt="landing slideshow" showNavigation />
+      ) : null}
+    </div>
+  )
+})
+
+Landing.displayName = 'Landing'
+
+const Releases = memo(({ releases }) => {
+  const [loadedByKey, setLoadedByKey] = useState(() => ({}))
+
+  const markLoaded = useCallback((key) => {
+    if (!key) return
+    setLoadedByKey((prev) => (prev[key] ? prev : { ...prev, [key]: true }))
   }, [])
 
-  const projectLinks = useMemo(() => [
-    // Updated order and thumbnails (no separate performance card)
-    {
-      id: 3,
-      to: "/licitir-live",
-      className: "project-link project-licitir",
-      dataTitle: "licitir live",
-      mobileSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
-      desktopSrc: "/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
-      alt: "LICITIR live",
-      ref: image3Ref,
-      caption: "LICITIR live"
-    },
-    {
-      id: 6,
-      to: "/pastoral-ep",
-      className: "project-link project-pastoral-ep",
-      dataTitle: "pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos",
-      mobileSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
-      desktopSrc: "/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
-      alt: "Pastoral EP",
-      ref: image6Ref,
-      caption: ".pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos"
-    },
-    {
-      id: 1,
-      to: "/diamantista-live",
-      className: "project-link project-live",
-      dataTitle: "diamantista live",
-      mobileSrc: "/images/diamantista-mobile.webp",
-      desktopSrc: "/images/diamantista-dramatic.webp", // Dramatic image converted to WebP
-      alt: "diamantista live",
-      ref: image1Ref,
-      caption: "diamantista live"
-    },
-    {
-      id: 2,
-      to: "/diamantista-ep",
-      className: "project-link project-ep",
-      dataTitle: "diamantista - LOVE IS VITAL",
-      mobileSrc: "/images/diamantista%20ep-mobile.webp",
-      desktopSrc: "/images/diamantista%20ep.webp",
-      alt: "Project 2",
-      ref: image2Ref,
-      caption: "diamantista - LOVE IS VITAL"
-    },
-    {
-      id: 5,
-      to: "/pastoral-live",
-      className: "project-link project-pastoral",
-      dataTitle: "pastoral live",
-      mobileSrc: "/images/pastoral-mobile.webp",
-      desktopSrc: "/images/pastoral.webp",
-      alt: "Project 5",
-      ref: image5Ref,
-      caption: ".pastoral live"
-    },
-    {
-      id: 4,
-      to: "/licitir-ep",
-      className: "project-link project-licitir-ep",
-      dataTitle: "licitir - Tomorrow we dream of sleeping in a garden of camellias",
-      mobileSrc: "/images/licitir%20ep-mobile.webp",
-      desktopSrc: "/images/licitir%20ep.webp",
-      alt: "Project 4",
-      ref: image4Ref,
-      caption: "LICITIR - Tomorrow we dream of sleeping in a garden of camellias"
-    }
-  ], [image1Ref, image2Ref, image3Ref, image4Ref, image5Ref, image6Ref])
+  return (
+    <div className="releases-page">
+      <div className="projects-grid releases-grid">
+        {releases.map(({ href, title, image }, index) => (
+          // Render caption only after the image has loaded (prevents text-before-image flashes on mobile)
+          <a
+            key={href || `${title}-${index}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="release-card"
+          >
+            <picture>
+              <img 
+                src={image} 
+                alt={title} 
+                loading={index < 4 ? "eager" : "lazy"}
+                fetchpriority={index < 2 ? "high" : "auto"}
+                onLoad={() => markLoaded(href)}
+                onError={() => markLoaded(href)}
+              />
+            </picture>
+            {loadedByKey[href] ? <div className="project-caption">{title}</div> : null}
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+})
+
+Releases.displayName = 'Releases'
+
+const Live = memo(({ liveProjects }) => {
+  const [loadedByKey, setLoadedByKey] = useState(() => ({}))
+
+  const markLoaded = useCallback((key) => {
+    if (!key) return
+    setLoadedByKey((prev) => (prev[key] ? prev : { ...prev, [key]: true }))
+  }, [])
+
+  const resolveClass = useCallback((slug) => {
+    if (!slug) return 'project-link live-card'
+    if (slug.includes('licitir')) return 'project-link project-licitir live-card'
+    if (slug.includes('pastoral')) return 'project-link project-pastoral live-card'
+    if (slug.includes('diamantista')) return 'project-link project-live live-card'
+    return 'project-link live-card'
+  }, [])
 
   return (
-    <div className="projects-grid">
-      {projectLinks.map(({ id, to, className, dataTitle, mobileSrc, desktopSrc, alt, ref, caption }) => (
-        <Link 
-          key={id} 
-          to={to} 
-          className={className} 
-          data-title={dataTitle}
+    <div className="projects-grid live-grid">
+        {liveProjects.map(({ slug, title, image }) => (
+        <Link
+          key={slug}
+          to={`/${slug}`}
+          className={resolveClass(slug)}
         >
           <picture>
-            <source media="(max-width: 768px)" srcSet={mobileSrc} />
-            <source srcSet={desktopSrc} />
-            <img ref={ref} src={desktopSrc} alt={alt} loading="lazy" />
+            <img
+              src={image}
+              alt={title}
+              loading="lazy"
+              onLoad={() => markLoaded(slug)}
+              onError={() => markLoaded(slug)}
+            />
           </picture>
-          <div className="project-caption">{caption}</div>
+          {loadedByKey[slug] ? <div className="project-caption">{title}</div> : null}
         </Link>
       ))}
     </div>
   )
 })
 
-Home.displayName = 'Home'
+Live.displayName = 'Live'
 
-const Bio = memo(() => {
-  const bioContent = useMemo(() => [
-    {
-      title: "general bio",
-      delay: 0,
-      content: [
-        "Deterritorialized sound artist. Currently Berlin based.",
-        "A tender, visceral and hallucinatory vaporization of sounds and feelings, an exploration of solitude amidst a hyper connected reality. Voices, guitars, strings, field recordings, electronics, all processed through various audio production techniques and whatever means available, aiming to balance intensity and intimacy, manifest an arcane and elusive sense of beauty within dreamlike sequences, re-imagining the world building potential of metal-adjacent aesthetics through a degendered lens.",
-        "Co-founder of label/platform ruego, theatrical performance unit Anonymous Dreamers and clothing brand Liminal Veil.",
-        "For performance inquiries, soundtrack commissions contact here (diamantistavii@gmail.com)",
-        "Performance highlights include: Diamantista (solo) at Mondi Lontanissimi 2023 (Alcamo), Les Urbaines 2023 (Lausanne), Creepy Teepee 2024 (Kutna Hora), Hinterraum (Berlin), Metal Cave (Warsaw), FLUCC (Vienna) and KLANG (Rome) LICITIR (with Laurén Maria) at OGH 2025 (Berlin) .pastoral (with Gabi Pedrosa) at Les Urbaines 2023 (Lausanne), Creepy Teepee 2024 (Kutna Hora), Vekks (Vienna) , dock.digital (Berlin)",
-        "Other works: Generative audivisual spatial installation as [auloplegma] with Weixin Quek Chong for Continuo at Zapadores (Madrid) Soundtrack as LICITIR for the documentary 'ALMOST A KILLA' by Maurycy Polewski Audio and voice for M. Svitlo and Salt Salomé's video performance (LINK PENDING) Soundtrack and performance for fake_trailer's 'Shapeshifting Hallucination' as .pastoral, with M. Svitlo and Salt Salomé: link"
-      ]
-    },
-    {
-      title: "Diamantista",
-      delay: 100,
-      content: [
-        "A metamorphic entity emerging from the rubble, St. Diamantista VII manifests itself between the pieces of wreckage and the signals of a solitary lighthouse. A disfigured reinterpretation of avant-garde black metal, ambient and power electronics, Diamantista's performance emanates from the intimate. As if trapped in an in-between, their atmospheric guitar and vocal tears conjure a vivid wound, a distant and confused dream.",
-        "full discography"
-      ]
-    },
-    {
-      title: "LICITIR",
-      delay: 200,
-      content: [
-        "LICITIR is a bond between Laurén Maria and Diamantista, two vocalists and producers whose stylistics leanings are as elusive as they are intuitive, emotional, ever exploring, tender and intense. They shift through cinematic soundscapes that filter gentle melodies through heartfelt corrosion, innocently weaving pop sensibilities forming a dense sonic haze drenched in tearful shards."
-      ]
-    },
-    {
-      title: ".pastoral",
-      delay: 300,
-      content: [
-        "The vocal and instrumental panoply of .pastoral is established through an interdisciplinary practice. Composed of ErmenX aka Gabi Pedrosa and St. Diamantista VII, the duo experiments with perspectives. Their eclectic style emerges from bewitched swamps, between heightened indie-folk and post-metal, .pastoral adopts guitars, vocals, drums, sound collage and other instruments to tell narratives that are both tender and grotesque, inhabited by sensitive melodies and desperate incantations. They have released two albums on their label ruego; funeral perpetuo del espíritu (2019) and un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos (2022)."
-      ]
-    }
-  ], [])
-
+const Bio = memo(({ sections }) => {
   return (
-    <div className="container">
-      {bioContent.map((section, index) => (
+    <div className="container bio-container">
+      {sections.map((section, index) => (
         <div key={index} className="element data">
-          <h2><ScrambleText delay={section.delay}>{section.title}</ScrambleText></h2>
-          {section.content.map((text, textIndex) => (
-            <p key={textIndex}>
-              {text.includes('full discography') ? (
-                <a href="https://diamantistavii.bandcamp.com/" className="contact-link">{text}</a>
-              ) : text.includes('link') && text.includes('Other works') ? (
-                <>
-                  Other works: Generative audivisual spatial installation as [auloplegma] with Weixin Quek Chong for Continuo at Zapadores (Madrid) Soundtrack as LICITIR for the documentary 'ALMOST A KILLA' by Maurycy Polewski Audio and voice for M. Svitlo and Salt Salomé's video performance (LINK PENDING) Soundtrack and performance for fake_trailer's 'Shapeshifting Hallucination' as .pastoral, with M. Svitlo and Salt Salomé: <a href="https://www.youtube.com/watch?v=iX0uRjRQ9JA&ab_channel=ruegoWW" className="contact-link" target="_blank" rel="noopener noreferrer">link</a>
-                </>
-              ) : text.includes('link') ? (
-                <a href="https://www.youtube.com/watch?v=iX0uRjRQ9JA&ab_channel=ruegoWW" className="contact-link" target="_blank" rel="noopener noreferrer">{text}</a>
-              ) : (
-                text
-              )}
+          <h2><ScrambleText delay={section.delay || 0}>{section.title}</ScrambleText></h2>
+          {splitLines(section.text).map((paragraph, idx) => (
+            <p key={idx}>
+              {parseRichText(paragraph)}
             </p>
           ))}
         </div>
@@ -325,19 +374,36 @@ const Bio = memo(() => {
 
 Bio.displayName = 'Bio'
 
-const Contact = memo(() => {
+const Contact = memo(({ links }) => {
   return (
-    <div className="container">
+    <div className="container contact-container">
       <div className="writings-grid">
         <div className="writing-category">
           <div className="element data">
             <h2></h2>
           </div>
-          <div className="writing-item">
-            <a href="mailto:diamantistavii@gmail.com" className="contact-link">diamantistavii@gmail.com</a>
-          </div>
-          <div className="writing-item">
-            <a href="https://www.instagram.com/prenatal_amygdala/" target="_blank" rel="noopener noreferrer" className="contact-link">@prenatal_amygdala</a>
+          {links.map(link => (
+            <div className="writing-item" key={link.href || link.label}>
+              <a
+                href={link.href}
+                className="contact-link"
+                target={link.is_external ? '_blank' : undefined}
+                rel={link.is_external ? 'noopener noreferrer' : undefined}
+              >
+                {link.label}
+              </a>
+            </div>
+          ))}
+          <div className="element data instagram-widget">
+            <iframe 
+              src="https://www.instagram.com/prenatal_amygdala/embed/"
+              title="Instagram @prenatal_amygdala"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              loading="lazy"
+              className="instagram-embed"
+            />
           </div>
         </div>
       </div>
@@ -347,237 +413,122 @@ const Contact = memo(() => {
 
 Contact.displayName = 'Contact'
 
-const Project = memo(() => {
-  const { projectSlug } = useParams()
-  
-  const projectId = useMemo(() => {
-    const slugToId = {
-      'diamantista-live': '1',
-      'diamantista-ep': '2',
-      'licitir-live': '3',
-      'licitir-ep': '4',
-      'pastoral-live': '5',
-      'pastoral-ep': '6'
+const LiveDetail = memo(({ primaryImages, secondaryImages, video }) => {
+  const renderSliderOrPlaceholder = (slider, placeholder) => {
+    if (!slider || slider.length === 0) {
+      return (
+        <div className="slider-placeholder">
+          <strong>{placeholder}</strong>
+        </div>
+      )
     }
-    return slugToId[projectSlug]
-  }, [projectSlug])
 
-  // Redirect to home if invalid slug
-  useEffect(() => {
-    if (projectSlug && !projectId) {
-      window.location.href = '/'
-    }
-  }, [projectSlug, projectId])
-
-  const base = import.meta.env.BASE_URL || '/'
-
-  const projectData = useMemo(() => {
-    switch(projectId) {
-      case '1':
-        return {
-          title: "diamantista live",
-          content: (
-            <>
-              <div className="media-container">
-                <div className="image-section">
-                  <img src="/images/diamantista.webp" alt="diamantista live" className="project-image" loading="lazy" />
-                </div>
-                <div className="video-section">
-                  <video 
-                    className="project-video" 
-                    src="/images/diamantista.mp4" 
-                    controls 
-                    preload="none"
-                  />
-                </div>
-              </div>
-              <div className="instagram-widget">
-                <iframe 
-                  src="https://www.instagram.com/prenatal_amygdala/embed/"
-                  title="Instagram @prenatal_amygdala"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                  className="instagram-embed"
-                />
-                <p className="instagram-fallback">
-                  <a href="https://www.instagram.com/prenatal_amygdala/" target="_blank" rel="noopener noreferrer" className="contact-link">
-                    see instagram profile
-                  </a>
-                </p>
-              </div>
-            </>
-          )
-        }
-      case '2':
-        return {
-          title: "diamantista - LOVE IS VITAL",
-          content: (
-            <>
-              <div className="element data">
-                <h2><ScrambleText delay={0}>diamantista - LOVE IS VITAL</ScrambleText></h2>
-                <p>an exercise in solitude, drifting through a recollection of all my mistakes, written on excerpts from the fractured dams that held your mind in place, drinking from the sword that drips your endless bleeding</p>
-                <p>honeydew under the morning light, mesmerizing my pitiful gaze</p>
-                <p><strong>Released on September 30th, 2024</strong></p>
-                <p>St. Diamantista VII - voices, instruments, electronics, borrowing sounds, production, mixing</p>
-                <p>Artwork by Salt Salomé and M. Svitlo<br/>Lettering by Alklossien (Katarzyna Brzozowska)</p>
-                <p><strong>Mastered by Ludwig Wandinger</strong></p>
-                <p><a href="https://ruego.bandcamp.com/album/rg25" className="contact-link" target="_blank" rel="noopener noreferrer">bandcamp</a></p>
-                <p><Link to="/diamantista-live" className="contact-link">diamantista live</Link></p>
-                <p><Link to="/bio" className="contact-link">diamantista bio</Link></p>
-              </div>
-              <div className="element data">
-                <picture>
-                  <source media="(max-width: 768px)" srcSet="/images/diamantista%20ep-mobile.webp" />
-                  <source srcSet="/images/diamantista%20ep.webp" />
-                  <img src="/images/diamantista%20ep.webp" alt="diamantista - LOVE IS VITAL" style={{width:'100%', height:'auto'}} loading="lazy" />
-                </picture>
-              </div>
-            </>
-          )
-        }
-      case '3':
-        return {
-          title: "LICITIR live",
-          content: (
-            <div className="media-container">
-              <div className="image-section">
-                <img src="/images/licitir.webp" alt="licitir live" className="project-image" loading="lazy" />
-              </div>
-              <div className="video-section">
-                <iframe className="project-video" src="https://www.youtube.com/embed/vF7xEWjdFu0" title="licitir live" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen loading="lazy" />
-              </div>
-            </div>
-          )
-        }
-      case '4':
-        return {
-          title: "LICITIR - Tomorrow we dream of sleeping in a garden of camellias",
-          content: (
-            <>
-              <div className="element data">
-                <h2><ScrambleText delay={0}>LICITIR - Tomorrow we dream of sleeping in a garden of camellias</ScrambleText></h2>
-                <p><strong>Released on December 23rd, 2024</strong></p>
-                <p>Materialized, recorded, arranged, dismantled, produced and mixed in candlelit softness, in a Berlin room during 2024.</p>
-                <p><strong>Mastered by Ludwig Wandinger.</strong></p>
-                <p><strong>LICITIR</strong> is a bond between Laurén Maria and Diamantista.</p>
-                <p>A journey through turmoil, newfound joy, confusion, dissociation, love, and the end of the world.</p>
-                <p><strong>Tomorrow we dream of sleeping in a garden of camellias</strong> is a collaborative release between LICITIR and ruego.</p>
-                <p><a href="https://ruego.bandcamp.com/album/tomorrow-we-dream-of-sleeping-in-a-garden-of-camellias-rg26" className="contact-link" target="_blank" rel="noopener noreferrer">bandcamp</a></p>
-                <p><Link to="/licitir-live" className="contact-link">LICITIR live</Link></p>
-                <p><Link to="/bio#licitir" className="contact-link">LICITIR bio</Link></p>
-              </div>
-              <div className="element data">
-                <picture>
-                  <source media="(max-width: 768px)" srcSet="/images/licitir%20ep-mobile.webp" />
-                  <source srcSet="/images/licitir%20ep.webp" />
-                  <img src="/images/licitir%20ep.webp" alt="LICITIR - Tomorrow we dream of sleeping in a garden of camellias" style={{width:'100%', height:'auto'}} loading="lazy" />
-                </picture>
-              </div>
-            </>
-          )
-        }
-      case '5':
-        return {
-          title: ".pastoral live",
-          content: (
-            <>
-              <div className="element data">
-                <div className="performance-video">
-                  <iframe 
-                    src="https://www.youtube.com/embed/iX0uRjRQ9JA" 
-                    title=".pastoral performance" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen 
-                    loading="lazy" />
-                </div>
-                <div className="performance-gallery">
-                  <h3>performance frames</h3>
-                  <MediaSlider 
-                    dataUrl={`${base}images%202/performance-frames/index.json`}
-                    basePath={`${base}images%202/performance-frames/`}
-                    intervalMs={5000}
-                    alt="performance frames from .pastoral show"
-                    showNavigation={true}
-                  />
-                </div>
-              </div>
-              <div className="media-container">
-                <div className="image-section">
-                  <MediaSlider 
-                    dataUrl={`${base}images%202/pastoral%20gallery/index.json`}
-                    basePath={`${base}images%202/pastoral%20gallery/`}
-                    intervalMs={5000}
-                    alt="Pastoral gallery images"
-                    showNavigation={true}
-                    fallbackSrc={`${base}images/pastoral.webp`}
-                  />
-                </div>
-                <div className="video-section">
-                  <iframe className="project-video" 
-                    src="https://www.youtube.com/embed/WtsBI93REOU?start=2748"
-                    frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen loading="lazy" />
-                </div>
-              </div>
-            </>
-          )
-        }
-      case '6':
-        return {
-          title: ".pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos",
-          content: (
-            <>
-              <div className="element data">
-                <h2><ScrambleText delay={0}>.pastoral - Un corazón mustio y marchito por culpa de las tribulaciones y los padecimientos</ScrambleText></h2>
-                <p>A fool thought to emerge from such a magnum fracture in the timespace continuum unscathed. There are still trials to face and the body will soon enough give in.</p>
-                <p>Be our esteemed companion, sweeping through the perils of a withered heart, through confusion, desolation, fracture, but also through the joy of discovery, the promise of contentment with oneself.</p>
-                <p>The world was never ours, never satiated no matter how big the sacrifice. Leaves fall, leaving the heart naked once again.</p>
-                <p><strong>Released on October 7th, 2022</strong></p>
-                <p>Instruments, voices, and arrangements were composed, performed, recorded, and assembled between 2019 and 2021 in Warsaw, Szczyrk, and Berlin by ErmenX and St. Diamantista VII.</p>
-                <p>Saxophones in tracks 'Blanco Hueso' and 'Los Mismos Santos' by Gustavo Obligado.</p>
-                <p>Mixing and engineering by 47_N_74D0.</p>
-                <p>Cover art painting commission by Jan Eustachy Wolski (courtesy of Piktogram Gallery, <a href="http://www.piktogram.org" className="contact-link" target="_blank" rel="noopener noreferrer">www.piktogram.org</a>).</p>
-                <p>Mastering and additional graphic design by ErmenX.</p>
-                <p>Video editing for 'De qué sirve rogar' by St. Diamantista (<a href="https://www.youtube.com/watch?v=5JE9YOWjzv8" className="contact-link" target="_blank" rel="noopener noreferrer">watch video</a>).</p>
-                <p><strong>Un coraz​ó​n mustio y marchito por culpa de las tribulaciones y los padecimientos</strong> is a collaborative release between Most Dismal Swamp and ruego.</p>
-                <p><a href="http://www.mostdismalswamp.com" className="contact-link" target="_blank" rel="noopener noreferrer">www.mostdismalswamp.com</a></p>
-                <p><a href="https://ruego.bandcamp.com/album/un-coraz-n-mustio-y-marchito-por-culpa-de-las-tribulaciones-y-los-padecimientos-rg19" className="contact-link" target="_blank" rel="noopener noreferrer">bandcamp</a></p>
-                <p><Link to="/pastoral-live" className="contact-link">.pastoral live</Link></p>
-                <p><Link to="/bio#pastoral" className="contact-link">.pastoral bio</Link></p>
-              </div>
-              <div className="element data">
-                <picture>
-                  <source media="(max-width: 768px)" srcSet="/images/pastoral%20ep-mobile.webp" />
-                  <source srcSet="/images/pastoral%20ep.webp" />
-                  <img src="/images/pastoral%20ep.webp" alt=".pastoral - Un corazón mustio y marchito" style={{width:'100%', height:'auto'}} loading="lazy" />
-                </picture>
-              </div>
-            </>
-          )
-        }
-      default:
-        return null
-    }
-  }, [projectId])
-
-  if (!projectData) return null
-
-  if (projectId === '1' || projectId === '3' || projectId === '5') {
     return (
-      <div className={`project-container project-${projectId}`}>
-        <h2 className="project-title">
-          <ScrambleText delay={0}>{projectData.title}</ScrambleText>
-        </h2>
-        {projectData.content}
-      </div>
+      <MediaSlider
+        images={slider}
+        intervalMs={5000}
+        alt={placeholder}
+        showNavigation={true}
+      />
     )
   }
 
+  const renderVideoSection = () => {
+    // eslint-disable-next-line no-console
+    console.log('[LiveDetail] video', video)
+    if (!video) {
+      return (
+        <div className="slider-placeholder">
+          <strong>Live video coming soon</strong>
+          <small>waiting on footage</small>
+        </div>
+      )
+    }
+
+    if (video.type === 'iframe') {
+      return (
+        <iframe
+          className="project-video"
+          src={video.src}
+          title={video.title}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+        />
+      )
+    }
+
+    if (video.type === 'video') {
+      return (
+        <video
+          className="project-video"
+          src={video.src}
+          controls
+          preload="metadata"
+          playsInline
+          onError={(e) => {
+            // eslint-disable-next-line no-console
+            console.warn('[LiveDetail] video failed', e?.currentTarget?.src, e?.currentTarget?.error)
+          }}
+        />
+      )
+    }
+
+    return null
+  }
+
   return (
-    <div className="container">
-      {projectData.content}
+    <div className="project-container project-live-detail">
+      <div className="project-detail-content">
+        <div className="element data">
+          <div className="performance-gallery">
+            {renderSliderOrPlaceholder(primaryImages, 'slideshow 1')}
+          </div>
+        </div>
+        <div className="media-container">
+          <div className="image-section">
+            {renderSliderOrPlaceholder(secondaryImages, 'slideshow 2')}
+          </div>
+          <div className="video-section">
+            {renderVideoSection()}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+})
+
+LiveDetail.displayName = 'LiveDetail'
+
+const Project = memo(({ liveDetailMap, dataLoaded }) => {
+  const { projectSlug } = useParams()
+  const projectData = liveDetailMap[projectSlug]
+
+  useEffect(() => {
+    // Only redirect if data has finished loading AND project is not found
+    if (dataLoaded && projectSlug && !projectData) {
+      window.location.href = '/#/live'
+    }
+  }, [projectSlug, projectData, dataLoaded])
+
+  // Show loading state while data is being fetched
+  if (!dataLoaded) {
+    return <div className="project-container" style={{ minHeight: '100vh' }} />
+  }
+
+  if (!projectData) return null
+
+  return (
+    <div className={`project-container project-${projectSlug}`}>
+      <h2 className="project-title">
+        <ScrambleText delay={0}>{projectData.title}</ScrambleText>
+      </h2>
+      <LiveDetail
+        primaryImages={projectData.primaryImages}
+        secondaryImages={projectData.secondaryImages}
+        video={projectData.video}
+      />
     </div>
   )
 })
@@ -585,14 +536,176 @@ const Project = memo(() => {
 Project.displayName = 'Project'
 
 export default function App() {
+  const [releases, setReleases] = useState([])
+  const [liveProjects, setLiveProjects] = useState([])
+  const [liveDetailMap, setLiveDetailMap] = useState({})
+  const [bioSections, setBioSections] = useState([])
+  const [contactLinks, setContactLinks] = useState([])
+  const [landingSlides, setLandingSlides] = useState([])
+  const [dataLoaded, setDataLoaded] = useState(false)
+
+  useEffect(() => {
+    const SHEET_NAMES = ['LandingSlides', 'Releases', 'LiveGrid', 'LiveDetails', 'LiveSlides', 'Bio', 'Contact']
+
+    const applySheetsToState = (sheets, { allowSetDataLoaded = false } = {}) => {
+      const landingSheet = sheets.LandingSlides || []
+      const releasesSheet = sheets.Releases || []
+      const liveGridSheet = sheets.LiveGrid || []
+      const liveDetailsSheet = sheets.LiveDetails || []
+      const liveSlidesSheet = sheets.LiveSlides || []
+      const bioSheet = sheets.Bio || []
+      const contactSheet = sheets.Contact || []
+
+      const landingData = landingSheet
+        .map(r => ({
+          order: parseNumber(r.order, 0),
+          src: r.src,
+          caption: r.caption || ''
+        }))
+        .filter(r => r.src)
+        .sort((a, b) => a.order - b.order)
+        .map(r => r.src)
+      if (landingData.length) setLandingSlides(landingData)
+
+      const releasesData = releasesSheet
+        .map(r => ({
+          href: r.href,
+          title: r.title,
+          image: r.image,
+          order: parseNumber(r.order, 0)
+        }))
+        .filter(r => r.href && r.title)
+        .sort((a, b) => a.order - b.order)
+
+      const liveGridData = liveGridSheet
+        .map(r => ({
+          slug: r.slug,
+          title: r.title,
+          image: r.image,
+          order: parseNumber(r.order, 0)
+        }))
+        .filter(r => r.slug)
+        .sort((a, b) => a.order - b.order)
+
+      const slidesById = liveSlidesSheet.reduce((acc, row) => {
+        const sliderId = row.slider_id
+        if (!sliderId) return acc
+        const entry = acc[sliderId] || []
+        entry.push({ order: parseNumber(row.order, 0), src: row.src })
+        acc[sliderId] = entry
+        return acc
+      }, {})
+
+      const sortedSlides = Object.fromEntries(
+        Object.entries(slidesById).map(([id, items]) => [
+          id,
+          items
+            .filter(item => item.src)
+            .sort((a, b) => a.order - b.order)
+            .map(item => item.src)
+        ])
+      )
+
+      const liveDetailsData = liveDetailsSheet.reduce((acc, row) => {
+        const slug = row.slug
+        if (!slug) return acc
+        acc[slug] = {
+          title: row.title || slug,
+          video: inferVideo(row),
+          primaryImages: row.primary_slider_id ? sortedSlides[row.primary_slider_id] || [] : null,
+          secondaryImages: row.secondary_slider_id ? sortedSlides[row.secondary_slider_id] || [] : null
+        }
+        return acc
+      }, {})
+
+      const bioData = bioSheet
+        .map(r => ({
+          order: parseNumber(r.order, 0),
+          title: r.title,
+          text: r.text || ''
+        }))
+        .filter(r => r.title)
+        .sort((a, b) => a.order - b.order)
+
+      const contactData = contactSheet
+        .map(r => ({
+          order: parseNumber(r.order, 0),
+          label: r.label,
+          href: r.href,
+          is_external: (() => {
+            const href = String(r.href || '').trim()
+            if (!href) return false
+            return /^(https?:\/\/|mailto:|tel:)/i.test(href)
+          })()
+        }))
+        .filter(r => r.label && r.href)
+        .sort((a, b) => a.order - b.order)
+
+      if (releasesData.length) setReleases(releasesData)
+      if (liveGridData.length) setLiveProjects(liveGridData)
+      if (Object.keys(liveDetailsData).length) setLiveDetailMap(liveDetailsData)
+      if (bioData.length) setBioSections(bioData)
+      if (contactData.length) setContactLinks(contactData)
+
+      if (allowSetDataLoaded && Object.keys(liveDetailsData).length) {
+        setDataLoaded(true)
+      }
+    }
+
+    const fetchBatchWithRetry = async (attempts = 3) => {
+      for (let i = 0; i < attempts; i++) {
+        try {
+          return await fetchSheetsBatch(SHEET_NAMES)
+        } catch (err) {
+          if (i === attempts - 1) throw err
+          await sleep(350 * (i + 1))
+        }
+      }
+      return {}
+    }
+
+    const load = async () => {
+      debugLog('load start')
+
+      // 1) Instant render from cache (even if stale)
+      const cachedSheets = {}
+      for (const name of SHEET_NAMES) {
+        const cached = getCachedSheetAny(name)
+        if (cached) cachedSheets[name] = cached
+      }
+      if (Object.keys(cachedSheets).length) {
+        debugLog('cache bootstrap', Object.keys(cachedSheets))
+        applySheetsToState(cachedSheets, { allowSetDataLoaded: true })
+      }
+
+      // 2) Fresh data in ONE network request
+      try {
+        const sheets = await fetchBatchWithRetry(3)
+        Object.entries(sheets).forEach(([name, rows]) => setCachedSheet(name, rows))
+        applySheetsToState(sheets, { allowSetDataLoaded: true })
+        setDataLoaded(true)
+        debugLog('load done')
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('Sheets batch fetch error:', err?.message)
+        // If we had no cache, allow app to continue (but avoid redirect)
+        if (Object.keys(cachedSheets).length === 0) setDataLoaded(false)
+      }
+    }
+
+    load()
+  }, [])
+
   return (
     <Layout>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/bio" element={<Bio />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/:projectSlug" element={<Project />} />
+        <Route path="/" element={<Landing slides={landingSlides} />} />
+        <Route path="/releases" element={<Releases releases={releases} />} />
+        <Route path="/live" element={<Live liveProjects={liveProjects} />} />
+        <Route path="/bio" element={<Bio sections={bioSections} />} />
+        <Route path="/contact" element={<Contact links={contactLinks} />} />
+        <Route path="/:projectSlug" element={<Project liveDetailMap={liveDetailMap} dataLoaded={dataLoaded} />} />
       </Routes>
     </Layout>
   )
