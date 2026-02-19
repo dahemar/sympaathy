@@ -1624,20 +1624,20 @@ h1, h2, h3, h4, h5, h6 {
     overflow: visible;
 }
 
-/* Ensure Releases page grid is not affected by the large fixed .projects-grid rules
-   defined earlier for the homepage — force releases-specific layout here. */
-.releases-page .projects-grid.releases-grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
-  grid-template-rows: none !important;
-  gap: 32px !important;
-  width: 100% !important;
-  align-items: stretch !important;
-  height: auto !important;
-  padding: 3rem 1.75rem 4.5rem !important;
-  box-sizing: border-box !important;
-  overflow: visible !important;
-}
+  /* Releases page should expand to fit all rows (don't constrain to viewport) */
+  .projects-grid.releases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-rows: none;
+    gap: 32px;
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    padding: 3rem 1.75rem 4.5rem; /* match .releases-page spacing */
+    box-sizing: border-box;
+    height: auto; /* allow grid to grow */
+    overflow: visible; /* show captions outside image box */
+  }
 
 /* Live grid items should keep natural rectangles (not forced absolute-fill cropping) */
 .projects-grid.live-grid .project-link {
