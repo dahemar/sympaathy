@@ -106,7 +106,7 @@ const inferVideo = (row) => {
 
   // Infer type from URL / extension
   const lower = videoSrc.toLowerCase()
-  const isLocalVideo = /\.(mp4|mov|webm|ogg)(\?.*)?$/.test(lower) || lower.startsWith('/images/') || lower.startsWith('/videos/') || lower.startsWith('/')
+  const isLocalVideo = /\.(mp4|mov|webm|ogg|mpg|mpeg)(\?.*)?$/.test(lower) || lower.startsWith('/images/') || lower.startsWith('/videos/') || lower.startsWith('/')
   const isIframe = /youtube\.com|youtu\.be|vimeo\.com|player\.vimeo\.com/.test(lower)
 
   if (isIframe) return { type: 'iframe', src: videoSrc, title: row.video_title || row.title }
