@@ -1761,19 +1761,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .projects-grid.live-grid picture img,
-.projects-grid.live-grid picture .hover-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  overflow: hidden !important;
+  background: #0b0b0b;
+  box-sizing: border-box !important;
     display: block;
 }
 
 /* Estilos móviles para la galería */
-@media (max-width: 768px) {
-    .projects-grid {
-        display: flex !important;
-        flex-direction: column !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  box-sizing: border-box !important;
         gap: 32px !important;
+
+/* Ensure picture children fill the picture container in case picture
+   behaves inline in some browsers */
+.projects-grid.live-grid picture > img,
+.projects-grid.live-grid picture > source {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
         width: 100vw !important;
         max-width: 100vw !important;
         margin-top: 48px !important;
