@@ -463,15 +463,19 @@ const LiveDetail = memo(({ primaryImages, secondaryImages, video, detailHeader =
       return (
         <video
           className="project-video"
-          src={video.src}
           controls
           preload="metadata"
           playsInline
+          webkit-playsinline="true"
           onError={(e) => {
             // eslint-disable-next-line no-console
-            console.warn('[LiveDetail] video failed', e?.currentTarget?.src, e?.currentTarget?.error)
+            console.warn('[LiveDetail] video failed', e?.currentTarget?.currentSrc || e?.currentTarget?.src, e?.currentTarget?.error)
           }}
-        />
+        >
+          <source src={video.src} type="video/mp4" />
+          {/* Fallback link if browser cannot play the video */}
+          <a href={video.src} target="_blank" rel="noopener noreferrer">Open video</a>
+        </video>
       )
     }
 

@@ -178,11 +178,15 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
             <picture>
                   {currentImageSources.isVideo ? (
                     <video
-                      src={currentImageSources.videoSrc}
                       controls
                       preload={index === 0 ? 'auto' : 'metadata'}
+                      playsInline
+                      webkit-playsinline="true"
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
+                    >
+                      <source src={currentImageSources.videoSrc} type="video/mp4" />
+                      <a href={currentImageSources.videoSrc} target="_blank" rel="noopener noreferrer">Open video</a>
+                    </video>
                   ) : (
                     <>
                       <source srcSet={currentImageSources.webp} type="image/webp" />
