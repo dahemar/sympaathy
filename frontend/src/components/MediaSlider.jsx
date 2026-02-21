@@ -70,10 +70,19 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
   const R2_BASE = (import.meta.env.VITE_R2_BASE || '').replace(/\/$/, '')
   const joinBase = (base, path) => base ? `${base}/${path.replace(/^\/+/, '')}` : path
 
-  const generateImageSources = useCallback((filename) => {
+  const generateImageSources = useCallback((item) => {
+    // item can be a string (filename) or an object { src, mobile_src }
+    if (!item) return { webp: '', original: '', isVideo: false, videoSrc: '' }
+
+    let filename = item
+    if (typeof item === 'object' && item !== null) {
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
+      filename = (isMobile && item.mobile_src) ? item.mobile_src : item.src
+    }
+
     if (!filename) return { webp: '', original: '', isVideo: false, videoSrc: '' }
 
-    const isVideo = /\.(mp4|mov|webm|ogg)(\?.*)?$/i.test(filename)
+    const isVideo = /\.(mp4|mov|webm|ogg|mpg|mpeg)(\?.*)?$/i.test(filename)
 
     // Absolute URL -> respect as-is
     if (/^https?:\/\//i.test(filename)) {
@@ -82,7 +91,6 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
     }
 
     // Root-relative paths (start with '/'): treat as local site assets.
-    // Do NOT automatically prefix with R2_BASE so local files continue working.
     if (filename.startsWith('/')) {
       const original = filename
       if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: original }

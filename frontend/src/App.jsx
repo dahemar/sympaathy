@@ -593,11 +593,12 @@ export default function App() {
         .map(r => ({
           order: parseNumber(r.order, 0),
           src: r.src,
+          mobile_src: r.mobile_src || '',
           caption: r.caption || ''
         }))
         .filter(r => r.src)
         .sort((a, b) => a.order - b.order)
-        .map(r => r.src)
+        .map(r => ({ src: r.src, mobile_src: r.mobile_src }))
       if (landingData.length) setLandingSlides(landingData)
 
       const releasesData = releasesSheet
