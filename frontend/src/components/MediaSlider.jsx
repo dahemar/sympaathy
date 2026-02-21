@@ -82,6 +82,12 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
 
     if (!filename) return { webp: '', original: '', isVideo: false, videoSrc: '' }
 
+    // Normalize filename: trim and ensure root-relative for local assets
+    filename = String(filename).trim()
+    if (!/^https?:\/\//i.test(filename) && !filename.startsWith('/')) {
+      filename = `/${filename}`
+    }
+
     const isVideo = /\.(mp4|mov|webm|ogg|mpg|mpeg)(\?.*)?$/i.test(filename)
 
     // Absolute URL -> respect as-is
