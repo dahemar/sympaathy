@@ -4572,25 +4572,28 @@ body::before {
 @media (max-width: 768px) {
   .landing-hero {
     min-height: calc(100vh - 56px);
-    margin-top: 56px;
+    margin-top: 0;
     padding: 0;
     overflow: hidden;
     position: fixed;
-    top: 0;
+    top: 56px;
     left: 0;
     right: 0;
     bottom: 0;
   }
   .landing-hero .media-slider {
-    height: calc(100vh - 56px);
+    height: 100%;
   }
-  /* Mobile: use vertical 4:5 frame for landing slides (vertical images expected via `mobile_src`) */
+  /* Mobile: fill the entire viewport area below the nav (no gap) */
   .landing-hero .slide {
-    aspect-ratio: 4 / 5 !important;
+    height: 100%;
+    aspect-ratio: auto !important;
   }
 
   .landing-hero .slide img {
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
