@@ -4583,6 +4583,11 @@ body::before {
   .landing-hero .media-slider {
     height: calc(100vh - 56px);
   }
+  /* Mobile: use vertical 4:5 frame for landing slides (vertical images expected via `mobile_src`) */
+  .landing-hero .slide {
+    aspect-ratio: 4 / 5 !important;
+  }
+
   .landing-hero .slide img {
     object-fit: contain;
   }
