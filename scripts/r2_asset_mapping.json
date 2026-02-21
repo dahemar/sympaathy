@@ -1,0 +1,410 @@
+{
+  "generatedAt": "2026-02-19T17:55:38.558Z",
+  "bucketName": "storage",
+  "accountId": "2db913ce5342c5c5db6b48bbf026717f",
+  "publicBaseUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev",
+  "mapping": [
+    {
+      "from": "images 2/performance-frames/B12.png",
+      "to": "assets/live/pastoral/performance-frames/b12.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B12.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b12.png"
+    },
+    {
+      "from": "images 2/performance-frames/B12.webp",
+      "to": "assets/live/pastoral/performance-frames/b12.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B12.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b12.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B13.png",
+      "to": "assets/live/pastoral/performance-frames/b13.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B13.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b13.png"
+    },
+    {
+      "from": "images 2/performance-frames/B13.webp",
+      "to": "assets/live/pastoral/performance-frames/b13.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B13.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b13.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B2.png",
+      "to": "assets/live/pastoral/performance-frames/b2.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B2.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b2.png"
+    },
+    {
+      "from": "images 2/performance-frames/B2.webp",
+      "to": "assets/live/pastoral/performance-frames/b2.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B2.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b2.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B3.png",
+      "to": "assets/live/pastoral/performance-frames/b3.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B3.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b3.png"
+    },
+    {
+      "from": "images 2/performance-frames/B3.webp",
+      "to": "assets/live/pastoral/performance-frames/b3.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B3.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b3.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B4.png",
+      "to": "assets/live/pastoral/performance-frames/b4.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B4.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b4.png"
+    },
+    {
+      "from": "images 2/performance-frames/B4.webp",
+      "to": "assets/live/pastoral/performance-frames/b4.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B4.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b4.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B5.png",
+      "to": "assets/live/pastoral/performance-frames/b5.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B5.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b5.png"
+    },
+    {
+      "from": "images 2/performance-frames/B5.webp",
+      "to": "assets/live/pastoral/performance-frames/b5.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B5.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b5.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B6.png",
+      "to": "assets/live/pastoral/performance-frames/b6.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B6.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b6.png"
+    },
+    {
+      "from": "images 2/performance-frames/B6.webp",
+      "to": "assets/live/pastoral/performance-frames/b6.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B6.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b6.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B7.png",
+      "to": "assets/live/pastoral/performance-frames/b7.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B7.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b7.png"
+    },
+    {
+      "from": "images 2/performance-frames/B7.webp",
+      "to": "assets/live/pastoral/performance-frames/b7.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B7.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b7.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B8.png",
+      "to": "assets/live/pastoral/performance-frames/b8.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B8.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b8.png"
+    },
+    {
+      "from": "images 2/performance-frames/B8.webp",
+      "to": "assets/live/pastoral/performance-frames/b8.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B8.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b8.webp"
+    },
+    {
+      "from": "images 2/performance-frames/B9.png",
+      "to": "assets/live/pastoral/performance-frames/b9.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B9.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b9.png"
+    },
+    {
+      "from": "images 2/performance-frames/B9.webp",
+      "to": "assets/live/pastoral/performance-frames/b9.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/B9.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/b9.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C1.png",
+      "to": "assets/live/pastoral/performance-frames/c1.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C1.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c1.png"
+    },
+    {
+      "from": "images 2/performance-frames/C1.webp",
+      "to": "assets/live/pastoral/performance-frames/c1.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C1.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c1.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C10.png",
+      "to": "assets/live/pastoral/performance-frames/c10.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C10.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c10.png"
+    },
+    {
+      "from": "images 2/performance-frames/C10.webp",
+      "to": "assets/live/pastoral/performance-frames/c10.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C10.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c10.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C2.png",
+      "to": "assets/live/pastoral/performance-frames/c2.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C2.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c2.png"
+    },
+    {
+      "from": "images 2/performance-frames/C2.webp",
+      "to": "assets/live/pastoral/performance-frames/c2.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C2.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c2.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C3.png",
+      "to": "assets/live/pastoral/performance-frames/c3.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C3.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c3.png"
+    },
+    {
+      "from": "images 2/performance-frames/C3.webp",
+      "to": "assets/live/pastoral/performance-frames/c3.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C3.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c3.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C4.png",
+      "to": "assets/live/pastoral/performance-frames/c4.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C4.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c4.png"
+    },
+    {
+      "from": "images 2/performance-frames/C4.webp",
+      "to": "assets/live/pastoral/performance-frames/c4.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C4.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c4.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C5.png",
+      "to": "assets/live/pastoral/performance-frames/c5.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C5.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c5.png"
+    },
+    {
+      "from": "images 2/performance-frames/C5.webp",
+      "to": "assets/live/pastoral/performance-frames/c5.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C5.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c5.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C6.png",
+      "to": "assets/live/pastoral/performance-frames/c6.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C6.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c6.png"
+    },
+    {
+      "from": "images 2/performance-frames/C6.webp",
+      "to": "assets/live/pastoral/performance-frames/c6.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C6.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c6.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C7.png",
+      "to": "assets/live/pastoral/performance-frames/c7.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C7.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c7.png"
+    },
+    {
+      "from": "images 2/performance-frames/C7.webp",
+      "to": "assets/live/pastoral/performance-frames/c7.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C7.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c7.webp"
+    },
+    {
+      "from": "images 2/performance-frames/C8.png",
+      "to": "assets/live/pastoral/performance-frames/c8.png",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C8.png",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c8.png"
+    },
+    {
+      "from": "images 2/performance-frames/C8.webp",
+      "to": "assets/live/pastoral/performance-frames/c8.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/performance-frames/C8.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/pastoral/performance-frames/c8.webp"
+    },
+    {
+      "from": "images 2/updated thumbnails/.pastoral album thumbnail.JPG",
+      "to": "assets/live/thumbnails/dot-pastoral-album-thumbnail.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/updated%20thumbnails/.pastoral%20album%20thumbnail.JPG",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/dot-pastoral-album-thumbnail.jpg"
+    },
+    {
+      "from": "images 2/updated thumbnails/licitir thumbnail.jpeg",
+      "to": "assets/live/thumbnails/licitir-thumbnail.jpeg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/updated%20thumbnails/licitir%20thumbnail.jpeg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/licitir-thumbnail.jpeg"
+    },
+    {
+      "from": "images 2/updated thumbnails/licitir thumbnail.webp",
+      "to": "assets/live/thumbnails/licitir-thumbnail.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/updated%20thumbnails/licitir%20thumbnail.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/licitir-thumbnail.webp"
+    },
+    {
+      "from": "images 2/updated thumbnails/pastoral album thumbnail.JPG",
+      "to": "assets/live/thumbnails/pastoral-album-thumbnail.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.JPG",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/pastoral-album-thumbnail.jpg"
+    },
+    {
+      "from": "images 2/updated thumbnails/pastoral album thumbnail.webp",
+      "to": "assets/live/thumbnails/pastoral-album-thumbnail.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images%202/updated%20thumbnails/pastoral%20album%20thumbnail.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/pastoral-album-thumbnail.webp"
+    },
+    {
+      "from": "images/diamantista ep-mobile.webp",
+      "to": "assets/releases/diamantista/diamantista-ep-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista%20ep-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/releases/diamantista/diamantista-ep-mobile.webp"
+    },
+    {
+      "from": "images/diamantista ep.webp",
+      "to": "assets/releases/diamantista/diamantista-ep.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista%20ep.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/releases/diamantista/diamantista-ep.webp"
+    },
+    {
+      "from": "images/diamantista-center-mobile.webp",
+      "to": "assets/live/thumbnails/diamantista-center-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista-center-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/diamantista-center-mobile.webp"
+    },
+    {
+      "from": "images/diamantista-center.webp",
+      "to": "assets/live/thumbnails/diamantista-center.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista-center.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/diamantista-center.webp"
+    },
+    {
+      "from": "images/diamantista-dramatic.webp",
+      "to": "assets/live/thumbnails/diamantista-dramatic.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista-dramatic.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/diamantista-dramatic.webp"
+    },
+    {
+      "from": "images/diamantista-mobile.webp",
+      "to": "assets/live/thumbnails/diamantista-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/diamantista-mobile.webp"
+    },
+    {
+      "from": "images/diamantista.jpg",
+      "to": "assets/live/thumbnails/diamantista.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/diamantista.jpg"
+    },
+    {
+      "from": "images/diamantista.mov",
+      "to": "assets/live/diamantista/diamantista.mov",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista.mov",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/diamantista/diamantista.mov"
+    },
+    {
+      "from": "images/diamantista.mp4",
+      "to": "assets/live/diamantista/diamantista.mp4",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista.mp4",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/diamantista/diamantista.mp4"
+    },
+    {
+      "from": "images/diamantista.webp",
+      "to": "assets/live/thumbnails/diamantista.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/diamantista.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/diamantista.webp"
+    },
+    {
+      "from": "images/landing/landing-1.jpg",
+      "to": "assets/landing/landing-1.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/landing/landing-1.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/landing/landing-1.jpg"
+    },
+    {
+      "from": "images/landing/landing-2.jpg",
+      "to": "assets/landing/landing-2.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/landing/landing-2.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/landing/landing-2.jpg"
+    },
+    {
+      "from": "images/landing/landing-3.jpg",
+      "to": "assets/landing/landing-3.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/landing/landing-3.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/landing/landing-3.jpg"
+    },
+    {
+      "from": "images/landing/orig/landing-1.jpg",
+      "to": "assets/landing/orig/landing-1.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/landing/orig/landing-1.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/landing/orig/landing-1.jpg"
+    },
+    {
+      "from": "images/landing/orig/landing-2.jpg",
+      "to": "assets/landing/orig/landing-2.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/landing/orig/landing-2.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/landing/orig/landing-2.jpg"
+    },
+    {
+      "from": "images/landing/orig/landing-3.jpg",
+      "to": "assets/landing/orig/landing-3.jpg",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/landing/orig/landing-3.jpg",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/landing/orig/landing-3.jpg"
+    },
+    {
+      "from": "images/licitir ep-mobile.webp",
+      "to": "assets/releases/licitir/licitir-ep-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/licitir%20ep-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/releases/licitir/licitir-ep-mobile.webp"
+    },
+    {
+      "from": "images/licitir ep.webp",
+      "to": "assets/releases/licitir/licitir-ep.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/licitir%20ep.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/releases/licitir/licitir-ep.webp"
+    },
+    {
+      "from": "images/licitir-mobile.webp",
+      "to": "assets/live/thumbnails/licitir-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/licitir-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/licitir-mobile.webp"
+    },
+    {
+      "from": "images/licitir.webp",
+      "to": "assets/live/thumbnails/licitir.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/licitir.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/licitir.webp"
+    },
+    {
+      "from": "images/pastoral ep-mobile.webp",
+      "to": "assets/releases/pastoral/pastoral-ep-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/pastoral%20ep-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/releases/pastoral/pastoral-ep-mobile.webp"
+    },
+    {
+      "from": "images/pastoral ep.webp",
+      "to": "assets/releases/pastoral/pastoral-ep.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/pastoral%20ep.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/releases/pastoral/pastoral-ep.webp"
+    },
+    {
+      "from": "images/pastoral-mobile.webp",
+      "to": "assets/live/thumbnails/pastoral-mobile.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/pastoral-mobile.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/pastoral-mobile.webp"
+    },
+    {
+      "from": "images/pastoral.webp",
+      "to": "assets/live/thumbnails/pastoral.webp",
+      "fromUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/images/pastoral.webp",
+      "toUrl": "https://pub-968c4f8cd5bc4dadb4ec1aa19cf615a2.r2.dev/assets/live/thumbnails/pastoral.webp"
+    }
+  ]
+}

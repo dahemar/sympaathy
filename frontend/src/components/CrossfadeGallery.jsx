@@ -51,6 +51,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
 
   // Generate optimized image/video sources, using VITE_R2_BASE when available.
   const R2_BASE = (import.meta.env.VITE_R2_BASE || '').replace(/\/$/, '')
+  const VITE_BASE = (import.meta.env.BASE_URL || '').replace(/\/$/, '')
   const joinBase = (base, path) => base ? `${base}/${path.replace(/^\/+/, '')}` : path
 
   const generateImageSources = useCallback((filename) => {
@@ -71,9 +72,10 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
     }
 
     // Root-relative paths (start with '/'): treat as local site assets.
-    // Do NOT automatically prefix with R2_BASE so local files continue working.
+    // Prefix with Vite BASE_URL when present so assets resolve when the app
+    // is deployed under a subpath (e.g. GitHub Pages repository sites).
     if (filename.startsWith('/')) {
-      const original = filename
+      const original = VITE_BASE ? `${VITE_BASE}${filename}` : filename
       if (isVideo) return { webp: '', original: '', isVideo: true, videoSrc: original }
       return { webp: filename.toLowerCase().endsWith('.webp') ? original : '', original, isVideo: false, videoSrc: '' }
     }

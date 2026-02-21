@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.993.0",
+    "@aws-sdk/node-http-handler": "^3.370.0",
     "googleapis": "^171.4.0"
   }
 }
