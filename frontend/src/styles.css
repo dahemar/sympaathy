@@ -4433,6 +4433,18 @@ body::before {
   background: #000;
 }
 
+/* Ensure picture elements fill the slide container (some browsers leave picture as inline)
+   and that their images/video cover the full area. */
+.slide picture,
+.slide picture img,
+.slide picture source,
+.landing-hero .slide picture,
+.landing-hero .slide picture img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .project-live-detail .slide {
   aspect-ratio: 16 / 9;
 }
