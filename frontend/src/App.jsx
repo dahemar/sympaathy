@@ -21,11 +21,24 @@ const debugLog = (...args) => {
   console.log('[sheets]', ...args)
 }
 
-const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes (session)
+const PERSIST_TTL = 24 * 60 * 60 * 1000 // 24 hours (localStorage)
 
 const getCachedSheetEntry = (sheetName) => {
   try {
     const cached = sessionStorage.getItem(`sheets_${sheetName}`)
+    if (!cached) return null
+    const { data, timestamp } = JSON.parse(cached)
+    if (!Array.isArray(data) || typeof timestamp !== 'number') return null
+    return { data, timestamp }
+  } catch {
+    return null
+  }
+}
+
+const getPersistentSheetEntry = (sheetName) => {
+  try {
+    const cached = localStorage.getItem(`sheets_persist_${sheetName}`)
     if (!cached) return null
     const { data, timestamp } = JSON.parse(cached)
     if (!Array.isArray(data) || typeof timestamp !== 'number') return null
@@ -44,12 +57,23 @@ const getCachedSheetFresh = (sheetName) => {
 
 const getCachedSheetAny = (sheetName) => {
   const entry = getCachedSheetEntry(sheetName)
-  return entry?.data || null
+  if (entry?.data) return entry.data
+  const persisted = getPersistentSheetEntry(sheetName)
+  if (!persisted?.data) return null
+  // If persistent cache is too old, ignore it (keeps it “instant” but not forever-stale)
+  if (Date.now() - persisted.timestamp > PERSIST_TTL) return null
+  return persisted.data
 }
 
 const setCachedSheet = (sheetName, data) => {
   try {
     sessionStorage.setItem(`sheets_${sheetName}`, JSON.stringify({ data, timestamp: Date.now() }))
+  } catch {
+    // ignore quota errors
+  }
+
+  try {
+    localStorage.setItem(`sheets_persist_${sheetName}`, JSON.stringify({ data, timestamp: Date.now() }))
   } catch {
     // ignore quota errors
   }
@@ -578,7 +602,114 @@ export default function App() {
   const [dataLoaded, setDataLoaded] = useState(false)
 
   useEffect(() => {
+    // Connection warmup for faster first paint (Sheets + optional R2/Cloudflare base)
+    const addLink = (rel, href, extra = {}) => {
+      if (!href) return
+      const key = `${rel}:${href}`
+      if (document.head.querySelector(`link[data-key="${CSS.escape(key)}"]`)) return
+      const link = document.createElement('link')
+      link.rel = rel
+      link.href = href
+      link.setAttribute('data-key', key)
+      Object.entries(extra).forEach(([k, v]) => {
+        if (v != null) link.setAttribute(k, String(v))
+      })
+      document.head.appendChild(link)
+    }
+
+    addLink('preconnect', 'https://sheets.googleapis.com', { crossorigin: '' })
+    addLink('dns-prefetch', 'https://sheets.googleapis.com')
+
+    const r2Base = (import.meta.env.VITE_R2_BASE || '').trim()
+    if (r2Base) {
+      try {
+        const origin = new URL(r2Base).origin
+        addLink('preconnect', origin, { crossorigin: '' })
+        addLink('dns-prefetch', origin)
+      } catch {
+        // ignore invalid URL
+      }
+    }
+
     const SHEET_NAMES = ['LandingSlides', 'Releases', 'LiveGrid', 'LiveDetails', 'LiveSlides', 'Bio', 'Contact']
+
+    // Lightweight image warmup to make navigation feel instant.
+    const warmed = new Set()
+    const R2_BASE = (import.meta.env.VITE_R2_BASE || '').replace(/\/$/, '')
+    const VITE_BASE = (import.meta.env.BASE_URL || '').replace(/\/$/, '')
+    const joinBase = (base, path) => base ? `${base}/${String(path).replace(/^\/+/, '')}` : String(path)
+
+    const resolveImageCandidates = (filename) => {
+      const name = String(filename || '').trim()
+      if (!name) return []
+      if (/\.(mp4|mov|webm|ogg|mpg|mpeg)(\?.*)?$/i.test(name)) return []
+
+      // Absolute URL
+      if (/^https?:\/\//i.test(name)) {
+        return [name]
+      }
+
+      // Root-relative local asset
+      if (name.startsWith('/')) {
+        const original = VITE_BASE ? `${VITE_BASE}${name}` : name
+        return [original]
+      }
+
+      // Relative: assume R2 base if available
+      if (!R2_BASE) return [name]
+      const original = joinBase(R2_BASE, name)
+      const baseName = name.replace(/\.[^/.]+$/, '')
+      const webp = joinBase(R2_BASE, `${baseName}.webp`)
+      return [webp, original]
+    }
+
+    const preloadUrl = (url) => {
+      if (!url) return
+      if (warmed.has(url)) return
+      warmed.add(url)
+
+      // Hint browser early without blocking render
+      try {
+        const key = `preload:image:${url}`
+        if (!document.head.querySelector(`link[data-key="${CSS.escape(key)}"]`)) {
+          const link = document.createElement('link')
+          link.rel = 'preload'
+          link.as = 'image'
+          link.href = url
+          link.setAttribute('data-key', key)
+          document.head.appendChild(link)
+        }
+      } catch {
+        // ignore
+      }
+
+      const img = new Image()
+      img.decoding = 'async'
+      img.loading = 'eager'
+      img.src = url
+      // Best-effort decode (supported in modern browsers)
+      img.decode?.().catch(() => {})
+    }
+
+    const warmupImages = (urls, { max = 60 } = {}) => {
+      const list = (urls || []).filter(Boolean)
+      if (!list.length) return
+
+      const run = () => {
+        let count = 0
+        for (const url of list) {
+          if (count >= max) break
+          preloadUrl(url)
+          count++
+        }
+      }
+
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        window.requestIdleCallback(run, { timeout: 1500 })
+      } else {
+        setTimeout(run, 150)
+      }
+    }
 
     const applySheetsToState = (sheets, { allowSetDataLoaded = false } = {}) => {
       const landingSheet = sheets.LandingSlides || []
@@ -683,6 +814,31 @@ export default function App() {
       if (Object.keys(liveDetailsData).length) setLiveDetailMap(liveDetailsData)
       if (bioData.length) setBioSections(bioData)
       if (contactData.length) setContactLinks(contactData)
+
+      // Warm up most-visible images (landing + grid + first slide per slider)
+      const warmCandidates = []
+
+      landingData.slice(0, 4).forEach(({ src, mobile_src }) => {
+        warmCandidates.push(...resolveImageCandidates(src))
+        if (mobile_src) warmCandidates.push(...resolveImageCandidates(mobile_src))
+      })
+
+      liveGridData.slice(0, 24).forEach((p) => {
+        if (p.image) warmCandidates.push(...resolveImageCandidates(p.image))
+      })
+
+      releasesData.slice(0, 24).forEach((r) => {
+        if (r.image) warmCandidates.push(...resolveImageCandidates(r.image))
+      })
+
+      Object.values(liveDetailsData).forEach((detail) => {
+        const prim = Array.isArray(detail.primaryImages) ? detail.primaryImages : []
+        const sec = Array.isArray(detail.secondaryImages) ? detail.secondaryImages : []
+        if (prim[0]) warmCandidates.push(...resolveImageCandidates(prim[0]))
+        if (sec[0]) warmCandidates.push(...resolveImageCandidates(sec[0]))
+      })
+
+      warmupImages(warmCandidates, { max: 80 })
 
       if (allowSetDataLoaded && Object.keys(liveDetailsData).length) {
         setDataLoaded(true)

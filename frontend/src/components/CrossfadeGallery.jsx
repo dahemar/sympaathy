@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState, useCallback } from 'react'
+import { memo, useEffect, useMemo, useRef, useState, useCallback } from 'react'
 
 export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, alt = '', fallbackSrc, showNavigation = false }) => {
   const [files, setFiles] = useState([])
@@ -8,7 +8,7 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   const [error, setError] = useState(null)
   const [lastManualNavigation, setLastManualNavigation] = useState(0)
   const [autoPlayPaused, setAutoPlayPaused] = useState(false)
-  const [preloadedImages, setPreloadedImages] = useState(new Set())
+  const preloadedImagesRef = useRef(new Set())
 
   useEffect(() => {
     let isMounted = true
@@ -132,30 +132,66 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
   // Preload adjacent images for smooth transitions
   useEffect(() => {
     if (!files.length || files.length <= 1) return
-    
+
+    const preloadSrc = (src) => {
+      if (!src) return
+      const set = preloadedImagesRef.current
+      if (set.has(src)) return
+      set.add(src)
+      const img = new Image()
+      img.decoding = 'async'
+      img.src = src
+      img.decode?.().catch(() => {})
+    }
+
     const nextIndex = (index + 1) % files.length
     const prevIndex = (index - 1 + files.length) % files.length
-    
+
     const nextSources = generateImageSources(files[nextIndex])
     const prevSources = generateImageSources(files[prevIndex])
-    
-    const imagesToPreload = [
+
+    ;[
       nextSources.webp,
       nextSources.original,
       prevSources.webp,
       prevSources.original
-    ]
-    
-    imagesToPreload.forEach(src => {
-      if (src && !preloadedImages.has(src)) {
-        const img = new Image()
-        img.onload = () => {
-          setPreloadedImages(prev => new Set([...prev, src]))
-        }
-        img.src = src
+    ].forEach(preloadSrc)
+  }, [index, files, generateImageSources])
+
+  // Idle-warm the rest of the gallery (best-effort)
+  useEffect(() => {
+    if (!files.length || files.length <= 2) return
+
+    const preloadSrc = (src) => {
+      if (!src) return
+      const set = preloadedImagesRef.current
+      if (set.has(src)) return
+      set.add(src)
+      const img = new Image()
+      img.decoding = 'async'
+      img.src = src
+      img.decode?.().catch(() => {})
+    }
+
+    const run = () => {
+      let budget = 30
+      for (let i = 0; i < files.length && budget > 0; i++) {
+        const sources = generateImageSources(files[i])
+        if (sources.isVideo) continue
+        if (sources.webp) { preloadSrc(sources.webp); budget-- }
+        if (budget <= 0) break
+        if (sources.original) { preloadSrc(sources.original); budget-- }
       }
-    })
-  }, [index, files, generateImageSources, preloadedImages])
+    }
+
+    let handle
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      handle = window.requestIdleCallback(run, { timeout: 1500 })
+      return () => window.cancelIdleCallback?.(handle)
+    }
+    handle = setTimeout(run, 200)
+    return () => clearTimeout(handle)
+  }, [files, generateImageSources])
   
   const goPrev = useCallback(() => {
     if (files.length <= 1) return
@@ -270,13 +306,24 @@ export const CrossfadeGallery = memo(({ dataUrl, basePath, intervalMs = 4000, al
             alt={alt || 'gallery image current'}
             className="crossfade-image visible"
             loading="eager"
+            decoding="async"
           />
         </picture>
       )}
       {showNavigation && files.length > 1 && (
         <>
-          <button className="crossfade-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
-          <button className="crossfade-btn next" onClick={goNext} aria-label="Next">›</button>
+          <button className="crossfade-btn prev" onClick={goPrev} aria-label="Previous">
+            <span className="arrow-text" aria-hidden="true">&lt;</span>
+            <svg className="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M15 18L9 12l6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button className="crossfade-btn next" onClick={goNext} aria-label="Next">
+            <span className="arrow-text" aria-hidden="true">&gt;</span>
+            <svg className="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </>
       )}
     </div>

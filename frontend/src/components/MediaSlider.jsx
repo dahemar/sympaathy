@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState, useCallback } from 'react'
+import { memo, useEffect, useMemo, useRef, useState, useCallback } from 'react'
 
 // MediaSlider can consume either:
 // 1) dataUrl + basePath (legacy: dataUrl returns ["file1.jpg", ...])
@@ -8,7 +8,9 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
   const [index, setIndex] = useState(0)
   const [lastManualNavigation, setLastManualNavigation] = useState(0)
   const [autoPlayPaused, setAutoPlayPaused] = useState(false)
-  const [preloadedImages, setPreloadedImages] = useState(new Set())
+  const preloadedImagesRef = useRef(new Set())
+
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
 
   // When images are passed directly, prefer them over dataUrl fetch.
   useEffect(() => {
@@ -114,31 +116,68 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
 
   // Preload adjacent images when index changes
   useEffect(() => {
-    if (hasImages && files.length > 1) {
-      const nextIndex = (index + 1) % files.length
-      const prevIndex = (index - 1 + files.length) % files.length
-      
-      const nextSources = generateImageSources(files[nextIndex])
-      const prevSources = generateImageSources(files[prevIndex])
+    if (!hasImages || files.length <= 1) return
 
-      const imagesToPreload = [
-        nextSources.webp,
-        nextSources.original,
-        prevSources.webp,
-        prevSources.original
-      ]
-
-      imagesToPreload.forEach(src => {
-        if (src && !preloadedImages.has(src)) {
-          const img = new Image()
-          img.onload = () => {
-            setPreloadedImages(prev => new Set([...prev, src]))
-          }
-          img.src = src
-        }
-      })
+    const preloadSrc = (src) => {
+      if (!src) return
+      const set = preloadedImagesRef.current
+      if (set.has(src)) return
+      set.add(src)
+      const img = new Image()
+      img.decoding = 'async'
+      img.src = src
+      img.decode?.().catch(() => {})
     }
-  }, [index, hasImages, files, generateImageSources, preloadedImages])
+
+    const nextIndex = (index + 1) % files.length
+    const prevIndex = (index - 1 + files.length) % files.length
+
+    const nextSources = generateImageSources(files[nextIndex])
+    const prevSources = generateImageSources(files[prevIndex])
+
+    ;[
+      nextSources.webp,
+      nextSources.original,
+      prevSources.webp,
+      prevSources.original
+    ].forEach(preloadSrc)
+  }, [index, hasImages, files, generateImageSources])
+
+  // Idle-warm the rest of the slider images (best-effort, throttled)
+  useEffect(() => {
+    if (!hasImages || files.length <= 2) return
+
+    const preloadSrc = (src) => {
+      if (!src) return
+      const set = preloadedImagesRef.current
+      if (set.has(src)) return
+      set.add(src)
+      const img = new Image()
+      img.decoding = 'async'
+      img.src = src
+      img.decode?.().catch(() => {})
+    }
+
+    const run = () => {
+      // Cap work to avoid flooding: preload up to ~30 resources per slider
+      let budget = 30
+      for (let i = 0; i < files.length && budget > 0; i++) {
+        const sources = generateImageSources(files[i])
+        if (sources.isVideo) continue
+        if (sources.webp) { preloadSrc(sources.webp); budget-- }
+        if (budget <= 0) break
+        if (sources.original) { preloadSrc(sources.original); budget-- }
+      }
+    }
+
+    let handle
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      handle = window.requestIdleCallback(run, { timeout: 1500 })
+      return () => window.cancelIdleCallback?.(handle)
+    }
+    handle = setTimeout(run, 200)
+    return () => clearTimeout(handle)
+  }, [files, generateImageSources, hasImages])
   
   // (moved generateImageSources above)
   
@@ -181,7 +220,12 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
     <div className="media-slider">
       {showNavigation && (
         <>
-          <button className="slider-btn prev" onClick={goPrev} aria-label="Previous">‹</button>
+          <button className="slider-btn prev" onClick={goPrev} aria-label="Previous">
+            <span className="arrow-text" aria-hidden="true">&lt;</span>
+            <svg className="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M15 18L9 12l6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
           <div className="slide">
             <picture>
                   {currentImageSources.isVideo ? (
@@ -190,7 +234,7 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
                       preload={index === 0 ? 'auto' : 'metadata'}
                       playsInline
                       webkit-playsinline="true"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      style={{ width: '100%', height: '100%', objectFit: isMobile ? 'cover' : 'contain' }}
                     >
                       <source src={currentImageSources.videoSrc} type="video/mp4" />
                       <a href={currentImageSources.videoSrc} target="_blank" rel="noopener noreferrer">Open video</a>
@@ -211,7 +255,7 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
                         style={{ 
                           width: '100%', 
                           height: '100%', 
-                          objectFit: 'contain',
+                          objectFit: isMobile ? 'cover' : 'contain',
                           willChange: 'opacity, transform'
                         }}
                       />
@@ -219,7 +263,12 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
                   )}
             </picture>
           </div>
-          <button className="slider-btn next" onClick={goNext} aria-label="Next">›</button>
+          <button className="slider-btn next" onClick={goNext} aria-label="Next">
+            <span className="arrow-text" aria-hidden="true">&gt;</span>
+            <svg className="arrow-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         </>
       )}
       {!showNavigation && (
@@ -234,6 +283,7 @@ export const MediaSlider = memo(({ dataUrl, basePath = '', images, intervalMs = 
                 // eslint-disable-next-line no-console
                 console.warn('[MediaSlider] image failed', e?.currentTarget?.src)
               }}
+              style={{ width: '100%', height: '100%', objectFit: isMobile ? 'cover' : 'contain' }}
             />
           </picture>
         </div>

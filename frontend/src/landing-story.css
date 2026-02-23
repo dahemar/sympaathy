@@ -1,0 +1,35 @@
+/* Mobile: crop slideshow images to Instagram Story aspect ratio (9:16) */
+@media (max-width: 768px) {
+  /* Force slideshow containers to a 9:16 portrait frame and hide overflow */
+  .crossfade-container,
+  .CrossfadeGallery,
+  .media-slider .slide,
+  .media-slider {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    max-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background: #000;
+  }
+
+  /* Make images and videos fill the frame and be cropped (cover) */
+  .crossfade-container .crossfade-image,
+  .media-slider .slide img,
+  .media-slider .slide video,
+  .crossfade-container picture,
+  .media-slider .slide picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Ensure picture/source elements behave like full-bleed media */
+  .crossfade-container picture > img,
+  .media-slider picture > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}

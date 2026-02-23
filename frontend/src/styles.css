@@ -3680,10 +3680,15 @@ a {
 
 /* Ajustes responsive */
 @media (orientation: portrait) {
+  .project-video iframe,
+  .project-video video,
+  .project-video img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     display: block !important;
+  }
+}
 
 .main-nav a::after {
     filter: blur(8px) !important;
@@ -4572,28 +4577,25 @@ body::before {
 @media (max-width: 768px) {
   .landing-hero {
     min-height: calc(100vh - 56px);
-    margin-top: 0;
+    margin-top: 56px;
     padding: 0;
     overflow: hidden;
     position: fixed;
-    top: 56px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
   }
   .landing-hero .media-slider {
-    height: 100%;
+    height: calc(100vh - 56px);
   }
-  /* Mobile: fill the entire viewport area below the nav (no gap) */
+  /* Mobile: use vertical 4:5 frame for landing slides (vertical images expected via `mobile_src`) */
   .landing-hero .slide {
-    height: 100%;
-    aspect-ratio: auto !important;
+    aspect-ratio: 4 / 5 !important;
   }
 
   .landing-hero .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 }
 
@@ -4708,6 +4710,47 @@ body::before {
   
   .crossfade-btn.next {
     right: 0.5rem;
+  }
+}
+
+/* Desktop: show minimal textual arrows (< and >) and hide SVGs */
+@media (min-width: 769px) {
+  .slider-btn .arrow-icon,
+  .crossfade-btn .arrow-icon {
+    display: none !important;
+  }
+
+  .slider-btn .arrow-text,
+  .crossfade-btn .arrow-text {
+    display: inline-block;
+    color: #fff;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    transform: translateZ(0);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .slider-btn,
+  .crossfade-btn {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Mobile: show SVGs and hide textual arrows */
+@media (max-width: 768px) {
+  .slider-btn .arrow-text,
+  .crossfade-btn .arrow-text {
+    display: none !important;
+  }
+
+  .slider-btn .arrow-icon,
+  .crossfade-btn .arrow-icon {
+    display: block;
   }
 }
 
